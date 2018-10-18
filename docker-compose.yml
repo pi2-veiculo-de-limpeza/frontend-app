@@ -1,17 +1,13 @@
-# EXPO needs a ip to run QRCode properly
-# use make, do not use docker-compose up alone
-
-version: "3"
+version: '3'
 services:
-  front:
-    build: mobile
-    command: bash -c "bash"
+  app:
+    build: .
     ports:
-      - "19000:19000"
-      - "19001:19001"
-    env_file:
-      - .host-ip
+      - 19000:19000
+      - 19001:19001
     volumes:
-      - ./mobile/:/app
-    stdin_open: true
-    tty: true
+      - .:/app
+      - /app/node_modules
+    working_dir: /app/pi2app
+    command: bash -c "yarn install && yarn start"
+    network_mode: "host"
