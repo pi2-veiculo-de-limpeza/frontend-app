@@ -68,7 +68,7 @@ class InitialScreen extends React.Component {
             <TouchableOpacity
               style={styles.loginButton}
               activeOpacity={0.7}
-              onPress={() => Actions.loginScreen()}
+              onPress={() => this.props.navigation.navigate('Login')}
             >
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
@@ -76,7 +76,7 @@ class InitialScreen extends React.Component {
             <TouchableOpacity
               style={styles.registerButton}
               activeOpacity={0.7}
-              onPress={() => Actions.registerScreen()}
+              onPress={() => this.props.navigation.navigate('Register')}
             >
               <Text style={styles.buttonText}>Cadastrar</Text>
             </TouchableOpacity>

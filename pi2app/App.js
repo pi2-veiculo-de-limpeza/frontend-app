@@ -1,13 +1,29 @@
 import React from 'react';
-import { StatusBar, Platform } from 'react-native';
-import { createStackNavigator } from 'react-navigation';
-import InitialScreen from './src/screens/InitialScreen';
+import { RootNavigator } from './src/Routes';
+import { isSignedIn } from "./src/Temporary";
 
-const App = createStackNavigator({
-  InitialScreen: {
-    screen: InitialScreen
+class App extends React.Component {
+  state = {
+    signed: false,
+    signLoaded: false,
   }
-},
-)
 
-export default App
+  componentWillMount(){
+    isSignedIn()
+    .then(res => this.setState({ signed: res, signLoaded: true }))
+    .catch(err => alert("Erro"));
+  }
+
+  render() {
+    const { signLoaded, signed } = this.state;
+
+    if (!signLoaded) {
+      return null;
+    }
+
+    const Layout = RootNavigator(signed);
+    return <Layout />;
+  }
+}
+
+export default App;
