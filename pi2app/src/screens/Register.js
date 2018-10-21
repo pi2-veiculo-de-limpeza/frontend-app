@@ -9,7 +9,7 @@ import {
   FormLabel, 
   FormInput,
   FormValidationMessage } from "react-native-elements";
-import { onSignIn, isSignedIn } from "../AuthMethods";
+import { onSignIn } from "../AuthMethods";
 
 const initialBackgroundImage = require('pi2app/images/sand.jpg');
 
@@ -30,10 +30,6 @@ class Register extends React.Component{
       password: '',
       passwordAgain: ''
     };
-  }
-
-  componentDidMount(){
-    const signed = isSignedIn();
   }
 
   static navigationOptions = {
@@ -88,7 +84,7 @@ class Register extends React.Component{
               backgroundColor="#03A9F4"
               title="Entrar"
               onPress={() => {
-                onSignIn().then(() => this.props.navigation.navigate("MainScreen"));
+                onSignIn(this.state.name).then(() => this.props.navigation.navigate("MainScreen"));
               }}
             />
           </Card>
