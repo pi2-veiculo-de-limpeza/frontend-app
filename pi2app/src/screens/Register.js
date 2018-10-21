@@ -4,7 +4,8 @@ import {
   ImageBackground,
   StyleSheet,
   KeyboardAvoidingView,
-  Alert } from "react-native";
+  Alert,
+  ActivityIndicator } from "react-native";
 import { 
   Card, 
   Button, 
@@ -34,10 +35,35 @@ class Register extends React.Component{
       nameIsValid: false,
       emailIsValid: false,
       passwordIsValid: false,
-      confirmPassword: false
+      confirmPassword: false,
+      isLoading: false,
     };
   }
 
+  // Methods to handle POST to the API
+  postForm = async () => {
+    this.setState({isLoading: true});
+    // TODO: implement POST
+    // TODO: change parameter of onSignIn to receive token from the POST request
+    onSignIn(this.state.name)
+    .then(() => this.props.navigation.navigate("MainScreen"));
+    this.setState({isLoading: false});
+  };
+
+  submitRegister = () => {
+    const titleAlert = 'Campo(s) Inválido(s)';
+    const bodyAlert = 'Não foi possível realizar o cadastro porque existem entradas inválidas!';
+    if(this.state.nameIsValid && 
+       this.state.emailIsValid &&
+       this.state.passwordIsValid &&
+       this.state.confirmPassword){
+      this.postForm();
+    } else {
+      this.showAlert(titleAlert, bodyAlert);
+    }
+  };
+
+  // Navigation header
   static navigationOptions = {
     title: 'Cadastro',
     headerStyle: {
@@ -53,6 +79,7 @@ class Register extends React.Component{
     },
   };
 
+  // General alert
   showAlert(title, body){
     Alert.alert(
       title,
@@ -63,22 +90,6 @@ class Register extends React.Component{
       { cancelable: false }
     )
   }
-
-  submitRegister = () => {
-    const titleAlert = 'Campo(s) Inválido(s)';
-    const bodyAlert = 'Não foi possível realizar o cadastro porque existem entradas inválidas!';
-    if(this.state.nameIsValid && 
-       this.state.emailIsValid &&
-       this.state.passwordIsValid &&
-       this.state.confirmPassword){
-    // TODO: create POST method
-    // TODO: change parameter to receive token from the POST request
-      onSignIn(this.state.name)
-      .then(() => this.props.navigation.navigate("MainScreen"));
-    } else {
-      this.showAlert(titleAlert, bodyAlert);
-    }
-  };
 
   // Methods to handle validity of inputs
   validateName = (text) => {
@@ -126,9 +137,14 @@ class Register extends React.Component{
     this.setState({ passwordAgain: text });
   };
 
-  render(){
-    return(
-      <ImageBackground style={styles.initialBackgroundImage} source={initialBackgroundImage}>
+  // Check to render next screen or isLoading
+  renderContext(){
+    if(this.state.isLoading == true){
+      return (
+          <ActivityIndicator size="large" color="#0000ff" />
+      )
+    }else{
+      return (
         <KeyboardAvoidingView style={{ flex: 1, paddingVertical: 50}} behavior='padding'>
           <ScrollView>
           <Card>
@@ -180,8 +196,15 @@ class Register extends React.Component{
             />
           </Card>
           </ScrollView>
-        </KeyboardAvoidingView>
-        
+        </KeyboardAvoidingView>        
+      )
+    }
+  }
+
+  render(){
+    return(
+      <ImageBackground style={styles.initialBackgroundImage} source={initialBackgroundImage}>
+        {this.renderContext()}
       </ImageBackground>
     )
   }
