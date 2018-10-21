@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
 });
 
 class InitialScreen extends React.Component {
-    static navigationOptions = {
+  static navigationOptions = {
     header: null,
   };
 

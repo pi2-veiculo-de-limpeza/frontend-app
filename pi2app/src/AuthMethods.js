@@ -8,6 +8,7 @@ export const onSignOut = () => AsyncStorage.removeItem(TOKEN_KEY);
 
 export const isSignedIn = async () => {
   const token = await AsyncStorage.getItem(TOKEN_KEY);
+  console.log('#### TOKEN: ' + token);
 
   return (token !== null) ? true : false;
 };
