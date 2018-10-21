@@ -2,7 +2,6 @@ import React from "react";
 import { 
   ScrollView, 
   ImageBackground,
-  StyleSheet,
   KeyboardAvoidingView,
   Alert,
   ActivityIndicator } from "react-native";
@@ -13,15 +12,9 @@ import {
   FormInput,
   FormValidationMessage } from "react-native-elements";
 import { onSignIn } from "../AuthMethods";
+import styles from '../styles/GeneralStyles';
 
-const initialBackgroundImage = require('pi2app/images/sand.jpg');
-
-const styles = StyleSheet.create({
-  initialBackgroundImage: {
-    flex: 1,
-    width: null,
-  }
-});
+const initialBackgroundImage = require('../images/sand.jpg');
 
 class Register extends React.Component{
   constructor(props) {

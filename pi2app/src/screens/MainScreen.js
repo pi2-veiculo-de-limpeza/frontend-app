@@ -1,7 +1,13 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { 
+  Text,
+  View,
+  ImageBackground } from 'react-native';
 import { Button } from 'react-native-elements';
 import { onSignOut, getUserToken } from "../AuthMethods";
+import styles from '../styles/GeneralStyles';
+
+const initialBackgroundImage = require('../images/sand.jpg');
 
 class MainScreen extends React.Component {
   state = {
@@ -14,13 +20,26 @@ class MainScreen extends React.Component {
     .catch(err => alert("Erro"));
   }
 
+  // Navigation header
   static navigationOptions = {
-    header: null,
+    title: 'Página Inicial',
+    headerStyle: {
+      backgroundColor: '#53A9F6',
+      elevation: 0,
+      borderBottomWidth: 0,
+    },
+    headerTintColor: '#fff',
+    headerTitleStyle: {
+      alignSelf:'center',
+      fontWeight: 'bold',
+      fontSize: 35,
+    },
   };
 
   render() {
     console.log(this.state.token)
     return (
+      <ImageBackground style={styles.initialBackgroundImage} source={initialBackgroundImage}>
       <View>
           <Text>
               Página Inicial!
@@ -31,11 +50,12 @@ class MainScreen extends React.Component {
           </Text>
 
           <Button
-            backgroundColor="#03A9F4"
+            backgroundColor="#000000"
             title="Sair"
             onPress={() => onSignOut().then(() => this.props.navigation.navigate("InitialScreen"))}
       />
       </View>
+      </ImageBackground>
 
     );
   }
