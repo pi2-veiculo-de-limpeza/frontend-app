@@ -1,12 +1,18 @@
 import React from 'react';
 import { createStackNavigator } from 'react-navigation';
 import InitialScreen from './screens/InitialScreen';
+import Login from './screens/Login';
 import Register from './screens/Register';
 import MainScreen from './screens/MainScreen';
 
+// Routes for a not signed in user must be placed here.
 export const SignedOutRoutes = createStackNavigator({
   InitialScreen: {
     screen: InitialScreen
+  },
+
+  Login: {
+    screen: Login
   },
 
   Register: {
@@ -15,6 +21,7 @@ export const SignedOutRoutes = createStackNavigator({
 }
 );
 
+// Routes for a signed in user must be placed here.
 export const SignedInRoutes = createStackNavigator({
   MainScreen: {
     screen: MainScreen
