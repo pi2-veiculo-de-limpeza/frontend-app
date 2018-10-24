@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+  front:
+    build: .
+    working_dir: /app/pi2app
+    command: bash -c "bash"
+    ports:
+      - "19000:19000"
+      - "19001:19001"
+    env_file:
+      - .host-ip
+    volumes:
+      - .:/app
+      - /app/node_modules
+    stdin_open: true
+    tty: true
