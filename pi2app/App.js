@@ -1,24 +1,29 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { RootNavigator } from './src/Routes';
+import { isSignedIn } from "./src/AuthMethods";
 
-export default class App extends React.Component {
+class App extends React.Component {
+  state = {
+    signed: false,
+    signLoaded: false,
+  }
+
+  componentWillMount(){
+    isSignedIn()
+    .then(res => this.setState({ signed: res, signLoaded: true }))
+    .catch(err => alert("Erro"));
+  }
+
   render() {
-    return (
-      <View style={styles.container}>
-        <Text>Open up App.js to start working on your app!</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
-        <Text>JS >>> TS</Text>
-      </View>
-    );
+    const { signLoaded, signed } = this.state;
+
+    if (!signLoaded) {
+      return null;
+    }
+
+    const Layout = RootNavigator(signed);
+    return <Layout />;
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
