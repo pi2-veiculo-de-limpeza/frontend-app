@@ -5,8 +5,7 @@ import {
   ImageBackground,
   TouchableOpacity } from 'react-native';
 import styles from '../styles/GeneralStyles';
-
-const initialBackgroundImage = require('../images/sand.jpg');
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants'
 
 class InitialScreen extends React.Component {
   static navigationOptions = {
@@ -15,7 +14,7 @@ class InitialScreen extends React.Component {
 
   render() {
     return (
-      <ImageBackground style={styles.initialBackgroundImage} source={initialBackgroundImage}>
+      <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         <View style={styles.initialScreen}>
           <View style={{ flex: 1, alignItems: 'center' }}>
             <Text style={styles.titleText}>Robô</Text>

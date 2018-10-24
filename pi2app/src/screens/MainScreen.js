@@ -6,8 +6,7 @@ import {
 import { Button } from 'react-native-elements';
 import { onSignOut, getUserToken } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
-
-const initialBackgroundImage = require('../images/sand.jpg');
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class MainScreen extends React.Component {
   state = {
@@ -39,7 +38,7 @@ class MainScreen extends React.Component {
   render() {
     console.log(this.state.token)
     return (
-      <ImageBackground style={styles.initialBackgroundImage} source={initialBackgroundImage}>
+      <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
       <View>
           <Text>
               Página Inicial!

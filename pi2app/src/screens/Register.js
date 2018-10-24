@@ -13,8 +13,7 @@ import {
   FormValidationMessage } from "react-native-elements";
 import { onSignIn } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
-
-const initialBackgroundImage = require('../images/sand.jpg');
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class Register extends React.Component{
   constructor(props) {
@@ -196,7 +195,7 @@ class Register extends React.Component{
 
   render(){
     return(
-      <ImageBackground style={styles.initialBackgroundImage} source={initialBackgroundImage}>
+      <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         {this.renderContext()}
       </ImageBackground>
     )
