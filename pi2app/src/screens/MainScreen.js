@@ -3,8 +3,8 @@ import {
   Text,
   View,
   ImageBackground,
-  StyleSheet,
-  ScrollView } from 'react-native';
+  ScrollView,
+  RefreshControl } from 'react-native';
 import { Card, ListItem, Button, Icon, Badge } from 'react-native-elements';
 import { onSignOut, getUserToken } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
@@ -60,7 +60,7 @@ class VehicleCard extends React.Component {
           </Text>
 
           <Text style={{color: 'gray'}}>
-            Finish mission at
+            Finishes mission at
             <Text style={{color: 'black'}}> { shortDate(this.props.vehicle.estimated_time)} </Text>
           </Text>
 
@@ -75,36 +75,25 @@ class VehicleCard extends React.Component {
 
 class MainScreen extends React.Component {
   state = {
+    refreshing: true,
     token: '',
-    vehicles: [
-      {
-        name: 'Optimus Prime',
-        battery_state: 1,
-        battery_capacity: 3,
-        weight: '10kg',
-        distance: '200m',
-        estimated_time: new Date(),
-        elapsed_time: new Date()
-      },
-      {
-        name: 'My Bot',
-        battery_state: 2,
-        battery_capacity: 3,
-        weight: '10kg',
-        distance: '200m',
-        estimated_time: new Date(),
-        elapsed_time: new Date()
-      },
-      {
-        name: 'Master Cleaner',
-        battery_state: 3,
-        battery_capacity: 3,
-        weight: '10kg',
-        distance: '200m',
-        estimated_time: new Date(),
-        elapsed_time: new Date()
-      },
-    ]
+    vehicles: []
+
+  }
+
+  addNewVehicle(name='SandBot', battery_state=3, battery_capacity=3, weight=0, distance=0, estimated_time=new Date(), elapsed_time=new Date()){
+
+    var newVehicle = {
+      name: name,
+      battery_state: battery_state,
+      battery_capacity: battery_capacity,
+      weight: weight,
+      distance: distance,
+      estimated_time: estimated_time,
+      elapsed_time: elapsed_time
+    }
+
+    this.state.vehicles.push(newVehicle)
   }
 
   componentWillMount(){
@@ -129,9 +118,56 @@ class MainScreen extends React.Component {
     },
   };
 
+	_onRefresh = () => {
+		this.setState({refreshing: true});
+		this.loadVehicles().then(() => {
+			this.setState({refreshing: false});
+		});
+	}
+
+  loadVehicles = async () => {
+		const { state } = this.props.navigation;
+		var token = 'YOU TOKEN HERE'
+		const vehicles_path = `${process.env.BACKEND}/vehicles`;
+
+    // console.log(vehicles_path)
+
+		fetch(vehicles_path, {
+			method: 'GET',
+			headers: {
+        'Content-Type': 'application/json',
+        'Authorization' : token
+			}
+		})
+			.then((response) => { return response.json() })
+			.then((responseJson) => {
+        //Clear vehicles
+        this.state.vehicles=[]
+
+        //Insert current vehicles
+        responseJson.map((json_vehicle, index) => {
+          this.addNewVehicle(name=json_vehicle.name);
+        })
+        
+				this.setState({refreshing: false});
+			})
+			.catch((err) => {
+				console.log(err);
+			})
+  }
+
+  componentWillMount() {
+		this.loadVehicles();
+	}
+
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.vehicleScrollView}>
+      <ScrollView contentContainerStyle={styles.vehicleScrollView} refreshControl={
+        <RefreshControl
+          refreshing={this.state.refreshing}
+          onRefresh={this._onRefresh}
+        />
+      }>
         <View>
           {this.state.vehicles.map((vehicle, index) => {
             return (
