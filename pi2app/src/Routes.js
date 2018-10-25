@@ -4,6 +4,9 @@ import InitialScreen from './screens/InitialScreen';
 import Login from './screens/Login';
 import Register from './screens/Register';
 import MainScreen from './screens/MainScreen';
+import VehicleDetail from './screens/VehicleDetail';
+import VehicleRegister from './screens/VehicleRegister';
+
 
 // Routes for a not signed in user must be placed here.
 export const SignedOutRoutes = createStackNavigator({
@@ -25,6 +28,13 @@ export const SignedOutRoutes = createStackNavigator({
 export const SignedInRoutes = createStackNavigator({
   MainScreen: {
     screen: MainScreen
+  },
+  VehicleDetail: {
+    screen: VehicleDetail
+  },
+
+  VehicleRegister: {
+    screen: VehicleRegister
   },
 });
 
