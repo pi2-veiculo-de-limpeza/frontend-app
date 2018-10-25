@@ -2,15 +2,46 @@ import React from 'react';
 import { 
   Text,
   View,
-  ImageBackground } from 'react-native';
-import { Button } from 'react-native-elements';
+  ImageBackground,
+  StyleSheet,
+  ScrollView } from 'react-native';
+import { Card, ListItem, Button, Icon } from 'react-native-elements';
 import { onSignOut, getUserToken } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
+
+class VehicleCard extends React.Component {
+  render() {
+    return (
+      <Card
+        title={this.props.title}
+        image={require('../images/sand.jpg')}>
+        <Text style={{marginBottom: 10}}>
+          The idea with React Native Elements is more about component structure than actual design.
+        </Text>
+        <Button
+          icon={<Icon name='code' color='#ffffff' />}
+          backgroundColor='#03A9F4'
+          buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
+          title='VIEW NOW' />
+      </Card>
+    );
+  }
+}
+
+
 class MainScreen extends React.Component {
   state = {
     token: '',
+    vehicles: [
+      {
+        title: 'Title'
+      },
+      {
+        title: 'Other'
+      },
+    ]
   }
 
   componentWillMount(){
@@ -36,28 +67,27 @@ class MainScreen extends React.Component {
   };
 
   render() {
-    console.log(this.state.token)
     return (
-      <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
-      <View>
-          <Text>
-              Página Inicial!
-          </Text>
-
-           <Text>
-              {this.state.token}
-          </Text>
-
-          <Button
-            backgroundColor="#000000"
-            title="Sair"
-            onPress={() => onSignOut().then(() => this.props.navigation.navigate("InitialScreen"))}
-      />
-      </View>
-      </ImageBackground>
-
+      <ScrollView contentContainerStyle={styles_alternative.contentContainer}>
+        <View>
+          {this.state.vehicles.map((vehicle, index) => {
+            return (
+              <VehicleCard
+                  title={vehicle.title}
+                  key={index}
+              />
+            );
+          })}
+        </View>
+      </ScrollView>
     );
   }
 }
 
 export default MainScreen;
+
+const styles_alternative = StyleSheet.create({
+  contentContainer: {
+    paddingVertical: 20
+  }
+});
