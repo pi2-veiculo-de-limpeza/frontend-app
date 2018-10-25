@@ -43,6 +43,10 @@ const styles = StyleSheet.create({
       color: 'white',
       marginTop: 140,
     },
+
+    vehicleScrollView: {
+      paddingVertical: 20
+    }
 });
 
 export default styles;

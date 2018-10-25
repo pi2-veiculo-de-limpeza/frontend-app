@@ -5,29 +5,71 @@ import {
   ImageBackground,
   StyleSheet,
   ScrollView } from 'react-native';
-import { Card, ListItem, Button, Icon } from 'react-native-elements';
+import { Card, ListItem, Button, Icon, Badge } from 'react-native-elements';
 import { onSignOut, getUserToken } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
+
+function shortDate(date) {
+  return ('' + date.getHours() + ':' + date.getMinutes());
+}
+
+function getColorForBattery(battery_state, battery_capacity) {
+
+  var color = 'green'
+  var ratio = battery_state/battery_capacity
+
+  if ( ratio < 0.35 ){
+    color = 'red'
+  }else if ( ratio < 0.67) {
+    color = 'orange'
+  }else{
+    color = 'green'
+  }
+
+  return color;
+}
 
 
 class VehicleCard extends React.Component {
   render() {
     return (
-      <Card
-        title={this.props.title}
-        image={require('../images/sand.jpg')}>
-        <Text style={{marginBottom: 10}}>
-          The idea with React Native Elements is more about component structure than actual design.
-        </Text>
-        <Button
-          icon={<Icon name='code' color='#ffffff' />}
-          backgroundColor='#03A9F4'
-          buttonStyle={{borderRadius: 0, marginLeft: 0, marginRight: 0, marginBottom: 0}}
-          title='VIEW NOW' />
-      </Card>
+      <View>
+        <Card
+          title={
+            this.props.vehicle.name + ' - ' + 
+            shortDate(this.props.vehicle.elapsed_time) }
+          // image={require('../images/sand.jpg')}
+          >
+
+          <Text style={{color: 'gray'}}>
+            Battery
+            <Text style={{color: getColorForBattery(this.props.vehicle.battery_state, this.props.vehicle.battery_capacity)}}>
+              {' ' +  this.props.vehicle.battery_state + '/' + this.props.vehicle.battery_capacity}
+            </Text>
+          </Text>
+
+          <Text style={{color: 'gray'}}>
+            Distance 
+            <Text style={{color: 'black'}}> {this.props.vehicle.distance} </Text>
+          </Text>
+
+          <Text style={{color: 'gray'}}>
+            Weight 
+            <Text style={{color: 'black'}}> {this.props.vehicle.weight} </Text>
+          </Text>
+
+          <Text style={{color: 'gray'}}>
+            Finish mission at
+            <Text style={{color: 'black'}}> { shortDate(this.props.vehicle.estimated_time)} </Text>
+          </Text>
+
+        </Card>
+      </View>
     );
   }
+
+  
 }
 
 
@@ -36,10 +78,31 @@ class MainScreen extends React.Component {
     token: '',
     vehicles: [
       {
-        title: 'Title'
+        name: 'Optimus Prime',
+        battery_state: 1,
+        battery_capacity: 3,
+        weight: '10kg',
+        distance: '200m',
+        estimated_time: new Date(),
+        elapsed_time: new Date()
       },
       {
-        title: 'Other'
+        name: 'My Bot',
+        battery_state: 2,
+        battery_capacity: 3,
+        weight: '10kg',
+        distance: '200m',
+        estimated_time: new Date(),
+        elapsed_time: new Date()
+      },
+      {
+        name: 'Master Cleaner',
+        battery_state: 3,
+        battery_capacity: 3,
+        weight: '10kg',
+        distance: '200m',
+        estimated_time: new Date(),
+        elapsed_time: new Date()
       },
     ]
   }
@@ -52,7 +115,7 @@ class MainScreen extends React.Component {
 
   // Navigation header
   static navigationOptions = {
-    title: 'Página Inicial',
+    title: 'SandBot',
     headerStyle: {
       backgroundColor: '#53A9F6',
       elevation: 0,
@@ -68,13 +131,13 @@ class MainScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles_alternative.contentContainer}>
+      <ScrollView contentContainerStyle={styles.vehicleScrollView}>
         <View>
           {this.state.vehicles.map((vehicle, index) => {
             return (
               <VehicleCard
-                  title={vehicle.title}
                   key={index}
+                  vehicle={vehicle}
               />
             );
           })}
@@ -85,9 +148,3 @@ class MainScreen extends React.Component {
 }
 
 export default MainScreen;
-
-const styles_alternative = StyleSheet.create({
-  contentContainer: {
-    paddingVertical: 20
-  }
-});
