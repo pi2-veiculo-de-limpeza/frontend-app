@@ -13,15 +13,8 @@ import {
   FormInput,
   FormValidationMessage } from "react-native-elements";
 import { onSignIn } from "../AuthMethods";
-
-const initialBackgroundImage = require('pi2app/images/sand.jpg');
-
-const styles = StyleSheet.create({
-  initialBackgroundImage: {
-    flex: 1,
-    width: null,
-  }
-});
+import styles from '../styles/GeneralStyles';
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class Login extends React.Component{
   constructor(props) {
@@ -155,7 +148,7 @@ class Login extends React.Component{
 
   render(){
     return(
-      <ImageBackground style={styles.initialBackgroundImage} source={initialBackgroundImage}>
+      <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         {this.renderContext()}
       </ImageBackground>
     )
