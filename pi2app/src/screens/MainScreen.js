@@ -15,9 +15,19 @@ import VehicleCard from '../components/VehicleCard';
 
 class MainScreen extends React.Component {
   state = {
-    refreshing: true,
-    token: '',
+    refreshing: false,
+    token: 'eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoibHVjYXMiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSJ9.MJ3YaOM9LVDHJTBydXHsnoCxmqV0sjAFJHDl4EgeId4',
     vehicles: []
+  }
+  componentDidMount(){
+    this._onRefresh();
+    this.props.navigation.addListener('willFocus', this._onRefresh );
+  }
+
+  componentWillMount(){
+    getUserToken()
+    .then(res => this.setState({ token: res }))
+    .catch(err => alert("Erro"));
   }
 
   addNewVehicle(name='SandBot', battery_state=3, battery_capacity=3, weight='0kg', distance='0m', estimated_time=new Date(), elapsed_time=new Date()){
@@ -33,12 +43,6 @@ class MainScreen extends React.Component {
     }
 
     this.state.vehicles.push(newVehicle)
-  }
-
-  componentWillMount(){
-    getUserToken()
-    .then(res => this.setState({ token: res }))
-    .catch(err => alert("Erro"));
   }
 
   // Navigation header
@@ -61,10 +65,13 @@ class MainScreen extends React.Component {
   };
 
 	_onRefresh = () => {
-		this.setState({refreshing: true});
-		this.loadVehicles().then(() => {
-			this.setState({refreshing: false});
-		});
+
+    if(this.state.refreshing) return;
+
+    // console.log("Refreshing...")
+    this.setState({refreshing: true});
+    
+		this.loadVehicles()
 	}
 
   loadVehicles = async () => {
@@ -80,18 +87,24 @@ class MainScreen extends React.Component {
 			.then((response) => { return response.json() })
 			.then((responseJson) => {
         //Clear vehicles
-        this.state.vehicles=[]
+        this.state.vehicles = [];
 
         //Insert current vehicles
         responseJson.map((json_vehicle, index) => {
           this.addNewVehicle(name=json_vehicle.name);
         })
         
-				this.setState({refreshing: false});
+        // console.log("Vehicle response")
+        this.setState({refreshing: false});
+
+        return
 			})
 			.catch((err) => {
+        this.setState({refreshing: false});
 				console.log(err);
-			})
+      })
+      
+    return 1;
   }
 
   componentWillMount() {
