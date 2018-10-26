@@ -13,6 +13,7 @@ import {
   FormValidationMessage } from "react-native-elements";
 import axios from 'axios';
 import styles from '../styles/GeneralStyles';
+import { onSignIn } from "../AuthMethods";
 import { 
   INITIAL_BACKGROUND_IMG, 
   BASE_URL } from '../constants/GeneralConstants';
@@ -30,7 +31,7 @@ class UpdateUserInfo extends React.Component{
       nameIsValid: true,
       emailIsValid: true,
       passwordIsValid: true,
-      confirmPassword: true,
+      confirmPassword: false,
       isLoading: false,
       userId: '',
       userToken: '',
@@ -79,11 +80,10 @@ class UpdateUserInfo extends React.Component{
     this.setState({ name: response.data.name})
     this.setState({ email: response.data.email})
     this.setState({ password: response.data.password})
-    this.setState({ passwordAgain: response.data.password})
   }
 
   // Send new information 
-  postForm = async () => {
+  updateUserData = async () => {
     this.setState({isLoading: true});
     const userBody = {
       "name": this.state.name,
@@ -91,24 +91,20 @@ class UpdateUserInfo extends React.Component{
       "password": this.state.password
     }
 
-    await axios.post(`${BASE_URL}/users`, userBody)
+    await axios.put(`${BASE_URL}/users/` + this.state.userId, userBody, { headers: { Authorization: this.state.userToken } })
     .then((response) => {
+      console.log('Updated user information.')
       var responseToken = response.data.token;
       var responseId = response.data._id.$oid;
 
       onSignIn(responseToken, responseId);
       this.setState({isLoading: false});
+      this.props.navigation.popToTop();
       this.props.navigation.navigate("MainScreen");
     })
     .catch((error) => {
       this.setState({isLoading: false});
-      if (error.response.status === 422) {
-        this.showAlert('Falha no cadastro', 'Esse email já está cadastrado. Coloque outro e tente novamente.')
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-         console.log('Error', error.message);
-      }
+      console.log('Error', error.message);
     })
   };
 
@@ -119,7 +115,7 @@ class UpdateUserInfo extends React.Component{
        this.state.emailIsValid &&
        this.state.passwordIsValid &&
        this.state.confirmPassword){
-      this.postForm();
+      this.updateUserData();
     } else {
       this.showAlert(titleAlert, bodyAlert);
     }
@@ -247,7 +243,7 @@ class UpdateUserInfo extends React.Component{
               buttonStyle={{ marginTop: 20 }}
               backgroundColor="#03A9F4"
               title="Atualizar informações"
-              onPress={() => {}}
+              onPress={() => {this.submitUpdate()}}
             />
 
             <Button
