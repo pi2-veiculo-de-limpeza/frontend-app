@@ -4,7 +4,7 @@ import {
   View,
   ImageBackground } from 'react-native';
 import { Button } from 'react-native-elements';
-import { onSignOut, getUserToken } from "../AuthMethods";
+import { getUserToken } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
@@ -47,12 +47,6 @@ class MainScreen extends React.Component {
            <Text>
               {this.state.token}
           </Text>
-
-          <Button
-            backgroundColor="#000000"
-            title="Sair"
-            onPress={() => onSignOut().then(() => this.props.navigation.navigate("InitialScreen"))}
-          />
 
           <Button
             backgroundColor="#000000"
