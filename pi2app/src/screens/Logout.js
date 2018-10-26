@@ -40,7 +40,7 @@ class Logout extends React.Component{
 
   cancelLogout(){
     this.props.navigation.popToTop();
-    this.props.navigation.goBack(null);
+    this.props.navigation.goBack('MainScreen');
   }
 
   // Methods to handle POST to the API
