@@ -16,8 +16,7 @@ import { onSignIn } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { 
   INITIAL_BACKGROUND_IMG, 
-  BASE_URL,
-  ERROR_422 } from '../constants/GeneralConstants';
+  BASE_URL } from '../constants/GeneralConstants';
 
 class Register extends React.Component{
   constructor(props) {
@@ -68,7 +67,7 @@ class Register extends React.Component{
     })
     .catch((error) => {
       this.setState({isLoading: false});
-      if (error.response.status === ERROR_422) {
+      if (error.response.status === 422) {
         this.showAlert('Falha no cadastro', 'Esse email já está cadastrado. Coloque outro e tente novamente.')
       } else if (error.request) {
         console.log(error.request);

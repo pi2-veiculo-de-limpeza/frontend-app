@@ -12,9 +12,10 @@ import {
   FormLabel, 
   FormInput,
   FormValidationMessage } from "react-native-elements";
+import axios from 'axios';
 import { onSignIn } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
-import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
+import { INITIAL_BACKGROUND_IMG, BASE_URL } from '../constants/GeneralConstants';
 
 class Login extends React.Component{
   constructor(props) {
@@ -30,13 +31,40 @@ class Login extends React.Component{
   }
 
   // Methods to handle POST to the API
+  // postForm = async () => {
+  //   this.setState({isLoading: true});
+  //   // TODO: implement POST
+  //   // TODO: change parameter of onSignIn to receive token from the POST request
+  //   onSignIn(this.state.email, 'foo')
+  //   .then(() => this.props.navigation.navigate("MainScreen"));
+  //   this.setState({isLoading: false});
+  // };
   postForm = async () => {
     this.setState({isLoading: true});
-    // TODO: implement POST
-    // TODO: change parameter of onSignIn to receive token from the POST request
-    onSignIn(this.state.email, 'foo')
-    .then(() => this.props.navigation.navigate("MainScreen"));
-    this.setState({isLoading: false});
+    const userBody = {
+      "email": this.state.email,
+      "password": this.state.password
+    }
+
+    await axios.post(`${BASE_URL}/sessions`, userBody)
+    .then((response) => {
+      var responseToken = response.data.token;
+      var responseId = response.data._id.$oid;
+
+      onSignIn(responseToken, responseId);
+      this.setState({isLoading: false});
+      this.props.navigation.navigate("MainScreen");
+    })
+    .catch((error) => {
+      this.setState({isLoading: false});
+      if (error.response.status === 404) {
+        this.showAlert('Falha no Login', 'Email e/ou senha incorretos. Tente novamente.')
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+         console.log('Error', error.message);
+      }
+    })
   };
 
   submitRegister = () => {
