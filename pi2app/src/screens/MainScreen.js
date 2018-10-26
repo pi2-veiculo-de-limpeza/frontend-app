@@ -4,19 +4,19 @@ import {
   View,
   ImageBackground } from 'react-native';
 import { Button } from 'react-native-elements';
-import { getUserToken } from "../AuthMethods";
+import { getUserToken, getUserId } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class MainScreen extends React.Component {
   state = {
-    token: '',
+    userToken: '',
+    userId: ''
   }
 
   componentWillMount(){
-    getUserToken()
-    .then(res => this.setState({ token: res }))
-    .catch(err => alert("Erro"));
+    getUserToken().then(res => this.setState({ userToken: res }))
+    getUserId().then(res => this.setState({ userId: res }))
   }
 
   // Navigation header
@@ -36,7 +36,8 @@ class MainScreen extends React.Component {
   };
 
   render() {
-    console.log(this.state.token)
+    console.log('Token: ' + this.state.userToken)
+    console.log('Id: ' + this.state.userId)
     return (
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
       <View>
@@ -45,13 +46,21 @@ class MainScreen extends React.Component {
           </Text>
 
            <Text>
-              {this.state.token}
+              {this.state.userToken}
           </Text>
 
           <Button
             backgroundColor="#000000"
             title="Logout"
             onPress={() => this.props.navigation.navigate("Logout")}
+          />
+
+          <Button
+            backgroundColor="#000000"
+            title="Editar conta"
+            onPress={() => this.props.navigation.navigate("UpdateUserInfo", {
+              userToken: this.state.userToken,
+              userId: this.state.userId})}
           />
       </View>
       </ImageBackground>

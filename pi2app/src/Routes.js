@@ -5,6 +5,7 @@ import Login from './screens/Login';
 import Register from './screens/Register';
 import MainScreen from './screens/MainScreen';
 import Logout from './screens/Logout'
+import UpdateUserInfo from './screens/UpdateUserInfo'
 
 // Routes for a not signed in user must be placed here.
 export const SignedOutRoutes = createStackNavigator({
@@ -30,6 +31,10 @@ export const SignedInRoutes = createStackNavigator({
 
   Logout: {
     screen: Logout
+  },
+
+  UpdateUserInfo: {
+    screen: UpdateUserInfo
   },
 });
 
