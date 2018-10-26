@@ -44,6 +44,16 @@ const styles = StyleSheet.create({
       marginTop: 140,
     },
 
+    registerVehicleButton: {
+      width: 140,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#50DD64',
+      borderRadius: 10,
+      marginBottom: 60,
+    },
+
     vehicleScrollView: {
       paddingVertical: 20
     }
