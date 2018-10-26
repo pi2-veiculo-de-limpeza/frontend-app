@@ -12,7 +12,6 @@ import {
   FormInput,
   FormValidationMessage } from "react-native-elements";
 import axios from 'axios';
-import { getUserToken, getUserId } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { 
   INITIAL_BACKGROUND_IMG, 
@@ -28,9 +27,10 @@ class UpdateUserInfo extends React.Component{
       password: '',
       passwordAgain: '',
       userId: '',
-      emailIsValid: false,
-      passwordIsValid: false,
-      confirmPassword: false,
+      nameIsValid: true,
+      emailIsValid: true,
+      passwordIsValid: true,
+      confirmPassword: true,
       isLoading: false,
       userId: '',
       userToken: '',
@@ -61,12 +61,13 @@ class UpdateUserInfo extends React.Component{
   }
 
   // Methods to handle POST to the API
+  // Get current user information and load on the fields
   getUserInfo = async () => {
     this.setState({isLoading: true});
     await axios.get(`${BASE_URL}/users/` + this.state.userId)
     .then(response => {
-      console.log(response.data)
-      this.setState({isLoading: false});      
+      this.setStateWithResponse(response);
+      this.setState({ isLoading: false });      
     })
     .catch((error) => {
     this.setState({isLoading: false});
@@ -74,6 +75,14 @@ class UpdateUserInfo extends React.Component{
     })
   }
 
+  setStateWithResponse(response){
+    this.setState({ name: response.data.name})
+    this.setState({ email: response.data.email})
+    this.setState({ password: response.data.password})
+    this.setState({ passwordAgain: response.data.password})
+  }
+
+  // Send new information 
   postForm = async () => {
     this.setState({isLoading: true});
     const userBody = {
@@ -103,7 +112,7 @@ class UpdateUserInfo extends React.Component{
     })
   };
 
-  submitRegister = () => {
+  submitUpdate = () => {
     const titleAlert = 'Campo(s) Inválido(s)';
     const bodyAlert = 'Não foi possível realizar o cadastro porque existem entradas inválidas!';
     if(this.state.nameIsValid && 
@@ -116,9 +125,11 @@ class UpdateUserInfo extends React.Component{
     }
   };
 
+  // Send delete account
+
   // Navigation header
   static navigationOptions = {
-    title: 'Cadastro',
+    title: 'Editar Informações',
     headerStyle: {
       backgroundColor: '#53A9F6',
       elevation: 0,
@@ -128,7 +139,7 @@ class UpdateUserInfo extends React.Component{
     headerTitleStyle: {
       alignSelf:'center',
       fontWeight: 'bold',
-      fontSize: 35,
+      fontSize: 30,
     },
   };
 
@@ -204,6 +215,7 @@ class UpdateUserInfo extends React.Component{
               keyboardType='email-address'
               placeholder="Digite seu e-mail"
               onChangeText={(text) => this.validateEmail(text)}
+              value={this.state.email}
             />
             {this.state.emailIsValid == false && this.state.email.length != 0 &&
               <FormValidationMessage>Email inválido!</FormValidationMessage>
@@ -214,6 +226,7 @@ class UpdateUserInfo extends React.Component{
               secureTextEntry 
               placeholder="Digite sua senha"
               onChangeText={(text) => this.validatePassword(text)}
+              value={this.state.password}
             />
             {this.state.passwordIsValid == false && this.state.password.length != 0 &&
               <FormValidationMessage>A senha deve ter entre 6 e 18 caracteres!</FormValidationMessage>
@@ -223,7 +236,8 @@ class UpdateUserInfo extends React.Component{
             <FormInput 
               secureTextEntry
               placeholder="Confirme sua senha"
-              onChangeText={(text) => this.comparePassword(text)} 
+              onChangeText={(text) => this.comparePassword(text)}
+              value={this.state.passwordAgain}
             />
             {this.state.confirmPassword == false && this.state.passwordAgain.length != 0 &&
               <FormValidationMessage>As senhas digitadas são diferentes!</FormValidationMessage>
@@ -232,8 +246,15 @@ class UpdateUserInfo extends React.Component{
             <Button
               buttonStyle={{ marginTop: 20 }}
               backgroundColor="#03A9F4"
-              title="Entrar"
-              onPress={() => {this.submitRegister()}}
+              title="Atualizar informações"
+              onPress={() => {}}
+            />
+
+            <Button
+              buttonStyle={{ marginTop: 20 }}
+              backgroundColor="#BA0006"
+              title="Exluir conta"
+              onPress={() => {}}
             />
           </Card>
           </ScrollView>
