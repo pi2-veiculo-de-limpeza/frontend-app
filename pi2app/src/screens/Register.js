@@ -11,9 +11,10 @@ import {
   FormLabel, 
   FormInput,
   FormValidationMessage } from "react-native-elements";
+import axios from 'axios';
 import { onSignIn } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
-import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
+import { INITIAL_BACKGROUND_IMG, BASE_URL } from '../constants/GeneralConstants';
 
 class Register extends React.Component{
   constructor(props) {
@@ -35,9 +36,22 @@ class Register extends React.Component{
   // Methods to handle POST to the API
   postForm = async () => {
     this.setState({isLoading: true});
-    // TODO: implement POST
-    // TODO: change parameter of onSignIn to receive token from the POST request
-    onSignIn(this.state.name)
+    const userBody = {
+      "name": this.state.name,
+      "email": this.state.email,
+      "password": this.state.password
+    }
+
+    await axios.post(`${BASE_URL}/users`, userBody)
+    .then((response) => {
+      var responseToken = response.data.token;
+      var responseId = response.data._id.$oid;
+
+      onSignIn(responseToken, responseId)
+    })
+    .catch(function(error) {
+      console.error(error);
+    })
     .then(() => this.props.navigation.navigate("MainScreen"));
     this.setState({isLoading: false});
   };

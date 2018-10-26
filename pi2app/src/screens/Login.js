@@ -34,7 +34,7 @@ class Login extends React.Component{
     this.setState({isLoading: true});
     // TODO: implement POST
     // TODO: change parameter of onSignIn to receive token from the POST request
-    onSignIn(this.state.email)
+    onSignIn(this.state.email, 'foo')
     .then(() => this.props.navigation.navigate("MainScreen"));
     this.setState({isLoading: false});
   };

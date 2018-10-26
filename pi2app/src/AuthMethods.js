@@ -1,10 +1,9 @@
 import { AsyncStorage } from 'react-native';
 
-export const TOKEN_KEY = "@tokenKey:key";
-
-export const onSignIn = async (token) => {
+export const onSignIn = async (token, id) => {
   try{
-    await AsyncStorage.setItem(TOKEN_KEY, token);
+    await AsyncStorage.setItem("tokenKey", token);
+    await AsyncStorage.setItem("idKey", id);
     console.log('Saved on Storage.')
   }
   catch(exception) {
@@ -14,7 +13,7 @@ export const onSignIn = async (token) => {
 
 export const onSignOut = async () => {
   try {
-    await AsyncStorage.removeItem(TOKEN_KEY);
+    await AsyncStorage.removeItem("tokenKey");
     console.log('Storage Removed.')
     return true;
   }
@@ -26,7 +25,7 @@ export const onSignOut = async () => {
 
 export const isSignedIn = async () => {
   try{
-    const token = await AsyncStorage.getItem(TOKEN_KEY);
+    const token = await AsyncStorage.getItem("tokenKey");
     return (token !== null) ? true : false;
   }
   catch(exception){
@@ -38,8 +37,19 @@ export const isSignedIn = async () => {
 
 export const getUserToken = async () => {
   try{
-    const token = await AsyncStorage.getItem(TOKEN_KEY);
+    const token = await AsyncStorage.getItem("tokenKey");
     return (token !== null) ? token : null;
+  }
+  catch(exception){
+    console.log('Fail to get user token.')
+    return null;
+  }
+};
+
+export const getUserId = async () => {
+  try{
+    const id = await AsyncStorage.getItem("idKey");
+    return (id !== null) ? id : null;
   }
   catch(exception){
     console.log('Fail to get user token.')
