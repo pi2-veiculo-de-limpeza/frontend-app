@@ -52,7 +52,13 @@ class MainScreen extends React.Component {
             backgroundColor="#000000"
             title="Sair"
             onPress={() => onSignOut().then(() => this.props.navigation.navigate("InitialScreen"))}
-      />
+          />
+
+          <Button
+            backgroundColor="#000000"
+            title="Logout"
+            onPress={() => this.props.navigation.navigate("Logout")}
+          />
       </View>
       </ImageBackground>
 

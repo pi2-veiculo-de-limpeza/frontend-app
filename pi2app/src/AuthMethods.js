@@ -14,6 +14,7 @@ export const onSignIn = async (token, id) => {
 export const onSignOut = async () => {
   try {
     await AsyncStorage.removeItem("tokenKey");
+    await AsyncStorage.removeItem("idKey");
     console.log('Storage Removed.')
     return true;
   }

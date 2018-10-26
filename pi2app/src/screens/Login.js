@@ -2,7 +2,6 @@ import React from "react";
 import { 
   ScrollView, 
   ImageBackground,
-  StyleSheet,
   KeyboardAvoidingView,
   Alert,
   ActivityIndicator } from "react-native";
@@ -30,15 +29,19 @@ class Login extends React.Component{
     };
   }
 
+  // General alert
+  showAlert(title, body){
+    Alert.alert(
+      title,
+      body,
+      [
+        {text: 'Ok', onPress: () => console.log('Ok pressed')},
+      ],
+      { cancelable: false }
+    )
+  }
+
   // Methods to handle POST to the API
-  // postForm = async () => {
-  //   this.setState({isLoading: true});
-  //   // TODO: implement POST
-  //   // TODO: change parameter of onSignIn to receive token from the POST request
-  //   onSignIn(this.state.email, 'foo')
-  //   .then(() => this.props.navigation.navigate("MainScreen"));
-  //   this.setState({isLoading: false});
-  // };
   postForm = async () => {
     this.setState({isLoading: true});
     const userBody = {
@@ -93,18 +96,6 @@ class Login extends React.Component{
       fontSize: 35,
     },
   };
-
-  // General alert
-  showAlert(title, body){
-    Alert.alert(
-      title,
-      body,
-      [
-        {text: 'Ok', onPress: () => console.log('Ok pressed')},
-      ],
-      { cancelable: false }
-    )
-  }
 
   // Methods to handle validity of inputs
   validateEmail = (text) => {
