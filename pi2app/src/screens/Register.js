@@ -14,7 +14,10 @@ import {
 import axios from 'axios';
 import { onSignIn } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
-import { INITIAL_BACKGROUND_IMG, BASE_URL } from '../constants/GeneralConstants';
+import { 
+  INITIAL_BACKGROUND_IMG, 
+  BASE_URL,
+  ERROR_422 } from '../constants/GeneralConstants';
 
 class Register extends React.Component{
   constructor(props) {
@@ -33,6 +36,18 @@ class Register extends React.Component{
     };
   }
 
+  // General alert
+  showAlert(title, body){
+    Alert.alert(
+      title,
+      body,
+      [
+      {text: 'Ok', onPress: () => console.log('Ok')},
+      ],
+      { cancelable: false }
+    )
+  }
+
   // Methods to handle POST to the API
   postForm = async () => {
     this.setState({isLoading: true});
@@ -47,13 +62,20 @@ class Register extends React.Component{
       var responseToken = response.data.token;
       var responseId = response.data._id.$oid;
 
-      onSignIn(responseToken, responseId)
+      onSignIn(responseToken, responseId);
+      this.setState({isLoading: false});
+      this.props.navigation.navigate("MainScreen");
     })
-    .catch(function(error) {
-      console.error(error);
+    .catch((error) => {
+      this.setState({isLoading: false});
+      if (error.response.status === ERROR_422) {
+        this.showAlert('Falha no cadastro', 'Esse email já está cadastrado. Coloque outro e tente novamente.')
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+         console.log('Error', error.message);
+      }
     })
-    .then(() => this.props.navigation.navigate("MainScreen"));
-    this.setState({isLoading: false});
   };
 
   submitRegister = () => {
@@ -84,18 +106,6 @@ class Register extends React.Component{
       fontSize: 35,
     },
   };
-
-  // General alert
-  showAlert(title, body){
-    Alert.alert(
-      title,
-      body,
-      [
-        {text: 'Ok', onPress: () => console.log('Ok pressed')},
-      ],
-      { cancelable: false }
-    )
-  }
 
   // Methods to handle validity of inputs
   validateName = (text) => {
@@ -149,7 +159,7 @@ class Register extends React.Component{
       return (
           <ActivityIndicator size="large" color="#0000ff" />
       )
-    }else{
+    } else {
       return (
         <KeyboardAvoidingView style={{ flex: 1, paddingVertical: 50}} behavior='padding'>
           <ScrollView>
