@@ -13,7 +13,7 @@ import {
   FormValidationMessage } from "react-native-elements";
 import axios from 'axios';
 import styles from '../styles/GeneralStyles';
-import { onSignIn } from "../AuthMethods";
+import { onSignIn, getUserToken, getUserId } from "../AuthMethods";
 import { 
   INITIAL_BACKGROUND_IMG, 
   BASE_URL } from '../constants/GeneralConstants';
@@ -82,7 +82,7 @@ class UpdateUserInfo extends React.Component{
     this.setState({ password: response.data.password})
   }
 
-  // Send new information 
+  // Post new information 
   updateUserData = async () => {
     this.setState({isLoading: true});
     const userBody = {
@@ -99,6 +99,7 @@ class UpdateUserInfo extends React.Component{
 
       onSignIn(responseToken, responseId);
       this.setState({isLoading: false});
+      // Unpack stack navigator and go back to MainScreen
       this.props.navigation.popToTop();
       this.props.navigation.navigate("MainScreen");
     })
@@ -108,6 +109,7 @@ class UpdateUserInfo extends React.Component{
     })
   };
 
+  // Validate fields before calling POST method to update
   submitUpdate = () => {
     const titleAlert = 'Campo(s) Inválido(s)';
     const bodyAlert = 'Não foi possível realizar o cadastro porque existem entradas inválidas!';

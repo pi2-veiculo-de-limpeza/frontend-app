@@ -14,7 +14,7 @@ class MainScreen extends React.Component {
     userId: ''
   }
 
-  componentWillMount(){
+  componentDidMount(){
     getUserToken().then(res => this.setState({ userToken: res }))
     getUserId().then(res => this.setState({ userId: res }))
   }
@@ -36,8 +36,6 @@ class MainScreen extends React.Component {
   };
 
   render() {
-    console.log('Token: ' + this.state.userToken)
-    console.log('Id: ' + this.state.userId)
     return (
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
       <View>
