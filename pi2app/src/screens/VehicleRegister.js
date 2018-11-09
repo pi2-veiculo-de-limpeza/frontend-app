@@ -11,11 +11,12 @@ import {
   FormLabel, 
   FormInput,
   FormValidationMessage, } from 'react-native-elements';
+import { getUserToken, getUserId } from "../AuthMethods";
 
 class VehicleRegister extends React.Component {
   state = {
-    user_id: '5bd3790b282ced0001bcc0ee',
-    token: 'eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoibHVjYXMiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSJ9.MJ3YaOM9LVDHJTBydXHsnoCxmqV0sjAFJHDl4EgeId4',
+    user_id: '',
+    token: '',
     codeIsValid: true,
     robotCode: '',
     robotName: ''
@@ -37,6 +38,13 @@ class VehicleRegister extends React.Component {
     },
   };
 
+  componentWillMount(){
+    getUserToken().then(res => this.setState({ token: res }))
+      .catch(err => alert("Erro"));
+    getUserId().then(res => this.setState({ user_id: res }))
+      .catch(err => alert("Erro"));
+  }
+
   validateCode(text){
     this.setState({ codeIsValid: text.length > 5 });
     this.setState({ robotCode: text });
@@ -49,7 +57,7 @@ class VehicleRegister extends React.Component {
         'Robot Registerd!',
         '🤖',
         [
-          {text: 'Thanks', onPress: () => console.log('Thanks pressed')},
+          {text: 'Thanks', onPress: () => this.props.navigation.navigate("MainScreen")},
         ],
         { cancelable: false }
       )
@@ -58,7 +66,7 @@ class VehicleRegister extends React.Component {
         'Could not Register Robot',
         'Server appears to be offline',
         [
-          {text: 'OK', onPress: () => console.log('OK Pressed')},
+          {text: 'OK'},
         ],
         { cancelable: false }
       )
@@ -67,6 +75,7 @@ class VehicleRegister extends React.Component {
 
 
   requestRegisteringOfNewVehicle = async () => {
+
 		const vehicles_path = `${process.env.BACKEND}/vehicles`;
 
     bodyData = {

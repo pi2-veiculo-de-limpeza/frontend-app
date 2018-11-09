@@ -2,7 +2,6 @@ import React from "react";
 import { 
   ScrollView, 
   ImageBackground,
-  StyleSheet,
   KeyboardAvoidingView,
   Alert,
   ActivityIndicator } from "react-native";
@@ -12,6 +11,7 @@ import {
   FormLabel, 
   FormInput,
   FormValidationMessage } from "react-native-elements";
+import axios from 'axios';
 import { onSignIn } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
@@ -29,14 +29,45 @@ class Login extends React.Component{
     };
   }
 
+  // General alert
+  showAlert(title, body){
+    Alert.alert(
+      title,
+      body,
+      [
+        {text: 'Ok', onPress: () => console.log('Ok pressed')},
+      ],
+      { cancelable: false }
+    )
+  }
+
   // Methods to handle POST to the API
   postForm = async () => {
     this.setState({isLoading: true});
-    // TODO: implement POST
-    // TODO: change parameter of onSignIn to receive token from the POST request
-    onSignIn(this.state.email)
-    .then(() => this.props.navigation.navigate("MainScreen"));
-    this.setState({isLoading: false});
+    const userBody = {
+      "email": this.state.email,
+      "password": this.state.password
+    }
+
+    await axios.post(`${process.env.BACKEND}/sessions`, userBody)
+    .then((response) => {
+      var responseToken = response.data.token;
+      var responseId = response.data._id.$oid;
+
+      onSignIn(responseToken, responseId);
+      this.setState({isLoading: false});
+      this.props.navigation.navigate("MainScreen");
+    })
+    .catch((error) => {
+      this.setState({isLoading: false});
+      if (error.response.status === 404) {
+        this.showAlert('Falha no Login', 'Email e/ou senha incorretos. Tente novamente.')
+      } else if (error.request) {
+        console.log(error.request);
+      } else {
+         console.log('Error', error.message);
+      }
+    })
   };
 
   submitRegister = () => {
@@ -65,18 +96,6 @@ class Login extends React.Component{
       fontSize: 35,
     },
   };
-
-  // General alert
-  showAlert(title, body){
-    Alert.alert(
-      title,
-      body,
-      [
-        {text: 'Ok', onPress: () => console.log('Ok pressed')},
-      ],
-      { cancelable: false }
-    )
-  }
 
   // Methods to handle validity of inputs
   validateEmail = (text) => {
