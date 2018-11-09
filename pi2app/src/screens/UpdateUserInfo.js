@@ -12,13 +12,13 @@ import {
   FormInput,
   FormValidationMessage } from "react-native-elements";
 import axios from 'axios';
-import { onSignIn } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
+import { onSignIn, getUserToken, getUserId } from "../AuthMethods";
 import { 
   INITIAL_BACKGROUND_IMG, 
   BASE_URL } from '../constants/GeneralConstants';
 
-class Register extends React.Component{
+class UpdateUserInfo extends React.Component{
   constructor(props) {
     super(props);
 
@@ -27,12 +27,26 @@ class Register extends React.Component{
       email: '',
       password: '',
       passwordAgain: '',
-      nameIsValid: false,
-      emailIsValid: false,
-      passwordIsValid: false,
+      userId: '',
+      nameIsValid: true,
+      emailIsValid: true,
+      passwordIsValid: true,
       confirmPassword: false,
       isLoading: false,
+      userId: '',
+      userToken: '',
     };
+  }
+
+  // Receive user token and id from navigation and save on state
+  componentWillMount(){
+    const { navigation } = this.props;
+    this.setState({ userToken: navigation.getParam('userToken') })
+    this.setState({ userId: navigation.getParam('userId') })
+  }
+
+  componentDidMount(){
+    this.getUserInfo()
   }
 
   // General alert
@@ -48,7 +62,28 @@ class Register extends React.Component{
   }
 
   // Methods to handle POST to the API
-  postForm = async () => {
+  // Get current user information and load on the fields
+  getUserInfo = async () => {
+    this.setState({isLoading: true});
+    await axios.get(`${BASE_URL}/users/` + this.state.userId)
+    .then(response => {
+      this.setStateWithResponse(response);
+      this.setState({ isLoading: false });      
+    })
+    .catch((error) => {
+    this.setState({isLoading: false});
+    console.log('Error: ' + error)      
+    })
+  }
+
+  setStateWithResponse(response){
+    this.setState({ name: response.data.name})
+    this.setState({ email: response.data.email})
+    this.setState({ password: response.data.password})
+  }
+
+  // Post new information 
+  updateUserData = async () => {
     this.setState({isLoading: true});
     const userBody = {
       "name": this.state.name,
@@ -56,43 +91,43 @@ class Register extends React.Component{
       "password": this.state.password
     }
 
-    await axios.post(`${BASE_URL}/users`, userBody)
+    await axios.put(`${BASE_URL}/users/` + this.state.userId, userBody, { headers: { Authorization: this.state.userToken } })
     .then((response) => {
+      console.log('Updated user information.')
       var responseToken = response.data.token;
       var responseId = response.data._id.$oid;
 
       onSignIn(responseToken, responseId);
       this.setState({isLoading: false});
+      // Unpack stack navigator and go back to MainScreen
+      this.props.navigation.popToTop();
       this.props.navigation.navigate("MainScreen");
     })
     .catch((error) => {
       this.setState({isLoading: false});
-      if (error.response.status === 422) {
-        this.showAlert('Falha no cadastro', 'Esse email já está cadastrado. Coloque outro e tente novamente.')
-      } else if (error.request) {
-        console.log(error.request);
-      } else {
-         console.log('Error', error.message);
-      }
+      console.log('Error', error.message);
     })
   };
 
-  submitRegister = () => {
+  // Validate fields before calling POST method to update
+  submitUpdate = () => {
     const titleAlert = 'Campo(s) Inválido(s)';
     const bodyAlert = 'Não foi possível realizar o cadastro porque existem entradas inválidas!';
     if(this.state.nameIsValid && 
        this.state.emailIsValid &&
        this.state.passwordIsValid &&
        this.state.confirmPassword){
-      this.postForm();
+      this.updateUserData();
     } else {
       this.showAlert(titleAlert, bodyAlert);
     }
   };
 
+  // Send delete account
+
   // Navigation header
   static navigationOptions = {
-    title: 'Cadastro',
+    title: 'Editar Informações',
     headerStyle: {
       backgroundColor: '#53A9F6',
       elevation: 0,
@@ -102,7 +137,7 @@ class Register extends React.Component{
     headerTitleStyle: {
       alignSelf:'center',
       fontWeight: 'bold',
-      fontSize: 35,
+      fontSize: 30,
     },
   };
 
@@ -178,6 +213,7 @@ class Register extends React.Component{
               keyboardType='email-address'
               placeholder="Digite seu e-mail"
               onChangeText={(text) => this.validateEmail(text)}
+              value={this.state.email}
             />
             {this.state.emailIsValid == false && this.state.email.length != 0 &&
               <FormValidationMessage>Email inválido!</FormValidationMessage>
@@ -188,6 +224,7 @@ class Register extends React.Component{
               secureTextEntry 
               placeholder="Digite sua senha"
               onChangeText={(text) => this.validatePassword(text)}
+              value={this.state.password}
             />
             {this.state.passwordIsValid == false && this.state.password.length != 0 &&
               <FormValidationMessage>A senha deve ter entre 6 e 18 caracteres!</FormValidationMessage>
@@ -197,7 +234,8 @@ class Register extends React.Component{
             <FormInput 
               secureTextEntry
               placeholder="Confirme sua senha"
-              onChangeText={(text) => this.comparePassword(text)} 
+              onChangeText={(text) => this.comparePassword(text)}
+              value={this.state.passwordAgain}
             />
             {this.state.confirmPassword == false && this.state.passwordAgain.length != 0 &&
               <FormValidationMessage>As senhas digitadas são diferentes!</FormValidationMessage>
@@ -206,8 +244,15 @@ class Register extends React.Component{
             <Button
               buttonStyle={{ marginTop: 20 }}
               backgroundColor="#03A9F4"
-              title="Entrar"
-              onPress={() => {this.submitRegister()}}
+              title="Atualizar informações"
+              onPress={() => {this.submitUpdate()}}
+            />
+
+            <Button
+              buttonStyle={{ marginTop: 20 }}
+              backgroundColor="#BA0006"
+              title="Exluir conta"
+              onPress={() => {}}
             />
           </Card>
           </ScrollView>
@@ -225,4 +270,4 @@ class Register extends React.Component{
   }
 }
 
-export default Register;
+export default UpdateUserInfo;

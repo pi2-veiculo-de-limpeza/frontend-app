@@ -4,11 +4,12 @@ import {
   View,
   TouchableHighlight,
   ScrollView,
-  RefreshControl } from 'react-native';
+  RefreshControl,
+  ImageBackground } from 'react-native';
 import { Card, ListItem, Button, Icon, Badge } from 'react-native-elements';
-import { onSignOut, getUserToken } from "../AuthMethods";
+import { getUserToken, getUserId } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
-import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
+import { INITIAL_BACKGROUND_IMG, BASE_URL } from '../constants/GeneralConstants';
 import VehicleCard from '../components/VehicleCard';
 
 
@@ -17,7 +18,9 @@ class MainScreen extends React.Component {
   state = {
     refreshing: true,
     token: '',
-    vehicles: []
+    vehicles: [],
+    userToken: '',
+    userId: ''
   }
 
   addNewVehicle(name='SandBot', battery_state=3, battery_capacity=3, weight='0kg', distance='0m', estimated_time=new Date(), elapsed_time=new Date()){
@@ -35,10 +38,9 @@ class MainScreen extends React.Component {
     this.state.vehicles.push(newVehicle)
   }
 
-  componentWillMount(){
-    getUserToken()
-    .then(res => this.setState({ token: res }))
-    .catch(err => alert("Erro"));
+  componentDidMount(){
+    getUserToken().then(res => this.setState({ userToken: res })).then(this.loadVehicles())
+    getUserId().then(res => this.setState({ userId: res }))
   }
 
   // Navigation header
@@ -74,10 +76,12 @@ class MainScreen extends React.Component {
 			method: 'GET',
 			headers: {
         'Content-Type': 'application/json',
-        'Authorization' : this.state.token
+        'Authorization' : this.state.userToken
 			}
 		})
-			.then((response) => { return response.json() })
+			.then((response) => {
+        return response.json()
+      })
 			.then((responseJson) => {
         //Clear vehicles
         this.state.vehicles=[]
@@ -87,19 +91,20 @@ class MainScreen extends React.Component {
           this.addNewVehicle(name=json_vehicle.name);
         })
         
-				this.setState({refreshing: false});
+        this.setState({refreshing: false});
 			})
 			.catch((err) => {
 				console.log(err);
 			})
   }
 
-  componentWillMount() {
-		this.loadVehicles();
-	}
+  // componentWillMount() {
+	// 	this.loadVehicles();
+	// }
 
   render() {
     return (
+      <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
       <ScrollView contentContainerStyle={styles.vehicleScrollView} refreshControl={
         <RefreshControl
           refreshing={this.state.refreshing}
@@ -118,6 +123,23 @@ class MainScreen extends React.Component {
           })}
         </View>
       </ScrollView>
+      <View>
+          <Button
+            backgroundColor="#000000"
+            title="Logout"
+            onPress={() => this.props.navigation.navigate("Logout")}
+          />
+
+          <Button
+            backgroundColor="#000000"
+            title="Editar conta"
+            onPress={() => this.props.navigation.navigate("UpdateUserInfo", {
+              userToken: this.state.userToken,
+              userId: this.state.userId})}
+          />
+      </View>
+      </ImageBackground>
+
     );
   }
 }
