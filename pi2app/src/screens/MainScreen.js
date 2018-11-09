@@ -4,9 +4,10 @@ import {
   View,
   TouchableHighlight,
   ScrollView,
-  RefreshControl } from 'react-native';
+  RefreshControl,
+  ImageBackground } from 'react-native';
 import { Card, ListItem, Button, Icon, Badge } from 'react-native-elements';
-import { onSignOut, getUserToken } from "../AuthMethods";
+import { getUserToken, getUserId } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 import VehicleCard from '../components/VehicleCard';
@@ -16,18 +17,21 @@ import VehicleCard from '../components/VehicleCard';
 class MainScreen extends React.Component {
   state = {
     refreshing: false,
-    token: 'eyJhbGciOiJIUzI1NiJ9.eyJuYW1lIjoibHVjYXMiLCJlbWFpbCI6ImVtYWlsQGdtYWlsLmNvbSJ9.MJ3YaOM9LVDHJTBydXHsnoCxmqV0sjAFJHDl4EgeId4',
-    vehicles: []
+    vehicles: [],
+    userToken: '',
+    userId: ''
   }
   componentDidMount(){
+    
     this._onRefresh();
     this.props.navigation.addListener('willFocus', this._onRefresh );
   }
 
   componentWillMount(){
-    getUserToken()
-    .then(res => this.setState({ token: res }))
-    .catch(err => alert("Erro"));
+    getUserToken().then(res => this.setState({ userToken: res }))
+      .catch(err => alert("Erro"));
+    getUserId().then(res => this.setState({ userId: res }))
+      .catch(err => alert("Erro"));
   }
 
   addNewVehicle(name='SandBot', battery_state=3, battery_capacity=3, weight='0kg', distance='0m', estimated_time=new Date(), elapsed_time=new Date()){
@@ -60,14 +64,19 @@ class MainScreen extends React.Component {
         fontWeight: 'bold',
         fontSize: 35,
       },
-      headerRight:<Icon raised name='plus' type='font-awesome' color='green' onPress={ () => navigation.navigate("VehicleRegister") } />
+      headerRight:
+            <Icon
+              raised name='plus' 
+              type='font-awesome' 
+              color='green' 
+              onPress={ () => navigation.navigate("VehicleRegister") } 
+            />
     }
   };
 
 	_onRefresh = () => {
 
     if(this.state.refreshing) return;
-
     // console.log("Refreshing...")
     this.setState({refreshing: true});
     
@@ -75,19 +84,29 @@ class MainScreen extends React.Component {
 	}
 
   loadVehicles = async () => {
+
+    // wait 1s for db get userToken
+    if (this.state.userToken == undefined || this.state.userToken == ""){
+      await sleep(1000);
+    }
+
 		const vehicles_path = `${process.env.BACKEND}/vehicles`;
 
 		fetch(vehicles_path, {
 			method: 'GET',
 			headers: {
         'Content-Type': 'application/json',
-        'Authorization' : this.state.token
+        'Authorization' : this.state.userToken
 			}
 		})
-			.then((response) => { return response.json() })
+			.then((response) => {
+        return response.json()
+      })
 			.then((responseJson) => {
         //Clear vehicles
         this.state.vehicles = [];
+
+        console.log(responseJson)
 
         //Insert current vehicles
         responseJson.map((json_vehicle, index) => {
@@ -107,12 +126,9 @@ class MainScreen extends React.Component {
     return 1;
   }
 
-  componentWillMount() {
-		this.loadVehicles();
-	}
-
   render() {
     return (
+      <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
       <ScrollView contentContainerStyle={styles.vehicleScrollView} refreshControl={
         <RefreshControl
           refreshing={this.state.refreshing}
@@ -131,8 +147,29 @@ class MainScreen extends React.Component {
           })}
         </View>
       </ScrollView>
+      <View>
+          <Button
+            backgroundColor="#000000"
+            title="Logout"
+            onPress={() => this.props.navigation.navigate("Logout")}
+          />
+
+          <Button
+            backgroundColor="#000000"
+            title="Editar conta"
+            onPress={() => this.props.navigation.navigate("UpdateUserInfo", {
+              userToken: this.state.userToken,
+              userId: this.state.userId})}
+          />
+      </View>
+      </ImageBackground>
+
     );
   }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export default MainScreen;

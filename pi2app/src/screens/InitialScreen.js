@@ -5,13 +5,13 @@ import {
   ImageBackground,
   TouchableOpacity } from 'react-native';
 import styles from '../styles/GeneralStyles';
-import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants'
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class InitialScreen extends React.Component {
   static navigationOptions = {
     header: null,
   };
-
+  
   render() {
     return (
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
