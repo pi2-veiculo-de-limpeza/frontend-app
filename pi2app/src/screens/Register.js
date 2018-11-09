@@ -15,8 +15,7 @@ import axios from 'axios';
 import { onSignIn } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { 
-  INITIAL_BACKGROUND_IMG, 
-  BASE_URL } from '../constants/GeneralConstants';
+  INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class Register extends React.Component{
   constructor(props) {
@@ -56,7 +55,7 @@ class Register extends React.Component{
       "password": this.state.password
     }
 
-    await axios.post(`${BASE_URL}/users`, userBody)
+    await axios.post(`${process.env.BACKEND}/users`, userBody)
     .then((response) => {
       var responseToken = response.data.token;
       var responseId = response.data._id.$oid;
@@ -66,6 +65,8 @@ class Register extends React.Component{
       this.props.navigation.navigate("MainScreen");
     })
     .catch((error) => {
+      console.log(error)
+
       this.setState({isLoading: false});
       if (error.response.status === 422) {
         this.showAlert('Falha no cadastro', 'Esse email já está cadastrado. Coloque outro e tente novamente.')

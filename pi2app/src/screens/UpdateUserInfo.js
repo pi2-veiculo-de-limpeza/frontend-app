@@ -14,9 +14,7 @@ import {
 import axios from 'axios';
 import styles from '../styles/GeneralStyles';
 import { onSignIn, getUserToken, getUserId } from "../AuthMethods";
-import { 
-  INITIAL_BACKGROUND_IMG, 
-  BASE_URL } from '../constants/GeneralConstants';
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class UpdateUserInfo extends React.Component{
   constructor(props) {
@@ -65,7 +63,7 @@ class UpdateUserInfo extends React.Component{
   // Get current user information and load on the fields
   getUserInfo = async () => {
     this.setState({isLoading: true});
-    await axios.get(`${BASE_URL}/users/` + this.state.userId)
+    await axios.get(`${process.env.BACKEND}/users/` + this.state.userId)
     .then(response => {
       this.setStateWithResponse(response);
       this.setState({ isLoading: false });      
@@ -91,7 +89,7 @@ class UpdateUserInfo extends React.Component{
       "password": this.state.password
     }
 
-    await axios.put(`${BASE_URL}/users/` + this.state.userId, userBody, { headers: { Authorization: this.state.userToken } })
+    await axios.put(`${process.env.BACKEND}/users/` + this.state.userId, userBody, { headers: { Authorization: this.state.userToken } })
     .then((response) => {
       console.log('Updated user information.')
       var responseToken = response.data.token;

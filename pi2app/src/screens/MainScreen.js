@@ -9,7 +9,7 @@ import {
 import { Card, ListItem, Button, Icon, Badge } from 'react-native-elements';
 import { getUserToken, getUserId } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
-import { INITIAL_BACKGROUND_IMG, BASE_URL } from '../constants/GeneralConstants';
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 import VehicleCard from '../components/VehicleCard';
 
 

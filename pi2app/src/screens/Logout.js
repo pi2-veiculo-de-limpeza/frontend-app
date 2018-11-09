@@ -6,7 +6,7 @@ import {
 import axios from 'axios';
 import { getUserToken, onSignOut } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
-import { INITIAL_BACKGROUND_IMG, BASE_URL } from '../constants/GeneralConstants';
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class Logout extends React.Component{
   state = {
@@ -47,7 +47,7 @@ class Logout extends React.Component{
   confirmLogout = async () => {
     this.setState({isLoading: true});
 
-    await axios.delete(`${BASE_URL}/sessions/destroy`, { data: { token: this.state.token } })
+    await axios.delete(`${process.env.BACKEND}/sessions/destroy`, { data: { token: this.state.token } })
     .then(() => {
       onSignOut();
       this.setState({isLoading: false});

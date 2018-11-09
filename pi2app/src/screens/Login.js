@@ -14,7 +14,7 @@ import {
 import axios from 'axios';
 import { onSignIn } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
-import { INITIAL_BACKGROUND_IMG, BASE_URL } from '../constants/GeneralConstants';
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class Login extends React.Component{
   constructor(props) {
@@ -49,7 +49,7 @@ class Login extends React.Component{
       "password": this.state.password
     }
 
-    await axios.post(`${BASE_URL}/sessions`, userBody)
+    await axios.post(`${process.env.BACKEND}/sessions`, userBody)
     .then((response) => {
       var responseToken = response.data.token;
       var responseId = response.data._id.$oid;
