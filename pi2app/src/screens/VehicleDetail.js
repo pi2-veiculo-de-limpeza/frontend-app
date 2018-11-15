@@ -4,9 +4,13 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  StyleSheet,
-  ActivityIndicator } from 'react-native';
+  ActivityIndicator,
+  ImageBackground } 
+from 'react-native';
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
+import CreateMissionMapStyle from '../styles/CreateMissionMapStyle';
+import styles from '../styles/GeneralStyles';
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 const { width, height } = Dimensions.get('window');
 
@@ -130,6 +134,10 @@ class VehicleDetail extends React.Component {
     }
   }
 
+  static navigationOptions = {
+    header: null,
+  };
+
   render() {
     const mapOptions = {
       scrollEnabled: true,
@@ -143,15 +151,17 @@ class VehicleDetail extends React.Component {
     // While getting user actual location, displays loadind
     if(this.state.isLoading == true){
       return (
-          <ActivityIndicator size="large" color="#0000ff" />
+        <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
+          <ActivityIndicator size="large" color="#0000ff" style={styles.activityIndicator}/>
+        </ImageBackground>
       )
     } else {
     return (
-      <View style={styles.container}>
+      <View style={CreateMissionMapStyle.container}>
         <MapView
           provider={this.props.provider}
           initialRegion={this.state.region}
-          style={styles.map}
+          style={CreateMissionMapStyle.map}
           mapType={MAP_TYPES.HYBRID}
           onPress={e => this.onPress(e)}
           {...mapOptions}
@@ -177,11 +187,11 @@ class VehicleDetail extends React.Component {
             />
           )}
         </MapView>
-        <View style={styles.buttonContainer}>
+        <View style={CreateMissionMapStyle.buttonContainer}>
           {this.state.editing && (
             <TouchableOpacity
               onPress={() => this.createHole()}
-              style={[styles.bubble, styles.button]}
+              style={[CreateMissionMapStyle.bubble, CreateMissionMapStyle.button]}
             >
               <Text>{this.state.creatingHole ? 'Finish Hole' : 'Create Hole'}</Text>
             </TouchableOpacity>
@@ -189,7 +199,7 @@ class VehicleDetail extends React.Component {
           {this.state.editing && (
             <TouchableOpacity
               onPress={() => this.finish()}
-              style={[styles.bubble, styles.button]}
+              style={[CreateMissionMapStyle.bubble, CreateMissionMapStyle.button]}
             >
               <Text>Finish</Text>
             </TouchableOpacity>
@@ -204,37 +214,5 @@ class VehicleDetail extends React.Component {
 VehicleDetail.propTypes = {
   provider: ProviderPropType,
 };
-
-const styles = StyleSheet.create({
-  container: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  map: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  bubble: {
-    backgroundColor: 'rgba(255,255,255,0.7)',
-    paddingHorizontal: 18,
-    paddingVertical: 12,
-    borderRadius: 20,
-  },
-  latlng: {
-    width: 200,
-    alignItems: 'stretch',
-  },
-  button: {
-    width: 80,
-    paddingHorizontal: 12,
-    alignItems: 'center',
-    marginHorizontal: 10,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    marginVertical: 20,
-    backgroundColor: 'transparent',
-  },
-});
 
 export default VehicleDetail;

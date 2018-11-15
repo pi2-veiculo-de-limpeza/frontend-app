@@ -27,6 +27,13 @@ const styles = StyleSheet.create({
       fontSize: 20,
       color: 'white',
     },
+
+    activityIndicator: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 80
+   },
   
     registerButton: {
       width: 320,
