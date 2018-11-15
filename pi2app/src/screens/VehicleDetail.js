@@ -13,14 +13,12 @@ import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 const { width, height } = Dimensions.get('window');
-
 const ASPECT_RATIO = width / height;
-const LATITUDE_DELTA = 0.0922;
+const LATITUDE_DELTA = 0.0013; // Used to set initial map zoon
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 let id = 0;
 
-// TODO: Ver problema do fillColor, buscar meio de abrir mapa com zoom
-// e pegar coordenadas atuais do usuário
+// TODO: Ver problema do fillColor
 
 class VehicleDetail extends React.Component {
   constructor(props) {
@@ -58,6 +56,7 @@ class VehicleDetail extends React.Component {
     );
   }
 
+  // Call when user finishes to drawn the polygon
   finish() {
     const { polygons, editing } = this.state;
     this.setState({
