@@ -4,14 +4,13 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  StyleSheet } from 'react-native';
+  StyleSheet,
+  ActivityIndicator } from 'react-native';
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
 
 const { width, height } = Dimensions.get('window');
 
 const ASPECT_RATIO = width / height;
-const LATITUDE = -15.867900;
-const LONGITUDE = -48.081260;
 const LATITUDE_DELTA = 0.0922;
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 let id = 0;
@@ -20,18 +19,39 @@ let id = 0;
 // e pegar coordenadas atuais do usuário
 
 class VehicleDetail extends React.Component {
-  state = {
-    token: '',
-    vehicle: {},
-    region: {
-      latitude: LATITUDE,
-      longitude: LONGITUDE,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
+  constructor(props) {
+    super(props);
+  
+    this.state = {
+      token: '',
+      vehicle: {},
+      isLoading: true,
+      region: {
+        latitude: 0.0,
+        longitude: 0.0,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      },
+      polygons: [],
+      editing: null,
+      creatingHole: false,
+    }
+  }
+
+  componentDidMount(){
+    navigator.geolocation.getCurrentPosition((position) => {
+      this.setState({
+        region: {
+          ...this.state.region,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        },
+        isLoading: false
+      })
     },
-    polygons: [],
-    editing: null,
-    creatingHole: false,
+    (error) => console.log("error: " + error.message),
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+    );
   }
 
   finish() {
@@ -120,13 +140,19 @@ class VehicleDetail extends React.Component {
       mapOptions.onPanDrag = e => this.onPress(e);
     }
 
+    // While getting user actual location, displays loadind
+    if(this.state.isLoading == true){
+      return (
+          <ActivityIndicator size="large" color="#0000ff" />
+      )
+    } else {
     return (
       <View style={styles.container}>
         <MapView
           provider={this.props.provider}
+          initialRegion={this.state.region}
           style={styles.map}
           mapType={MAP_TYPES.HYBRID}
-          initialRegion={this.state.region}
           onPress={e => this.onPress(e)}
           {...mapOptions}
         >
@@ -171,6 +197,7 @@ class VehicleDetail extends React.Component {
         </View>
       </View>
     );
+          }
   }
 }
 
