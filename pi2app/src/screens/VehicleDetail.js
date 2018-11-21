@@ -5,20 +5,19 @@ import {
   Dimensions,
   TouchableOpacity,
   ActivityIndicator,
-  ImageBackground } 
+  ImageBackground,
+  Alert } 
 from 'react-native';
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
 import CreateMissionMapStyle from '../styles/CreateMissionMapStyle';
 import styles from '../styles/GeneralStyles';
-import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
+import { INITIAL_BACKGROUND_IMG, MAP_HELP_MESSAGE } from '../constants/GeneralConstants';
 
 const { width, height } = Dimensions.get('window');
 const ASPECT_RATIO = width / height;
 const LATITUDE_DELTA = 0.0013; // Used to set initial map zoon
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 let id = 0;
-
-// TODO: Ver problema do fillColor
 
 class VehicleDetail extends React.Component {
   constructor(props) {
@@ -145,6 +144,18 @@ class VehicleDetail extends React.Component {
     header: null,
   };
 
+  // General alert
+  showAlert(title, body){
+    Alert.alert(
+      title,
+      body,
+      [
+        {text: 'Ok', onPress: () => console.log('Ok pressed')},
+      ],
+      { cancelable: false }
+    )
+  }
+
   render() {
     const mapOptions = {
       scrollEnabled: true,
@@ -201,6 +212,14 @@ class VehicleDetail extends React.Component {
                 style={[CreateMissionMapStyle.bubble, CreateMissionMapStyle.button]}
               >
                 <Text>Delimitar área</Text>
+              </TouchableOpacity>
+            )}
+            {this.state.editing && !this.state.creatingHole && (
+              <TouchableOpacity
+                onPress={() => this.showAlert('Ajuda', MAP_HELP_MESSAGE)}
+                style={[CreateMissionMapStyle.bubble, CreateMissionMapStyle.button]}
+              >
+                <Text>Ajuda</Text>
               </TouchableOpacity>
             )}
             {this.state.creatingHole && (
