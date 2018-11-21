@@ -94,6 +94,14 @@ class VehicleDetail extends React.Component {
     }
   }
 
+  deletePolygon(){
+    this.setState({
+      editing: null,
+      creatingHole: false,
+      polygons: [],
+    });
+  }
+
   onPress(e) {
     const { editing, creatingHole } = this.state;
     if (!editing) {
@@ -155,58 +163,66 @@ class VehicleDetail extends React.Component {
         </ImageBackground>
       )
     } else {
-    return (
-      <View style={CreateMissionMapStyle.container}>
-        <MapView
-          provider={this.props.provider}
-          initialRegion={this.state.region}
-          style={CreateMissionMapStyle.map}
-          mapType={MAP_TYPES.HYBRID}
-          onPress={e => this.onPress(e)}
-          {...mapOptions}
-        >
-          {this.state.polygons.map(polygon => (
-            <Polygon
-              key={polygon.id}
-              coordinates={polygon.coordinates}
-              holes={polygon.holes}
-              fillColor="rgba(255, 0, 0, 0.3)"
-              strokeColor="#eeff00"
-              strokeWidth={2}
-            />
-          ))}
-          {this.state.editing && (
-            <Polygon
-              key={this.state.editing.id}
-              coordinates={this.state.editing.coordinates}
-              holes={this.state.editing.holes}
-              strokeColor="#000"
-              fillColor="rgba(255,0,0,0.5)"
-              strokeWidth={1}
-            />
-          )}
-        </MapView>
-        <View style={CreateMissionMapStyle.buttonContainer}>
-          {this.state.editing && (
-            <TouchableOpacity
-              onPress={() => this.createHole()}
-              style={[CreateMissionMapStyle.bubble, CreateMissionMapStyle.button]}
-            >
-              <Text>{this.state.creatingHole ? 'Finish Hole' : 'Create Hole'}</Text>
-            </TouchableOpacity>
-          )}
-          {this.state.editing && (
-            <TouchableOpacity
-              onPress={() => this.finish()}
-              style={[CreateMissionMapStyle.bubble, CreateMissionMapStyle.button]}
-            >
-              <Text>Finish</Text>
-            </TouchableOpacity>
-          )}
+      return (
+        <View style={CreateMissionMapStyle.container}>
+          <MapView
+            provider={this.props.provider}
+            initialRegion={this.state.region}
+            style={CreateMissionMapStyle.map}
+            mapType={MAP_TYPES.HYBRID}
+            onPress={e => this.onPress(e)}
+            {...mapOptions}
+          >
+            {this.state.polygons.map(polygon => (
+              <Polygon
+                key={polygon.id}
+                coordinates={polygon.coordinates}
+                holes={polygon.holes}
+                fillColor="rgba(255, 0, 0, 0.3)"
+                strokeColor="#eeff00"
+                strokeWidth={2}
+              />
+            ))}
+            {this.state.editing && (
+              <Polygon
+                key={this.state.editing.id}
+                coordinates={this.state.editing.coordinates}
+                holes={this.state.editing.holes}
+                fillColor="rgba(255, 0, 0, 0.3)"
+                strokeColor="#eeff00"
+                strokeWidth={2}
+              />
+            )}
+          </MapView>
+          <View style={CreateMissionMapStyle.buttonContainer}>
+            {this.state.editing && !this.state.creatingHole && (
+              <TouchableOpacity
+                onPress={() => this.createHole()}
+                style={[CreateMissionMapStyle.bubble, CreateMissionMapStyle.button]}
+              >
+                <Text>Delimitar área</Text>
+              </TouchableOpacity>
+            )}
+            {this.state.creatingHole && (
+              <TouchableOpacity
+                onPress={() => this.finish()}
+                style={[CreateMissionMapStyle.bubble, CreateMissionMapStyle.button]}
+              >
+                <Text>Finalizar</Text>
+              </TouchableOpacity>
+            )}
+            {this.state.creatingHole && (
+              <TouchableOpacity
+                onPress={() => this.deletePolygon()}
+                style={[CreateMissionMapStyle.bubble, CreateMissionMapStyle.button]}
+              >
+                <Text>Excluir</Text>
+              </TouchableOpacity>
+            )}
+          </View>
         </View>
-      </View>
-    );
-          }
+      );
+    }
   }
 }
 
