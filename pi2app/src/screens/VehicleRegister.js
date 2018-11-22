@@ -6,12 +6,13 @@ import {
   TouchableOpacity, 
   Alert,
   ScrollView } from 'react-native';
-  import styles from '../styles/GeneralStyles';
+import styles from '../styles/GeneralStyles';
 import { 
   FormLabel, 
   FormInput,
   FormValidationMessage, } from 'react-native-elements';
 import { getUserToken, getUserId } from "../AuthMethods";
+import DefaultButton from "../components/DefaultButton";
 
 class VehicleRegister extends React.Component {
   state = {
@@ -124,16 +125,10 @@ class VehicleRegister extends React.Component {
               value={this.state.robotName}
             />
         </View>
-
-        <View style={{ flex: 1, alignItems: 'center', paddingVertical: 30 }}>
-          <TouchableOpacity
-            style={styles.registerVehicleButton}
-            activeOpacity={0.7}
-            onPress={() => this.requestRegisteringOfNewVehicle()}
-          >
-          <Text style={styles.buttonText}>Cadastrar</Text>
-          </TouchableOpacity>
-        </View>
+        <DefaultButton 
+          text={"Cadastrar"}
+          onPress={() => this.requestRegisteringOfNewVehicle()}
+        />
       </ScrollView>
     );
   }
