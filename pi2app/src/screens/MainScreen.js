@@ -138,11 +138,13 @@ class MainScreen extends React.Component {
         <View>
           {this.state.vehicles.map((vehicle, index) => {
             return (
-              <VehicleCard
-                  key={index}
-                  vehicle={vehicle}
-                  navigation={this.props.navigation}
-              />
+              <TouchableHighlight 
+              key={index}
+              onPress={ () => { this.props.navigation.navigate("VehicleDetail", {vehicle:vehicle}) }}>
+                <VehicleCard
+                    vehicle={vehicle}
+                />
+              </TouchableHighlight>
             );
           })}
         </View>

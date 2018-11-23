@@ -14,11 +14,22 @@ class DefaultButton extends React.Component {
         padding = this.props.padding ? this.props.padding : 30
         ButtonPress = this.props.onPress ? this.props.onPress : () => console.log("Hello from Button")
         text = this.props.text ? this.props.text : "Button"
+        ButtonStyle = this.props.type ? this.props.type : "green"
+
+        if(ButtonStyle == "green"){
+            ButtonStyle = styles.greenButton;
+        }else if(ButtonStyle == "red") {
+            ButtonStyle = styles.redButton;
+        }else if(ButtonStyle == "gray"){
+            ButtonStyle = styles.grayButton;
+        }else{
+            ButtonStyle = styles.grayButton;
+        }
 
         return (
         <View style={{ flex: 1, alignItems: align, paddingVertical: padding }}>
             <TouchableOpacity
-            style={styles.registerVehicleButton}
+            style={ButtonStyle}
             activeOpacity={opacity}
             onPress={ButtonPress}
             >
