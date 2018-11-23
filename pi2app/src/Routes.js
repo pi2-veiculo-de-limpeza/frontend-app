@@ -6,6 +6,7 @@ import Register from './screens/Register';
 import MainScreen from './screens/MainScreen';
 import VehicleDetail from './screens/VehicleDetail';
 import VehicleRegister from './screens/VehicleRegister';
+import VehicleEdit from './screens/VehicleEdit';
 import Logout from './screens/Logout'
 import UpdateUserInfo from './screens/UpdateUserInfo'
 
@@ -37,6 +38,10 @@ export const SignedInRoutes = createStackNavigator({
 
   VehicleRegister: {
     screen: VehicleRegister
+  },
+
+  VehicleEdit: {
+    screen: VehicleEdit
   },
 
   Logout: {

@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       backgroundColor: '#55C583',
       borderRadius: 10,
-      marginBottom: 60,
+      marginBottom: 20,
     },
 
     redButton: {
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       backgroundColor: '#E94B74',
       borderRadius: 10,
-      marginBottom: 60,
+      marginBottom: 20,
     },
 
     grayButton: {
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       backgroundColor: '#858585',
       borderRadius: 10,
-      marginBottom: 60,
+      marginBottom: 20,
     },
 
     vehicleScrollView: {

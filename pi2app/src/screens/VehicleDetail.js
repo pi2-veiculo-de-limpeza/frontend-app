@@ -1,7 +1,9 @@
 import React from 'react';
-import { 
+import {
+  Text, 
   View,
   ScrollView } from 'react-native';
+import { Button } from 'react-native-elements';
 import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
 import VehicleCard from '../components/VehicleCard';
@@ -13,31 +15,47 @@ class VehicleDetail extends React.Component {
     onManual: false
   }
 
-  // Navigation header
-  static navigationOptions = {
-    title: 'Vehicle Detail',
-    headerStyle: {
-      backgroundColor: '#53A9F6',
-      elevation: 0,
-      borderBottomWidth: 0,
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      alignSelf:'center',
-      fontWeight: 'bold',
-      fontSize: 35,
-    },
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.state.params.vehicle.name,
+      headerStyle: {
+        backgroundColor: '#53A9F6',
+        elevation: 0,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        alignSelf:'center',
+        fontWeight: 'bold',
+        fontSize: 35,
+      },
+      headerRight:
+        <Button
+          title={"edit"}
+          clear={true}
+          onPress={ () => navigation.navigate("VehicleEdit", {vehicle: navigation.state.params.vehicle}) } 
+          buttonStyle={{
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            borderColor: "transparent",
+          }}
+          containerStyle={{ alignSelf:'center' }}
+        />
+    }
   };
 
+
   newMission(){
+    // TODO: iniciar mapeamento do terreno
     this.setState({ isInMission:false })
   }
 
   stopMission(){
+    // TODO: atualizar API
     this.setState({ isInMission:true })
   }
 
   startManual(){
+    // TODO: iniciar conexão bluetooth, joystick para controle remoto do Veículo
     this.setState({ onManual:true })
   }
 
@@ -53,13 +71,14 @@ class VehicleDetail extends React.Component {
       button = <DefaultButton
         type={"green"}
         text={"Modo Manual"}
+        padding={15}
         onPress={() => this.startManual()}
       />
     }else {
       button = <DefaultButton
         type={"red"}
-        width={200}
         text={"Sair do Manual"}
+        padding={15}
         onPress={() => this.stopManual()}
       />
     }
@@ -75,13 +94,14 @@ class VehicleDetail extends React.Component {
       button = <DefaultButton
         type={"green"}
         text={"Nova missão"}
+        padding={15}
         onPress={() => this.newMission()}
       />
     }else {
       button = <DefaultButton
         type={"red"}
         text={"Cancelar missão"}
-        width={200}
+        padding={15}
         onPress={() => this.stopMission()}
       />
     }
@@ -106,22 +126,23 @@ class VehicleDetail extends React.Component {
     }else{
       screen = (
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
+          
+          {/* PLACEHOLDER do mapa */}
           <View style={{ 
             flex: 1, 
             alignItems: 'center',
             height: 250,
-            paddingVertical: 30,
+            paddingVertical: 20,
             marginHorizontal: 10,
             backgroundColor: "gray" }}>
+            <Text>Mapa :)</Text>
           </View>
 
           <VehicleCard
             key={1}
             vehicle={params.vehicle}
           />
-
-          {manualButton}
-
+          {manualButton} 
           {missionButton}
 
         </ScrollView>
