@@ -11,8 +11,7 @@ import { getUserToken, getUserId } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 import VehicleCard from '../components/VehicleCard';
-
-
+import DefaultButton from "../components/DefaultButton";
 
 class MainScreen extends React.Component {
   state = {
@@ -136,41 +135,41 @@ class MainScreen extends React.Component {
   render() {
     return (
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
-      <ScrollView contentContainerStyle={styles.vehicleScrollView} refreshControl={
-        <RefreshControl
-          refreshing={this.state.refreshing}
-          onRefresh={this._onRefresh}
-        />
-      }>
-        <View>
-          {this.state.vehicles.map((vehicle, index) => {
-            return (
-              <TouchableHighlight 
-              key={index}
-              onPress={ () => { this.props.navigation.navigate("VehicleDetail", {vehicle:vehicle}) }}>
-                <VehicleCard
-                    vehicle={vehicle}
-                />
-              </TouchableHighlight>
-            );
-          })}
-        </View>
-      </ScrollView>
-      <View>
-          <Button
-            backgroundColor="#000000"
-            title="Logout"
-            onPress={() => this.props.navigation.navigate("Logout")}
+        <ScrollView contentContainerStyle={styles.vehicleScrollView} refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+          />
+        }>
+          <View>
+            {this.state.vehicles.map((vehicle, index) => {
+              return (
+                <TouchableHighlight 
+                key={index}
+                onPress={ () => { this.props.navigation.navigate("VehicleDetail", {vehicle:vehicle}) }}>
+                  <VehicleCard
+                      vehicle={vehicle}
+                  />
+                </TouchableHighlight>
+              );
+            })}
+          </View>
+        </ScrollView>
+        <View style={{flex: 1, flexDirection: 'column'}}>
+          <DefaultButton 
+            text={"Logout"}
+            type={"blue"}
+            onPress={() => this.props.navigation.navigate("Logout")}            
           />
 
-          <Button
-            backgroundColor="#000000"
-            title="Editar conta"
+          <DefaultButton 
+            text={"Editar conta"}
+            type={"blue"}
             onPress={() => this.props.navigation.navigate("UpdateUserInfo", {
               userToken: this.state.userToken,
               userId: this.state.userId})}
           />
-      </View>
+        </View>
       </ImageBackground>
 
     );

@@ -2,16 +2,18 @@ import React from 'react';
 import {
   Text, 
   View,
+  ImageBackground,
   ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
 import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
 import VehicleCard from '../components/VehicleCard';
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class VehicleDetail extends React.Component {
   state = { 
     token: '',
-    isInMission: true,
+    isInMission: false,
     onManual: false
   }
 
@@ -29,29 +31,19 @@ class VehicleDetail extends React.Component {
         fontWeight: 'bold',
         fontSize: 35,
       },
-      headerRight:
-        <Button
-          title={"edit"}
-          clear={true}
-          onPress={ () => navigation.navigate("VehicleEdit", {vehicle: navigation.state.params.vehicle}) } 
-          buttonStyle={{
-            backgroundColor: "rgba(0, 0, 0, 0)",
-            borderColor: "transparent",
-          }}
-          containerStyle={{ alignSelf:'center' }}
-        />
     }
   };
 
 
   newMission(){
     // TODO: iniciar mapeamento do terreno
-    this.setState({ isInMission:false })
+    this.setState({ isInMission:true })
+    this.props.navigation.navigate("MissionDefinition");
   }
 
   stopMission(){
     // TODO: atualizar API
-    this.setState({ isInMission:true })
+    this.setState({ isInMission:false })
   }
 
   startManual(){
@@ -63,41 +55,41 @@ class VehicleDetail extends React.Component {
     this.setState({ onManual:false })
   }
 
-  renderManualButton(){
+  // renderManualButton(){
 
-    let button
+  //   let button
 
-    if(this.state.onManual == false){
-      button = <DefaultButton
-        type={"green"}
-        text={"Modo Manual"}
-        padding={15}
-        onPress={() => this.startManual()}
-      />
-    }else {
-      button = <DefaultButton
-        type={"red"}
-        text={"Sair do Manual"}
-        padding={15}
-        onPress={() => this.stopManual()}
-      />
-    }
+  //   if(this.state.onManual == false){
+  //     button = <DefaultButton
+  //       type={"green"}
+  //       text={"Modo Manual"}
+  //       padding={15}
+  //       onPress={() => this.startManual()}
+  //     />
+  //   }else {
+  //     button = <DefaultButton
+  //       type={"red"}
+  //       text={"Sair do Manual"}
+  //       padding={15}
+  //       onPress={() => this.stopManual()}
+  //     />
+  //   }
 
-    return button
-  }
+  //   return button
+  // }
 
   renderMissionButton(){
 
     let button
 
-    if(this.state.isInMission){
+    if(!this.state.isInMission){
       button = <DefaultButton
         type={"green"}
         text={"Nova missão"}
         padding={15}
         onPress={() => this.newMission()}
       />
-    }else {
+    } else {
       button = <DefaultButton
         type={"red"}
         text={"Cancelar missão"}
@@ -110,21 +102,13 @@ class VehicleDetail extends React.Component {
   }
 
   render() {
-
     var screen;
     const {params} = this.props.navigation.state
 
-    var manualButton = this.renderManualButton()
     var missionButton = this.renderMissionButton()
 
-    if (this.state.isInMission) {
-      screen = (
-        <ScrollView contentContainerStyle={styles.vehicleScrollView}>
-          {missionButton}
-        </ScrollView>
-      )
-    }else{
-      screen = (
+    return(
+      <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
           
           {/* PLACEHOLDER do mapa */}
@@ -142,15 +126,18 @@ class VehicleDetail extends React.Component {
             key={1}
             vehicle={params.vehicle}
           />
-          {manualButton} 
+          <DefaultButton
+            type={"blue"}
+            text={"Editar Robô"}
+            padding={15}
+            onPress={ () => this.props.navigation.navigate("VehicleEdit", {vehicle: params.vehicle}) } 
+          />
           {missionButton}
 
         </ScrollView>
+      </ImageBackground>
       )
     }
-
-    return screen
   }
-}
 
 export default VehicleDetail;

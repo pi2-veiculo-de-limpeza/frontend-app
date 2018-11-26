@@ -1,18 +1,18 @@
 import React from 'react';
 import { 
   View,
-  Button,
-  Text,
-  TouchableOpacity, 
   Alert,
-  ScrollView } from 'react-native';
+  ScrollView,
+  ImageBackground, } from 'react-native';
 import styles from '../styles/GeneralStyles';
 import { 
   FormLabel, 
   FormInput,
-  FormValidationMessage, } from 'react-native-elements';
+  FormValidationMessage,
+  Card, } from 'react-native-elements';
 import { getUserToken, getUserId } from "../AuthMethods";
 import DefaultButton from "../components/DefaultButton";
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class VehicleRegister extends React.Component {
   state = {
@@ -106,30 +106,34 @@ class VehicleRegister extends React.Component {
 
   render() {
     return (
-      <ScrollView contentContainerStyle={styles.vehicleScrollView}>
+      <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}> 
+        <ScrollView contentContainerStyle={styles.vehicleScrollView}>
 
-        <View style={{ paddingHorizontal: 10 }}>
-          <FormLabel>Robot Code</FormLabel>
-            <FormInput 
-              placeholder="42aQ7j4f"
-              onChangeText={(text) => this.validateCode(text)}
-              value={this.state.robotCode}
-            />
-            {this.state.codeIsValid == false &&
-              <FormValidationMessage>Invalid code</FormValidationMessage>
-            }
-          <FormLabel>Robot Name</FormLabel>
-            <FormInput 
-              placeholder="Alfredo"
-              onChangeText={(text) => this.setState( {robotName: text} )}
-              value={this.state.robotName}
-            />
-        </View>
-        <DefaultButton 
-          text={"Cadastrar"}
-          onPress={() => this.requestRegisteringOfNewVehicle()}
-        />
-      </ScrollView>
+          <View style={{ paddingHorizontal: 10 }}>
+            <Card> 
+              <FormLabel>Robot Code</FormLabel>
+                <FormInput 
+                  placeholder="42aQ7j4f"
+                  onChangeText={(text) => this.validateCode(text)}
+                  value={this.state.robotCode}
+                />
+                {this.state.codeIsValid == false &&
+                  <FormValidationMessage>Invalid code</FormValidationMessage>
+                }
+              <FormLabel>Robot Name</FormLabel>
+                <FormInput 
+                  placeholder="Alfredo"
+                  onChangeText={(text) => this.setState( {robotName: text} )}
+                  value={this.state.robotName}
+                />
+            </Card>  
+          </View>
+          <DefaultButton 
+            text={"Cadastrar"}
+            onPress={() => this.requestRegisteringOfNewVehicle()}
+          />
+        </ScrollView>
+      </ImageBackground>
     );
   }
 }

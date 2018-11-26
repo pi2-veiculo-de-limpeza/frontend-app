@@ -1,18 +1,17 @@
 import React from 'react';
 import { 
   View,
-  Button,
-  Text,
-  TouchableOpacity, 
+  ImageBackground, 
   Alert,
   ScrollView } from 'react-native';
 import styles from '../styles/GeneralStyles';
 import { 
   FormLabel, 
   FormInput,
-  FormValidationMessage, } from 'react-native-elements';
+  Card, } from 'react-native-elements';
 import { getUserToken, getUserId } from "../AuthMethods";
 import DefaultButton from "../components/DefaultButton";
+import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 class VehicleEdit extends React.Component {
   state = {
@@ -117,27 +116,31 @@ class VehicleEdit extends React.Component {
   render() {
 
     return (
-      <ScrollView contentContainerStyle={styles.vehicleScrollView}>
+      <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}> 
+        <ScrollView contentContainerStyle={styles.vehicleScrollView}>
 
-        <View style={{ paddingHorizontal: 10 }}>
-          <FormLabel>Robot Name</FormLabel>
-            <FormInput 
-              placeholder="Alfredo"
-              onChangeText={(text) => this.setState( {robotName: text} )}
-              value={this.state.robotName}
-            />
-        </View>
-        <DefaultButton 
-          text={"Salvar"}
-          onPress={() => this.requestRegisteringOfNewVehicle()}
-        />
+          <View style={{ paddingHorizontal: 10 }}>
+            <Card>
+            <FormLabel>Robot Name</FormLabel>
+                <FormInput 
+                  placeholder="Alfredo"
+                  onChangeText={(text) => this.setState( {robotName: text} )}
+                  value={this.state.robotName}
+                />
+            </Card>
+          </View>
+          <DefaultButton 
+            text={"Salvar"}
+            onPress={() => this.requestRegisteringOfNewVehicle()}
+          />
 
-        <DefaultButton 
-          text={"Destruir Robô"}
-          type={"red"}
-          onPress={() => console.log("Destroy all!") }
-        />
-      </ScrollView>
+          <DefaultButton 
+            text={"Destruir Robô"}
+            type={"red"}
+            onPress={() => console.log("Destroy all!") }
+          />
+        </ScrollView>
+      </ImageBackground>
     );
   }
 }

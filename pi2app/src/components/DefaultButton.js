@@ -20,6 +20,8 @@ class DefaultButton extends React.Component {
             ButtonStyle = styles.greenButton;
         }else if(ButtonStyle == "red") {
             ButtonStyle = styles.redButton;
+        }else if(ButtonStyle == "blue"){
+            ButtonStyle = styles.blueButton;
         }else if(ButtonStyle == "gray"){
             ButtonStyle = styles.grayButton;
         }else{

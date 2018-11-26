@@ -71,6 +71,16 @@ const styles = StyleSheet.create({
       marginBottom: 20,
     },
 
+    blueButton: {
+      width: 170,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#4885ed',
+      borderRadius: 10,
+      marginBottom: 20,
+    },
+
     grayButton: {
       width: 140,
       height: 45,
