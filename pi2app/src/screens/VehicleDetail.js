@@ -18,16 +18,52 @@ const LATITUDE_DELTA = 0.00008; // Used to set initial map zoon
 const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 class VehicleDetail extends React.Component {
-  state = { 
-    token: '',
-    isInMission: false,
-    onManual: false,
-    region: {
-      latitude: -15.989938,
-      longitude: -48.044018,
-      latitudeDelta: LATITUDE_DELTA,
-      longitudeDelta: LONGITUDE_DELTA,
-    },
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      token: '',
+      isInMission: false,
+      onManual: false,
+      region: {
+        latitude: -15.989938,
+        longitude: -48.044018,
+        latitudeDelta: LATITUDE_DELTA,
+        longitudeDelta: LONGITUDE_DELTA,
+      },
+      markerPosition: {
+        latitude: -15.989938,
+        longitude: -48.044018,
+      },
+      intervalId: null,
+    }
+    this.getRobotPosition = this.getRobotPosition.bind(this);
+  }
+
+  // TODO: Check if it has a mission to display on map
+  componentDidMount(){
+    this.getRobotPosition()
+    let updateMarker = setInterval(this.getRobotPosition, 2000);
+    this.setState({ intervalId: updateMarker })
+    console.log("INTERVAL ID: " + updateMarker)
+  }
+
+  componentWillUnmount(){
+    clearInterval(this.state.intervalId)
+    console.log("COMPONENTE DESMONTADO")
+  }
+
+  // TODO: Implement with API request
+  getRobotPosition(){
+    let long = this.state.markerPosition.longitude + 0.000005
+    let lat = this.state.markerPosition.latitude + 0.000005
+    this.setState({
+      markerPosition: {
+        latitude: lat,
+        longitude: long,
+      },
+    })
+    console.log("Marker Updated!")
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -139,8 +175,8 @@ class VehicleDetail extends React.Component {
             >
               <Marker
                 coordinate={{
-                  latitude: this.state.region.latitude,
-                  longitude: this.state.region.longitude,
+                  latitude: this.state.markerPosition.latitude,
+                  longitude: this.state.markerPosition.longitude,
                 }}
                 image={rover}
                 >
@@ -151,6 +187,12 @@ class VehicleDetail extends React.Component {
           <VehicleCard
             key={1}
             vehicle={params.vehicle}
+          />
+          <DefaultButton
+            type={"blue"}
+            text={"Teste"}
+            padding={15}
+            onPress={ () => this.getRobotPosition() } 
           />
           <DefaultButton
             type={"blue"}
