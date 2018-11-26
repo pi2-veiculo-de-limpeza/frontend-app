@@ -1,20 +1,33 @@
 import React from 'react';
 import {
-  Text, 
   View,
   ImageBackground,
+  Dimensions,
   ScrollView } from 'react-native';
-import { Button } from 'react-native-elements';
 import styles from '../styles/GeneralStyles';
+import CreateMissionMapStyle from '../styles/CreateMissionMapStyle';
 import DefaultButton from "../components/DefaultButton";
 import VehicleCard from '../components/VehicleCard';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
+import MapView, { MAP_TYPES, Marker, ProviderPropType } from 'react-native-maps';
+import rover from '../images/rover.png';
+
+const { width, height } = Dimensions.get('window');
+const ASPECT_RATIO = width / height;
+const LATITUDE_DELTA = 0.00008; // Used to set initial map zoon
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
 class VehicleDetail extends React.Component {
   state = { 
     token: '',
     isInMission: false,
-    onManual: false
+    onManual: false,
+    region: {
+      latitude: -15.989938,
+      longitude: -48.044018,
+      latitudeDelta: LATITUDE_DELTA,
+      longitudeDelta: LONGITUDE_DELTA,
+    },
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -102,7 +115,6 @@ class VehicleDetail extends React.Component {
   }
 
   render() {
-    var screen;
     const {params} = this.props.navigation.state
 
     var missionButton = this.renderMissionButton()
@@ -119,7 +131,21 @@ class VehicleDetail extends React.Component {
             paddingVertical: 20,
             marginHorizontal: 10,
             backgroundColor: "gray" }}>
-            <Text>Mapa :)</Text>
+            <MapView
+              initialRegion={this.state.region}
+              style={CreateMissionMapStyle.map}
+              mapType={MAP_TYPES.SATELLITE}
+              scrollEnabled={true}
+            >
+              <Marker
+                coordinate={{
+                  latitude: this.state.region.latitude,
+                  longitude: this.state.region.longitude,
+                }}
+                image={rover}
+                >
+              </Marker>
+            </MapView>
           </View>
 
           <VehicleCard
