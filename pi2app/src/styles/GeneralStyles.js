@@ -51,14 +51,34 @@ const styles = StyleSheet.create({
       marginTop: 140,
     },
 
-    registerVehicleButton: {
+    greenButton: {
       width: 140,
       height: 45,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#50DD64',
+      backgroundColor: '#55C583',
       borderRadius: 10,
-      marginBottom: 60,
+      marginBottom: 20,
+    },
+
+    redButton: {
+      width: 170,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#E94B74',
+      borderRadius: 10,
+      marginBottom: 20,
+    },
+
+    grayButton: {
+      width: 140,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#858585',
+      borderRadius: 10,
+      marginBottom: 20,
     },
 
     vehicleScrollView: {

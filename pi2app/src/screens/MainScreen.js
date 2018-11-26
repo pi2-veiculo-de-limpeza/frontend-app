@@ -34,7 +34,7 @@ class MainScreen extends React.Component {
       .catch(err => alert("Erro"));
   }
 
-  addNewVehicle(name='SandBot', battery_state=3, battery_capacity=3, weight='0kg', distance='0m', estimated_time=new Date(), elapsed_time=new Date()){
+  addNewVehicle(name='SandBot', code='123abc', battery_state=3, battery_capacity=3, weight='0kg', distance='0m', estimated_time=new Date(), elapsed_time=new Date()){
 
     var newVehicle = {
       name: name,
@@ -43,7 +43,8 @@ class MainScreen extends React.Component {
       weight: weight,
       distance: distance,
       estimated_time: estimated_time,
-      elapsed_time: elapsed_time
+      elapsed_time: elapsed_time,
+      code: code
     }
 
     this.state.vehicles.push(newVehicle)
@@ -110,7 +111,13 @@ class MainScreen extends React.Component {
 
         //Insert current vehicles
         responseJson.map((json_vehicle, index) => {
-          this.addNewVehicle(name=json_vehicle.name);
+
+          console.log(json_vehicle)
+
+          this.addNewVehicle(
+            name=json_vehicle.name,
+            code=json_vehicle.code
+            );
         })
         
         // console.log("Vehicle response")
@@ -138,11 +145,13 @@ class MainScreen extends React.Component {
         <View>
           {this.state.vehicles.map((vehicle, index) => {
             return (
-              <VehicleCard
-                  key={index}
-                  vehicle={vehicle}
-                  navigation={this.props.navigation}
-              />
+              <TouchableHighlight 
+              key={index}
+              onPress={ () => { this.props.navigation.navigate("VehicleDetail", {vehicle:vehicle}) }}>
+                <VehicleCard
+                    vehicle={vehicle}
+                />
+              </TouchableHighlight>
             );
           })}
         </View>

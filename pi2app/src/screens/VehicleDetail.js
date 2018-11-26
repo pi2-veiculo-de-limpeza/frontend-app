@@ -1,57 +1,155 @@
 import React from 'react';
-import { 
-  Text,
+import {
+  Text, 
   View,
-  TouchableHighlight,
-  ScrollView,
-  TouchableOpacity,
-  RefreshControl } from 'react-native';
-import { Card, ListItem, Button, Icon, Badge } from 'react-native-elements';
-import { onSignOut, getUserToken } from "../AuthMethods";
+  ScrollView } from 'react-native';
+import { Button } from 'react-native-elements';
 import styles from '../styles/GeneralStyles';
-import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
+import DefaultButton from "../components/DefaultButton";
+import VehicleCard from '../components/VehicleCard';
 
 class VehicleDetail extends React.Component {
-  state = {
+  state = { 
     token: '',
-    vehicle: {}
+    isInMission: true,
+    onManual: false
   }
 
-  // Navigation header
-  static navigationOptions = {
-    title: 'Vehicle Detail',
-    headerStyle: {
-      backgroundColor: '#53A9F6',
-      elevation: 0,
-      borderBottomWidth: 0,
-    },
-    headerTintColor: '#fff',
-    headerTitleStyle: {
-      alignSelf:'center',
-      fontWeight: 'bold',
-      fontSize: 35,
-    },
+  static navigationOptions = ({ navigation }) => {
+    return {
+      title: navigation.state.params.vehicle.name,
+      headerStyle: {
+        backgroundColor: '#53A9F6',
+        elevation: 0,
+        borderBottomWidth: 0,
+      },
+      headerTintColor: '#fff',
+      headerTitleStyle: {
+        alignSelf:'center',
+        fontWeight: 'bold',
+        fontSize: 35,
+      },
+      headerRight:
+        <Button
+          title={"edit"}
+          clear={true}
+          onPress={ () => navigation.navigate("VehicleEdit", {vehicle: navigation.state.params.vehicle}) } 
+          buttonStyle={{
+            backgroundColor: "rgba(0, 0, 0, 0)",
+            borderColor: "transparent",
+          }}
+          containerStyle={{ alignSelf:'center' }}
+        />
+    }
   };
 
-  onPress = () => {
-    this.props.navigation.navigate("MissionDefinition");
+
+  newMission(){
+    // TODO: iniciar mapeamento do terreno
+    this.setState({ isInMission:false })
+  }
+
+  stopMission(){
+    // TODO: atualizar API
+    this.setState({ isInMission:true })
+  }
+
+  startManual(){
+    // TODO: iniciar conexão bluetooth, joystick para controle remoto do Veículo
+    this.setState({ onManual:true })
+  }
+
+  stopManual(){
+    this.setState({ onManual:false })
+  }
+
+  renderManualButton(){
+
+    let button
+
+    if(this.state.onManual == false){
+      button = <DefaultButton
+        type={"green"}
+        text={"Modo Manual"}
+        padding={15}
+        onPress={() => this.startManual()}
+      />
+    }else {
+      button = <DefaultButton
+        type={"red"}
+        text={"Sair do Manual"}
+        padding={15}
+        onPress={() => this.stopManual()}
+      />
+    }
+
+    return button
+  }
+
+  renderMissionButton(){
+
+    let button
+
+    if(this.state.isInMission){
+      button = <DefaultButton
+        type={"green"}
+        text={"Nova missão"}
+        padding={15}
+        onPress={() => this.newMission()}
+      />
+    }else {
+      button = <DefaultButton
+        type={"red"}
+        text={"Cancelar missão"}
+        padding={15}
+        onPress={() => this.stopMission()}
+      />
+    }
+
+    return button
   }
 
   render() {
-    return (
-      <ScrollView contentContainerStyle={styles.vehicleScrollView}>
-        <View>
-            <Text>
-                Vehicle Detail
-            </Text>
-        </View>
-        <TouchableOpacity
-         onPress={this.onPress}
-       >
-         <Text> Touch Here </Text>
-       </TouchableOpacity>
-      </ScrollView>
-    );
+
+    var screen;
+    const {params} = this.props.navigation.state
+
+    var manualButton = this.renderManualButton()
+    var missionButton = this.renderMissionButton()
+
+    if (this.state.isInMission) {
+      screen = (
+        <ScrollView contentContainerStyle={styles.vehicleScrollView}>
+          {missionButton}
+        </ScrollView>
+      )
+    }else{
+      screen = (
+        <ScrollView contentContainerStyle={styles.vehicleScrollView}>
+          
+          {/* PLACEHOLDER do mapa */}
+          <View style={{ 
+            flex: 1, 
+            alignItems: 'center',
+            height: 250,
+            paddingVertical: 20,
+            marginHorizontal: 10,
+            backgroundColor: "gray" }}>
+            <Text>Mapa :)</Text>
+          </View>
+
+          <VehicleCard
+            key={1}
+            vehicle={params.vehicle}
+          />
+          {manualButton} 
+          {missionButton}
+
+        </ScrollView>
+      )
+    }
+
+    return screen
   }
 }
 
