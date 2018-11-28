@@ -99,7 +99,7 @@ class VehicleDetail extends React.Component {
                 <TouchableHighlight
                 style={styles.missionNameTouch}
                 key={index}
-                onPress={ () => console.log("MISSION PRESSED")}>
+                onPress={ () => this.props.navigation.navigate("MissionAccompaniment", { mission: mission})}>
                   <Text style={styles.missionTextName}>
                     {mission.name}
                   </Text>

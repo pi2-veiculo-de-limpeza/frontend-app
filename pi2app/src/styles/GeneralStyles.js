@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       backgroundColor: '#328A2E',
       margin: 10,
-      borderRadius: 10,
+      borderRadius: 2,
    },
 
    missionNameView: {
