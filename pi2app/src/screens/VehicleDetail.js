@@ -45,12 +45,10 @@ class VehicleDetail extends React.Component {
     this.getRobotPosition()
     let updateMarker = setInterval(this.getRobotPosition, 2000);
     this.setState({ intervalId: updateMarker })
-    console.log("INTERVAL ID: " + updateMarker)
   }
 
   componentWillUnmount(){
     clearInterval(this.state.intervalId)
-    console.log("COMPONENTE DESMONTADO")
   }
 
   // TODO: Implement with API request
@@ -63,7 +61,6 @@ class VehicleDetail extends React.Component {
         longitude: long,
       },
     })
-    console.log("Marker Updated!")
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -187,12 +184,6 @@ class VehicleDetail extends React.Component {
           <VehicleCard
             key={1}
             vehicle={params.vehicle}
-          />
-          <DefaultButton
-            type={"blue"}
-            text={"Teste"}
-            padding={15}
-            onPress={ () => this.getRobotPosition() } 
           />
           <DefaultButton
             type={"blue"}

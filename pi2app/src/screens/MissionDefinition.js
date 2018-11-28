@@ -91,6 +91,8 @@ class MissionDefinition extends React.Component {
       }
       this.setState({ creatingHole: false });
     }
+    console.log("MAP: " + JSON.stringify(this.state.editing.coordinates))
+    console.log("LENGTH: " + this.state.editing.coordinates.length)
   }
 
   deletePolygon(){
