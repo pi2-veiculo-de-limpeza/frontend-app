@@ -121,13 +121,7 @@ class MissionAccompaniment extends React.Component {
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
           
           {/* PLACEHOLDER do mapa */}
-          <View style={{ 
-            flex: 1, 
-            alignItems: 'center',
-            height: height * 0.7,
-            paddingVertical: 20,
-            marginHorizontal: 10,
-            backgroundColor: "gray" }}>
+          <View style={styles.mapStyle}>
             <MapView
               initialRegion={this.state.region}
               style={CreateMissionMapStyle.map}

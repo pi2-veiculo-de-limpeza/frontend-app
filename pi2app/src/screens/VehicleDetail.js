@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
   TouchableHighlight,
 } from 'react-native';
-import { Card } from 'react-native-elements';
 import axios from 'axios';
 import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
@@ -50,7 +49,7 @@ class VehicleDetail extends React.Component {
   }
 
   newMission(){
-    // TODO: iniciar mapeamento do terreno
+    this.props.navigation.navigate("MissionDefinition")
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -72,8 +71,14 @@ class VehicleDetail extends React.Component {
 
   render() {
     const {params} = this.props.navigation.state
-
-    return(
+    if(this.state.isLoading == true){
+      return (
+        <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
+          <ActivityIndicator size="large" color="#0000ff" style={styles.activityIndicator}/>
+        </ImageBackground>
+      )
+    } else {
+      return (
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
           <VehicleCard
@@ -119,6 +124,7 @@ class VehicleDetail extends React.Component {
       </ImageBackground>
       )
     }
+  }
   }
 
 export default VehicleDetail;

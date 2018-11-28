@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+const { height } = Dimensions.get('window');
+
 
 const styles = StyleSheet.create({
     initialBackgroundImage: {
@@ -81,6 +83,16 @@ const styles = StyleSheet.create({
       marginBottom: 20,
     },
 
+    yellowButton: {
+      width: 170,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#ffd800',
+      borderRadius: 10,
+      marginBottom: 20,
+    },
+
     grayButton: {
       width: 140,
       height: 45,
@@ -128,7 +140,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: 'white',
- },
+  }, 
+
+  mapStyle: {
+    flex: 1, 
+    alignItems: 'center',
+    height: height * 0.7,
+    paddingVertical: 20,
+    marginHorizontal: 10,
+    backgroundColor: "gray"
+  },
 });
 
 export default styles;

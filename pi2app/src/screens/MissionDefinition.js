@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ImageBackground,
+  ScrollView,
   Alert } 
 from 'react-native';
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
+import DefaultButton from "../components/DefaultButton";
 import CreateMissionMapStyle from '../styles/CreateMissionMapStyle';
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG, MAP_HELP_MESSAGE } from '../constants/GeneralConstants';
@@ -33,6 +35,7 @@ class MissionDefinition extends React.Component {
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
+      coordinates: [],
       polygons: [],
       editing: null,
       creatingHole: false,
@@ -58,6 +61,8 @@ class MissionDefinition extends React.Component {
   // Call when user finishes to drawn the polygon
   finish() {
     const { polygons, editing } = this.state;
+    console.log("COORDINATES: " + JSON.stringify(this.state.coordinates))
+    console.log("EDITING: " + JSON.stringify(editing))
     this.setState({
       polygons: [...polygons, editing],
       editing: null,
@@ -91,6 +96,7 @@ class MissionDefinition extends React.Component {
       }
       this.setState({ creatingHole: false });
     }
+    this.setState({ coordinates: this.state.editing.coordinates })
     console.log("MAP: " + JSON.stringify(this.state.editing.coordinates))
     console.log("LENGTH: " + this.state.editing.coordinates.length)
   }
@@ -189,7 +195,9 @@ class MissionDefinition extends React.Component {
       )
     } else {
       return (
-        <View style={CreateMissionMapStyle.container}>
+        <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
+        <ScrollView contentContainerStyle={styles.vehicleScrollView}>
+        <View style={styles.mapStyle}>
           <MapView
             provider={this.props.provider}
             initialRegion={this.state.region}
@@ -228,14 +236,6 @@ class MissionDefinition extends React.Component {
                 <Text>Delimitar área</Text>
               </TouchableOpacity>
             )}
-            {this.state.editing && !this.state.creatingHole && (
-              <TouchableOpacity
-                onPress={() => this.showAlert('Ajuda', MAP_HELP_MESSAGE)}
-                style={[CreateMissionMapStyle.bubble, CreateMissionMapStyle.button]}
-              >
-                <Text>Ajuda</Text>
-              </TouchableOpacity>
-            )}
             {this.state.creatingHole && (
               <TouchableOpacity
                 onPress={() => this.finish()}
@@ -254,6 +254,14 @@ class MissionDefinition extends React.Component {
             )}
           </View>
         </View>
+        <DefaultButton
+            type={"yellow"}
+            text={"Ajuda"}
+            padding={15}
+            onPress={() => this.showAlert('Ajuda', MAP_HELP_MESSAGE)}
+          />
+        </ScrollView>
+        </ImageBackground>
       );
     }
   }
