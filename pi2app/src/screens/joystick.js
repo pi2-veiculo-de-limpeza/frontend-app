@@ -61,17 +61,19 @@ class Joystick extends React.Component {
     const {params} = this.props.navigation.state;
 
     return (
-        <View>
-            <View>
+        <View style={{
+            marginTop:600,
+        }}>
+            <View style={{flex: 1, flexDirection: 'row'}}>
                 {/* Left Wheel */}
-                <View style={[StickStyle.backCircle, {marginLeft:20 ,marginTop:120}]}> 
+                <View style={[StickStyle.backCircle, {marginLeft:30}]}> 
                     <Draggable
                         valueUpdate={this.leftValueUpdate}
                     />
                 </View>
 
                 {/* Right Wheel */}
-                <View style={[StickStyle.backCircle, {marginLeft:20, marginTop:240}]}>
+                <View style={[StickStyle.backCircle, {marginLeft:30}]}>
                     <Draggable 
                         valueUpdate={this.rightValueUpdate}
                     />
@@ -120,22 +122,22 @@ class Draggable extends React.Component {
     componentWillMount() {
       // Add a listener for the delta value change
       this._val = { x:0, y:0 }
-      this.state.pan.addListener((value) => {this.valueUpdate(value.x)} );
+      this.state.pan.addListener((value) => {this.valueUpdate(value.y)} );
       // Initialize PanResponder with move handling
       this.panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gesture) => true,
         onPanResponderMove: (e, gestureState) => {
 
             // console.log(`before_set: ${this.state.pan.x._value}`)
-            corrected_x = this.state.pan.x._value < 0 ? 0 : this.state.pan.x._value
-            corrected_x = this.state.pan.x._value > 50 ? 50 : this.state.pan.x._value
+            corrected = this.state.pan.y._value < 0 ? 0 : this.state.pan.y._value
+            corrected = this.state.pan.y._value > 50 ? 50 : this.state.pan.y._value
 
-            this.state.pan.setValue({ x:corrected_x, y:0})
+            this.state.pan.setValue({ x:0, y:corrected})
             // console.log(`after_set: ${this.state.pan.x._value}`)
    
             Animated.event([
                     null,
-                    {dx: this.state.pan.x, dy: 0},
+                    {dx: 0, dy: this.state.pan.y},
                 ])(e, gestureState)
             },
         onPanResponderRelease: (e, gesture) => {
