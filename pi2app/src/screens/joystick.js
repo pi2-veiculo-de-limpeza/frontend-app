@@ -48,12 +48,12 @@ class Joystick extends React.Component {
     }
   };
 
-  leftPress(evt){
-    console.log(`left: ${evt.nativeEvent.locationX}`)
+  leftValueUpdate(value){
+    console.log(`left: ${value}`)
   }
 
-  rightPress(evt){
-    console.log(`right: ${evt.nativeEvent.locationX}`)
+  rightValueUpdate(value){
+    console.log(`right: ${value}`)
   }
 
   render() {
@@ -62,38 +62,26 @@ class Joystick extends React.Component {
 
     return (
         <View>
-            <Text>{ params.vehicle.name }</Text>
-            <Stick 
-                leftPress={this.leftPress}
-                leftWheelValue={this.state.leftWheelValue}
+            <View>
+                {/* Left Wheel */}
+                <View style={[StickStyle.backCircle, {marginLeft:20 ,marginTop:120}]}> 
+                    <Draggable
+                        valueUpdate={this.leftValueUpdate}
+                    />
+                </View>
 
-                rightPress={this.rightPress}
-                rightWheelValue={this.state.rightWheelValue}
-            />
+                {/* Right Wheel */}
+                <View style={[StickStyle.backCircle, {marginLeft:20, marginTop:240}]}>
+                    <Draggable 
+                        valueUpdate={this.rightValueUpdate}
+                    />
+                </View>
+            </View>
         </View>
     )
   }
 }
 
-class Stick extends React.Component {
-
-    render(){
-        return (
-            <View>
-
-                {/* Left Wheel */}
-                <View style={[StickStyle.backCircle, {marginLeft:20 ,marginTop:80}]}> 
-                    <Draggable/>
-                </View>
-
-                {/* Right Wheel */}
-                <View style={[StickStyle.backCircle, {marginLeft:20, marginTop:280}]}>
-                    <Draggable/>
-                </View>
-            </View>
-        )
-    }
-}
 
 const StickStyle = StyleSheet.create({
     frontCircle: {
@@ -123,16 +111,16 @@ class Draggable extends React.Component {
     }
 
     valueUpdate(value){
-        // if(value.x > 10 || value.x < 50){
-            this._val = value
-        // }
-        console.log(`value: ${value.x}`)
+        // console.log(this.props);
+        if (value > 0.01 || value < -0.01){
+            this.props.valueUpdate(value);
+        }
     }
   
     componentWillMount() {
       // Add a listener for the delta value change
       this._val = { x:0, y:0 }
-      this.state.pan.addListener((value) => {this.valueUpdate(value)} );
+      this.state.pan.addListener((value) => {this.valueUpdate(value.x)} );
       // Initialize PanResponder with move handling
       this.panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gesture) => true,
@@ -153,7 +141,7 @@ class Draggable extends React.Component {
         onPanResponderRelease: (e, gesture) => {
             Animated.spring(this.state.pan, {
                 toValue: { x: 0, y: 0 },
-                friction: 5
+                friction: 10
             }).start();
             }
       });
