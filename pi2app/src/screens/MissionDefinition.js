@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   ImageBackground,
   ScrollView,
+  Modal,
   Alert } 
 from 'react-native';
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
@@ -29,6 +30,7 @@ class MissionDefinition extends React.Component {
       token: '',
       vehicle: {},
       isLoading: true,
+      modalVisible: false, 
       region: {
         latitude: 0.0,
         longitude: 0.0,
@@ -60,14 +62,18 @@ class MissionDefinition extends React.Component {
 
   // Call when user finishes to drawn the polygon
   finish() {
-    const { polygons, editing } = this.state;
-    console.log("COORDINATES: " + JSON.stringify(this.state.coordinates))
-    console.log("EDITING: " + JSON.stringify(editing))
-    this.setState({
-      polygons: [...polygons, editing],
-      editing: null,
-      creatingHole: false,
-    });
+    const { coordinates } = this.state;
+    if(coordinates.length != 4){
+      this.finishError()
+    } else {
+      console.log("COORDINATES: " + JSON.stringify(coordinates))
+      this.setState({ modalVisible: true })
+    }
+  }
+
+  finishError(){
+    this.deletePolygon()
+    this.showAlert('Erro', 'A figura deve possuir exatamente 4 lados!')
   }
 
   createHole() {
@@ -106,6 +112,7 @@ class MissionDefinition extends React.Component {
       editing: null,
       creatingHole: false,
       polygons: [],
+      coordinates: [],
     });
   }
 
@@ -176,7 +183,25 @@ class MissionDefinition extends React.Component {
     )
   }
 
+  renderModal(){
+    return(
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.modalVisible}
+          onRequestClose={() => this.setState({ modalVisible: false })}>
+        <View style={CreateMissionMapStyle.modalView}>
+          <Text style={CreateMissionMapStyle.modalText}>
+            Missões
+          </Text>
+        </View>
+        </Modal>
+    )
+  }
+
   render() {
+    var modal = this.renderModal()
+
     const mapOptions = {
       scrollEnabled: true,
     };
@@ -197,6 +222,7 @@ class MissionDefinition extends React.Component {
       return (
         <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
+        {modal}
         <View style={styles.mapStyle}>
           <MapView
             provider={this.props.provider}
