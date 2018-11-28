@@ -3,10 +3,12 @@ import {
   View,
   ImageBackground,
   Text,
-  ScrollView ,
+  ScrollView,
+  ActivityIndicator,
   TouchableHighlight,
 } from 'react-native';
 import { Card } from 'react-native-elements';
+import axios from 'axios';
 import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
 import VehicleCard from '../components/VehicleCard';
@@ -18,7 +20,35 @@ class VehicleDetail extends React.Component {
 
     this.state = {
       missions: [],
+      isLoading: false,
+      vehicleInfo: {},
     }
+  }
+
+  componentWillMount(){
+    const { params } = this.props.navigation.state
+    this.setState({ vehicleInfo: params.vehicle})
+  }
+
+  componentDidMount(){
+    this.getAllMissions()
+  }
+
+  // Get all missions registered
+  getAllMissions = async () => {
+    const details = this.state.vehicleInfo
+    const endpoint = `${process.env.BACKEND}/vehicles/` + details.vehicleId + '/all_missions_vehicle'
+    console.log("DETAILS STATE: " + JSON.stringify(details))
+    console.log("URL: " + endpoint)
+    this.setState({isLoading: true});
+    await axios.get(`${process.env.BACKEND}/vehicles/` + details.vehicleId + '/all_missions_vehicle')
+    .then(response => {
+      console.log("AEEEEEEEEEE: " + JSON.stringify(response.data))
+    })
+    .catch((error) => {
+    this.setState({isLoading: false});
+    console.log('Error: ' + error)      
+    })
   }
 
   newMission(){

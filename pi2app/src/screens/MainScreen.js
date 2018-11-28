@@ -33,7 +33,16 @@ class MainScreen extends React.Component {
       .catch(err => alert("Erro"));
   }
 
-  addNewVehicle(name='SandBot', code='123abc', battery_state=3, battery_capacity=3, weight='0kg', distance='0m', estimated_time=new Date(), elapsed_time=new Date()){
+  addNewVehicle(name='SandBot', 
+                code='123abc', 
+                vehicleId=0,
+                userToken=0,
+                battery_state=3, 
+                battery_capacity=3, 
+                weight='0kg', 
+                distance='0m', 
+                estimated_time=new Date(), 
+                elapsed_time=new Date()){
 
     var newVehicle = {
       name: name,
@@ -43,7 +52,9 @@ class MainScreen extends React.Component {
       distance: distance,
       estimated_time: estimated_time,
       elapsed_time: elapsed_time,
-      code: code
+      code: code,
+      vehicleId: vehicleId,
+      userToken: userToken
     }
 
     this.state.vehicles.push(newVehicle)
@@ -115,7 +126,9 @@ class MainScreen extends React.Component {
 
           this.addNewVehicle(
             name=json_vehicle.name,
-            code=json_vehicle.code
+            code=json_vehicle.code,
+            vehicleId=json_vehicle._id.$oid,
+            userToken=this.state.userToken
             );
         })
         
