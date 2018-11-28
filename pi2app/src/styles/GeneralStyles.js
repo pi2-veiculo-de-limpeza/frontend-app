@@ -109,6 +109,26 @@ const styles = StyleSheet.create({
       margin: 10,
       borderRadius: 10,
    },
+
+   missionNameView: {
+    flex: 1,
+    flexDirection:"column",
+  },
+
+  missionNameTouch: {
+    backgroundColor: '#C26A00',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 45,
+    marginVertical: 10,
+  },
+
+  missionTextName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+ },
 });
 
 export default styles;

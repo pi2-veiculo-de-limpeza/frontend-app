@@ -36,14 +36,12 @@ class VehicleDetail extends React.Component {
 
   // Get all missions registered
   getAllMissions = async () => {
-    const details = this.state.vehicleInfo
-    const endpoint = `${process.env.BACKEND}/vehicles/` + details.vehicleId + '/all_missions_vehicle'
-    console.log("DETAILS STATE: " + JSON.stringify(details))
-    console.log("URL: " + endpoint)
     this.setState({isLoading: true});
+    const details = this.state.vehicleInfo
     await axios.get(`${process.env.BACKEND}/vehicles/` + details.vehicleId + '/all_missions_vehicle')
     .then(response => {
-      console.log("AEEEEEEEEEE: " + JSON.stringify(response.data))
+      this.setState({ missions: response.data })
+      this.setState({ isLoading: false })
     })
     .catch((error) => {
     this.setState({isLoading: false});
@@ -93,6 +91,21 @@ class VehicleDetail extends React.Component {
             <Text style={styles.simpleText}>
               Missões
             </Text>
+          </View>
+
+          <View style={styles.missionNameView}>
+            {this.state.missions.map((mission, index) => {
+              return (
+                <TouchableHighlight
+                style={styles.missionNameTouch}
+                key={index}
+                onPress={ () => console.log("MISSION PRESSED")}>
+                  <Text style={styles.missionTextName}>
+                    {mission.name}
+                  </Text>
+                </TouchableHighlight>
+              );
+            })}
           </View>
 
           <DefaultButton
