@@ -114,7 +114,7 @@ class Joystick extends React.Component {
     
     console.log(`left: ${absolute}, ${dir}`)
 
-    if(value >= 0 && value <= 100){
+    if(absolute >= 0 && absolute <= 100){
         ws.send(`left: ${absolute}, ${dir}`);
     }
     
@@ -123,6 +123,7 @@ class Joystick extends React.Component {
   rightValueUpdate(value){
     value *= -2
     dir = value < 0? -1 : 1;
+
     absolute = Math.abs(value)
 
     if(absolute <= 1){
@@ -153,7 +154,7 @@ class Joystick extends React.Component {
 
     console.log(`right: ${absolute}, ${dir}`)
     
-    if(value >= 0 && value <= 100){
+    if(absolute >= 0 && absolute <= 100){
         ws.send(`right: ${absolute}, ${dir}`);
     }
   }
