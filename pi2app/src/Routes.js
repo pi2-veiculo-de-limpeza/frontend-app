@@ -9,6 +9,7 @@ import VehicleRegister from './screens/VehicleRegister';
 import VehicleEdit from './screens/VehicleEdit';
 import Logout from './screens/Logout'
 import UpdateUserInfo from './screens/UpdateUserInfo'
+import Joystick from './screens/joystick.js';
 
 // Routes for a not signed in user must be placed here.
 export const SignedOutRoutes = createStackNavigator({
@@ -51,6 +52,10 @@ export const SignedInRoutes = createStackNavigator({
   UpdateUserInfo: {
     screen: UpdateUserInfo
   },
+
+  Joystick:{
+    screen: Joystick
+  }
 });
 
 export const RootNavigator = (signedIn = false) => {

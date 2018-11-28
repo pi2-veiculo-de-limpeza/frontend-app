@@ -8,11 +8,13 @@ import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
 import VehicleCard from '../components/VehicleCard';
 
+
 class VehicleDetail extends React.Component {
   state = { 
     token: '',
     isInMission: true,
-    onManual: false
+    onManual: false,
+    navigation: undefined
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -56,14 +58,15 @@ class VehicleDetail extends React.Component {
 
   startManual(){
     // TODO: iniciar conexão bluetooth, joystick para controle remoto do Veículo
-    this.setState({ onManual:true })
+    // this.setState({ onManual:true })
+    this.state.navigation.navigate("Joystick", {vehicle: this.state.navigation.state.params.vehicle})
   }
 
   stopManual(){
     this.setState({ onManual:false })
   }
 
-  renderManualButton(){
+  renderManualButton(){    
 
     let button
 
@@ -112,7 +115,8 @@ class VehicleDetail extends React.Component {
   render() {
 
     var screen;
-    const {params} = this.props.navigation.state
+    const {params} = this.props.navigation.state;
+    this.state.navigation = this.props.navigation;
 
     var manualButton = this.renderManualButton()
     var missionButton = this.renderMissionButton()
@@ -144,6 +148,7 @@ class VehicleDetail extends React.Component {
           />
           {manualButton} 
           {missionButton}
+
 
         </ScrollView>
       )
