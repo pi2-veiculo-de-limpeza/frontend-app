@@ -48,13 +48,117 @@ class Joystick extends React.Component {
     }
   };
 
+  correctValue(value){
+    absolute = Math.abs(value)
+
+    if(absolute <= 1){
+        absolute = 0
+    }else if(absolute < 9){
+        absolute = 10
+    }else if(absolute < 19){
+        absolute = 20
+    }else if(absolute < 29){
+        absolute = 30
+    }else if(absolute < 39){
+        absolute = 40
+    }else if(absolute < 49){
+        absolute = 50
+    }else if(absolute < 59){
+        absolute = 60
+    }else if(absolute < 69){
+        absolute = 70
+    }else if(absolute < 79){
+        absolute = 80
+    }else if(absolute < 89){
+        absolute = 90
+    }else if(absolute <= 100){
+        absolute = 100
+    }else{
+        absolute = 0
+    }
+
+    return absolute
+  }
+
   leftValueUpdate(value){
-    console.log(`left: ${value}`)
+    value *= -2
+    dir = value < 0? -1 : 1;
+
+    absolute = Math.abs(value)
+
+    if(absolute <= 1){
+        absolute = 0
+    }else if(absolute < 9){
+        absolute = 10
+    }else if(absolute < 19){
+        absolute = 20
+    }else if(absolute < 29){
+        absolute = 30
+    }else if(absolute < 39){
+        absolute = 40
+    }else if(absolute < 49){
+        absolute = 50
+    }else if(absolute < 59){
+        absolute = 60
+    }else if(absolute < 69){
+        absolute = 70
+    }else if(absolute < 79){
+        absolute = 80
+    }else if(absolute < 89){
+        absolute = 90
+    }else if(absolute <= 100){
+        absolute = 100
+    }else{
+        absolute = 100
+    }
+    
+    console.log(`left: ${absolute}, ${dir}`)
+
+    if(value >= 0 && value <= 100){
+        ws.send(`left: ${absolute}, ${dir}`);
+    }
+    
   }
 
   rightValueUpdate(value){
-    console.log(`right: ${value}`)
+    value *= -2
+    dir = value < 0? -1 : 1;
+    absolute = Math.abs(value)
+
+    if(absolute <= 1){
+        absolute = 0
+    }else if(absolute < 9){
+        absolute = 10
+    }else if(absolute < 19){
+        absolute = 20
+    }else if(absolute < 29){
+        absolute = 30
+    }else if(absolute < 39){
+        absolute = 40
+    }else if(absolute < 49){
+        absolute = 50
+    }else if(absolute < 59){
+        absolute = 60
+    }else if(absolute < 69){
+        absolute = 70
+    }else if(absolute < 79){
+        absolute = 80
+    }else if(absolute < 89){
+        absolute = 90
+    }else if(absolute <= 100){
+        absolute = 100
+    }else{
+        absolute = 100
+    }
+
+    console.log(`right: ${absolute}, ${dir}`)
+    
+    if(value >= 0 && value <= 100){
+        ws.send(`right: ${absolute}, ${dir}`);
+    }
   }
+
+  
 
   render() {
     
@@ -114,8 +218,10 @@ class Draggable extends React.Component {
 
     valueUpdate(value){
         // console.log(this.props);
-        if (value > 0.01 || value < -0.01){
+        if (value > 0.1 || value < -0.1){
             this.props.valueUpdate(value);
+        }else{
+            this.props.valueUpdate(0);
         }
     }
   
@@ -162,6 +268,38 @@ class Draggable extends React.Component {
       );
     }
 }
+
+var ws = new WebSocket('ws://localhost:8000');
+
+ws.onopen = () => {
+  // connection opened
+  ws.send('something'); // send a message
+};
+
+ws.onmessage = (e) => {
+  // a message was received
+  console.log(e.data);
+};
+
+ws.onerror = (e) => {
+  // an error occurred
+  console.log(e.message);
+};
+
+ws.onclose = (e) => {
+  // connection closed
+  console.log(e.code, e.reason);
+};
+
+// Connection opened
+ws.addEventListener('open', function (event) {
+    ws.send('Hello Server!');
+});
+
+// Listen for messages
+ws.addEventListener('message', function (event) {
+    console.log('Message from server ', event.data);
+});
 
 
 export default Joystick;
