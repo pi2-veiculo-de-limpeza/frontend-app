@@ -1,4 +1,5 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+const { height } = Dimensions.get('window');
 
 const CreateMissionMapStyle = StyleSheet.create({
   container: {
@@ -43,12 +44,10 @@ const CreateMissionMapStyle = StyleSheet.create({
   },
 
   modalView: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#328A2E',
-    margin: 10,
+    flex: 0.45,
     borderRadius: 2,
+    marginTop: height * 0.25,
+    marginHorizontal: 10,
  },
 });
 

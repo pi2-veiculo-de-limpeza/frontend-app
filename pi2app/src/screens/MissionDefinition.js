@@ -6,10 +6,16 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ImageBackground,
+  KeyboardAvoidingView,
   ScrollView,
   Modal,
   Alert } 
 from 'react-native';
+import { 
+  Card, 
+  FormLabel, 
+  FormInput,
+} from "react-native-elements";
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
 import DefaultButton from "../components/DefaultButton";
 import CreateMissionMapStyle from '../styles/CreateMissionMapStyle';
@@ -29,8 +35,9 @@ class MissionDefinition extends React.Component {
     this.state = {
       token: '',
       vehicle: {},
+      missionName: 'Missão',
       isLoading: true,
-      modalVisible: false, 
+      modalVisible: true, 
       region: {
         latitude: 0.0,
         longitude: 0.0,
@@ -62,11 +69,12 @@ class MissionDefinition extends React.Component {
 
   // Call when user finishes to drawn the polygon
   finish() {
-    const { coordinates } = this.state;
+    const { coordinates, missionName } = this.state;
     if(coordinates.length != 4){
       this.finishError()
     } else {
       console.log("COORDINATES: " + JSON.stringify(coordinates))
+      console.log("MISSION: " + missionName)
       this.setState({ modalVisible: true })
     }
   }
@@ -190,11 +198,21 @@ class MissionDefinition extends React.Component {
           transparent={true}
           visible={this.state.modalVisible}
           onRequestClose={() => this.setState({ modalVisible: false })}>
-        <View style={CreateMissionMapStyle.modalView}>
-          <Text style={CreateMissionMapStyle.modalText}>
-            Missões
-          </Text>
-        </View>
+        <ScrollView style={CreateMissionMapStyle.modalView}>
+        <Card>
+            <FormLabel>Nome da missão</FormLabel>
+            <FormInput 
+              placeholder="Digite o nome da missão"
+              onChangeText={(text) => this.setState({ missionName: text })}
+            />
+        </Card>
+        <DefaultButton
+            type={"blue"}
+            text={"Enviar"}
+            padding={15}
+            onPress={ () => this.setState({ modalVisible: false }) } 
+        />
+        </ScrollView>
         </Modal>
     )
   }
