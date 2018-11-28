@@ -93,7 +93,22 @@ const styles = StyleSheet.create({
 
     vehicleScrollView: {
       paddingVertical: 20
-    }
+    },
+
+    simpleText: {
+      fontSize: 30,
+      fontWeight: 'bold',
+      color: 'white',
+    },
+
+    simpleTextView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#328A2E',
+      margin: 10,
+      borderRadius: 10,
+   },
 });
 
 export default styles;

@@ -3,6 +3,7 @@ import {
   View,
   ImageBackground,
   Dimensions,
+  Text,
   ScrollView } from 'react-native';
 import styles from '../styles/GeneralStyles';
 import CreateMissionMapStyle from '../styles/CreateMissionMapStyle';
@@ -80,6 +81,8 @@ class VehicleDetail extends React.Component {
     }
   };
 
+  
+
 
   newMission(){
     // TODO: iniciar mapeamento do terreno
@@ -100,29 +103,6 @@ class VehicleDetail extends React.Component {
   stopManual(){
     this.setState({ onManual:false })
   }
-
-  // renderManualButton(){
-
-  //   let button
-
-  //   if(this.state.onManual == false){
-  //     button = <DefaultButton
-  //       type={"green"}
-  //       text={"Modo Manual"}
-  //       padding={15}
-  //       onPress={() => this.startManual()}
-  //     />
-  //   }else {
-  //     button = <DefaultButton
-  //       type={"red"}
-  //       text={"Sair do Manual"}
-  //       padding={15}
-  //       onPress={() => this.stopManual()}
-  //     />
-  //   }
-
-  //   return button
-  // }
 
   renderMissionButton(){
 
@@ -155,32 +135,6 @@ class VehicleDetail extends React.Component {
     return(
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
-          
-          {/* PLACEHOLDER do mapa */}
-          <View style={{ 
-            flex: 1, 
-            alignItems: 'center',
-            height: 250,
-            paddingVertical: 20,
-            marginHorizontal: 10,
-            backgroundColor: "gray" }}>
-            <MapView
-              initialRegion={this.state.region}
-              style={CreateMissionMapStyle.map}
-              mapType={MAP_TYPES.SATELLITE}
-              scrollEnabled={true}
-            >
-              <Marker
-                coordinate={{
-                  latitude: this.state.markerPosition.latitude,
-                  longitude: this.state.markerPosition.longitude,
-                }}
-                image={rover}
-                >
-              </Marker>
-            </MapView>
-          </View>
-
           <VehicleCard
             key={1}
             vehicle={params.vehicle}
@@ -191,6 +145,12 @@ class VehicleDetail extends React.Component {
             padding={15}
             onPress={ () => this.props.navigation.navigate("VehicleEdit", {vehicle: params.vehicle}) } 
           />
+
+          <View style={styles.simpleTextView}>
+            <Text style={styles.simpleText}>
+              Missões
+            </Text>
+          </View>
           {missionButton}
 
         </ScrollView>

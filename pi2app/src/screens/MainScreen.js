@@ -154,8 +154,8 @@ class MainScreen extends React.Component {
               );
             })}
           </View>
-        </ScrollView>
-        <View style={{flex: 1, flexDirection: 'column'}}>
+        
+        <View style={{flex: 1, flexDirection: 'row'}}>
           <DefaultButton 
             text={"Logout"}
             type={"blue"}
@@ -170,6 +170,7 @@ class MainScreen extends React.Component {
               userId: this.state.userId})}
           />
         </View>
+        </ScrollView>
       </ImageBackground>
 
     );
