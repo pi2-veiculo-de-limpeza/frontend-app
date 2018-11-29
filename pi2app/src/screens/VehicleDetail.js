@@ -49,7 +49,7 @@ class VehicleDetail extends React.Component {
   }
 
   newMission(){
-    this.props.navigation.navigate("MissionDefinition")
+    this.props.navigation.navigate("MissionDefinition", { vehicle: this.state.vehicleInfo })
   }
 
   static navigationOptions = ({ navigation }) => {

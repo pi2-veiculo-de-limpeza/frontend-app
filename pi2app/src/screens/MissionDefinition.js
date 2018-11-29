@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ImageBackground,
-  KeyboardAvoidingView,
   ScrollView,
   Modal,
   Alert } 
@@ -17,6 +16,7 @@ import {
   FormInput,
 } from "react-native-elements";
 import MapView, { MAP_TYPES, Polygon, ProviderPropType } from 'react-native-maps';
+import axios from 'axios';
 import DefaultButton from "../components/DefaultButton";
 import CreateMissionMapStyle from '../styles/CreateMissionMapStyle';
 import styles from '../styles/GeneralStyles';
@@ -33,11 +33,11 @@ class MissionDefinition extends React.Component {
     super(props);
   
     this.state = {
-      token: '',
-      vehicle: {},
+      userToken: '',
+      vehicleId: '',
       missionName: 'Missão',
       isLoading: true,
-      modalVisible: true, 
+      modalVisible: false, 
       region: {
         latitude: 0.0,
         longitude: 0.0,
@@ -49,6 +49,12 @@ class MissionDefinition extends React.Component {
       editing: null,
       creatingHole: false,
     }
+  }
+
+  componentWillMount(){
+    const { params } = this.props.navigation.state
+    this.setState({ vehicleId: params.vehicle.vehicleId })
+    this.setState({ userToken: params.vehicle.userToken })
   }
 
   componentDidMount(){
@@ -67,14 +73,36 @@ class MissionDefinition extends React.Component {
     );
   }
 
+  // Used to make request to save mission
+  saveMission = async () => {
+    this.setState({ modalVisible: false })
+    this.setState({isLoading: true});
+    const endpoint = `${process.env.BACKEND}/vehicles/` + this.state.vehicleId + '/create_mission'
+    const userBody = {
+      "name": this.state.missionName,
+      "coordinates": this.state.coordinates
+    }
+
+    await axios.post(endpoint, userBody, { headers: { Authorization: this.state.userToken } })
+    .then(() => {
+      console.log('Saved mission.')
+      this.setState({isLoading: false});
+      this.props.navigation.popToTop();
+      this.props.navigation.navigate("MainScreen");
+    })
+    .catch((error) => {
+      this.setState({isLoading: false});
+      console.log('Error', error.message);
+    })
+  };
+
+
   // Call when user finishes to drawn the polygon
   finish() {
     const { coordinates, missionName } = this.state;
     if(coordinates.length != 4){
       this.finishError()
     } else {
-      console.log("COORDINATES: " + JSON.stringify(coordinates))
-      console.log("MISSION: " + missionName)
       this.setState({ modalVisible: true })
     }
   }
@@ -111,8 +139,6 @@ class MissionDefinition extends React.Component {
       this.setState({ creatingHole: false });
     }
     this.setState({ coordinates: this.state.editing.coordinates })
-    console.log("MAP: " + JSON.stringify(this.state.editing.coordinates))
-    console.log("LENGTH: " + this.state.editing.coordinates.length)
   }
 
   deletePolygon(){
@@ -210,7 +236,7 @@ class MissionDefinition extends React.Component {
             type={"blue"}
             text={"Enviar"}
             padding={15}
-            onPress={ () => this.setState({ modalVisible: false }) } 
+            onPress={ () => this.saveMission() } 
         />
         </ScrollView>
         </Modal>
