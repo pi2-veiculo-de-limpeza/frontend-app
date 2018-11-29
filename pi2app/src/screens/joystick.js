@@ -15,6 +15,7 @@ class Joystick extends React.Component {
   state = {
     token: '',
     isInMission: true,
+    matState: false,
     onManual: false,
     leftWheelValue: 0,
     rightWheelValue: 0
@@ -112,7 +113,7 @@ class Joystick extends React.Component {
         absolute = 100
     }
     
-    console.log(`left: ${absolute}, ${dir}`)
+    // console.log(`left: ${absolute}, ${dir}`)
 
     if(absolute >= 0 && absolute <= 100){
         ws.send(`left: ${absolute}, ${dir}`);
@@ -152,36 +153,71 @@ class Joystick extends React.Component {
         absolute = 100
     }
 
-    console.log(`right: ${absolute}, ${dir}`)
+    // console.log(`right,${absolute},${dir}`)
     
     if(absolute >= 0 && absolute <= 100){
-        ws.send(`right: ${absolute}, ${dir}`);
+        ws.send(`right,${absolute},${dir}`);
     }
   }
 
-  
+  turnMatOn(){
+    ws.send(`turn-on-mat`);
+    this.setState({ matState:true })
+  }
+
+  turnMatOff(){
+    ws.send(`turn-off-mat`);
+    this.setState({ matState:false })
+  }
+
+  renderMatHandler(){
+
+    let button
+
+    if(this.state.matState == false){
+      button = <DefaultButton
+        type={"green"}
+        text={"Ligar Esteira"}
+        padding={15}
+        onPress={() => this.turnMatOn()}
+      />
+    }else {
+      button = <DefaultButton
+        type={"red"}
+        text={"Desligar Esteira"}
+        padding={15}
+        onPress={() => this.turnMatOff()}
+      />
+    }
+
+    return button
+  }
 
   render() {
     
     const {params} = this.props.navigation.state;
 
     return (
-        <View style={{
-            marginTop:600,
-        }}>
-            <View style={{flex: 1, flexDirection: 'row'}}>
-                {/* Left Wheel */}
-                <View style={[StickStyle.backCircle, {marginLeft:30}]}> 
-                    <Draggable
-                        valueUpdate={this.leftValueUpdate}
-                    />
-                </View>
+        <View>
+            {this.renderMatHandler()} 
+            <View style={{
+                marginTop:200,
+            }}>
+                
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    {/* Left Wheel */}
+                    <View style={[StickStyle.backCircle, {marginLeft:30}]}> 
+                        <Draggable
+                            valueUpdate={this.leftValueUpdate}
+                        />
+                    </View>
 
-                {/* Right Wheel */}
-                <View style={[StickStyle.backCircle, {marginLeft:30}]}>
-                    <Draggable 
-                        valueUpdate={this.rightValueUpdate}
-                    />
+                    {/* Right Wheel */}
+                    <View style={[StickStyle.backCircle, {marginLeft:30}]}>
+                        <Draggable 
+                            valueUpdate={this.rightValueUpdate}
+                        />
+                    </View>
                 </View>
             </View>
         </View>
