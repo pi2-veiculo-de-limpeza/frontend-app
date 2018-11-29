@@ -2,11 +2,13 @@ import React from 'react';
 import {
   Text, 
   View,
+  Alert,
   ScrollView } from 'react-native';
 import { Button } from 'react-native-elements';
 import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
 import VehicleCard from '../components/VehicleCard';
+import DialogInput from 'react-native-dialog-input';
 
 
 class VehicleDetail extends React.Component {
@@ -14,7 +16,8 @@ class VehicleDetail extends React.Component {
     token: '',
     isInMission: true,
     onManual: false,
-    navigation: undefined
+    navigation: undefined,
+    isDialogVisible: false
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -59,7 +62,32 @@ class VehicleDetail extends React.Component {
   startManual(){
     // TODO: iniciar conexão bluetooth, joystick para controle remoto do Veículo
     // this.setState({ onManual:true })
-    this.state.navigation.navigate("Joystick", {vehicle: this.state.navigation.state.params.vehicle})
+    this.setState({ isDialogVisible:true })
+  }
+
+  beginJoystick(ip_address){
+    var ws = new WebSocket(`ws://${ip_address}:8000`);
+    ws.onopen = () => {
+      // connection opened
+      ws.send('Remote activated'); // send a message
+      this.state.navigation.navigate("Joystick", {vehicle: this.state.navigation.state.params.vehicle, websocket: ws})
+      this.setState({ isDialogVisible:false })
+    };
+    ws.onclose = (e) => {
+      this.showAlert('Error', 'Não foi possível se conectar com o veículo.')
+      console.log(e.code, e.reason);
+    };
+  }
+
+  showAlert(title, body){
+    Alert.alert(
+      title,
+      body,
+      [
+        {text: 'Ok', onPress: () => console.log('Ok pressed')},
+      ],
+      { cancelable: false }
+    )
   }
 
   stopManual(){
@@ -73,7 +101,7 @@ class VehicleDetail extends React.Component {
     if(this.state.onManual == false){
       button = <DefaultButton
         type={"green"}
-        text={"Modo Manual"}
+        text={"Remoto"}
         padding={15}
         onPress={() => this.startManual()}
       />
@@ -118,13 +146,10 @@ class VehicleDetail extends React.Component {
     const {params} = this.props.navigation.state;
     this.state.navigation = this.props.navigation;
 
-    var manualButton = this.renderManualButton()
-    var missionButton = this.renderMissionButton()
-
     if (this.state.isInMission) {
       screen = (
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
-          {missionButton}
+          {this.renderMissionButton()}
         </ScrollView>
       )
     }else{
@@ -146,8 +171,17 @@ class VehicleDetail extends React.Component {
             key={1}
             vehicle={params.vehicle}
           />
-          {manualButton} 
-          {missionButton}
+
+          {this.renderManualButton()}
+          {this.renderMissionButton()}
+
+          <DialogInput isDialogVisible={this.state.isDialogVisible}
+            title={"Conexão remota"}
+            message={"Entre com o IP de rede do veículo"}
+            hintInput ={"192.168.1.20"}
+            submitInput={ (inputText) => {this.beginJoystick(inputText)} }
+            closeDialog={ () => {this.setState({ isDialogVisible:false })}}>
+          </DialogInput>
 
 
         </ScrollView>

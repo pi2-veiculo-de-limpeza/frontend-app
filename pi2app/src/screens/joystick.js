@@ -6,10 +6,13 @@ import {
   PanResponder,
   Animated
 } from "react-native";
-import { Button } from 'react-native-elements';
+import { Button, Icon } from 'react-native-elements';
 import styles from '../styles/GeneralStyles';
 import { StyleSheet } from 'react-native';
 import DefaultButton from "../components/DefaultButton";
+
+
+ws = undefined
 
 class Joystick extends React.Component {
   state = {
@@ -18,7 +21,8 @@ class Joystick extends React.Component {
     matState: false,
     onManual: false,
     leftWheelValue: 0,
-    rightWheelValue: 0
+    rightWheelValue: 0,
+    ws: undefined
   }
 
   static navigationOptions = ({ navigation }) => {
@@ -35,97 +39,66 @@ class Joystick extends React.Component {
         fontWeight: 'bold',
         fontSize: 35,
       },
-      headerRight:
-        <Button
-          title={"edit"}
-          clear={true}
-          onPress={ () => navigation.navigate("VehicleEdit", {vehicle: navigation.state.params.vehicle}) } 
-          buttonStyle={{
-            backgroundColor: "rgba(0, 0, 0, 0)",
-            borderColor: "transparent",
-          }}
-          containerStyle={{ alignSelf:'center' }}
-        />
+      headerLeft: ( <Icon name={'chevron-left'} onPress={ () => { 
+                console.log("HELLO !!")
+                if(ws != undefined){
+                    ws.close();
+                }
+                navigation.pop();
+            } 
+        }  /> )
     }
   };
 
-  correctValue(value){
-    absolute = Math.abs(value)
-
-    if(absolute <= 1){
-        absolute = 0
-    }else if(absolute < 9){
-        absolute = 10
-    }else if(absolute < 19){
-        absolute = 20
-    }else if(absolute < 29){
-        absolute = 30
-    }else if(absolute < 39){
-        absolute = 40
-    }else if(absolute < 49){
-        absolute = 50
-    }else if(absolute < 59){
-        absolute = 60
-    }else if(absolute < 69){
-        absolute = 70
-    }else if(absolute < 79){
-        absolute = 80
-    }else if(absolute < 89){
-        absolute = 90
-    }else if(absolute <= 100){
-        absolute = 100
-    }else{
-        absolute = 0
+  componentWillUnmount(){
+    if(ws != undefined){
+        ws.close();
     }
-
-    return absolute
   }
 
-  leftValueUpdate(value){
-    value *= -2
-    dir = value < 0? -1 : 1;
+  componentDidMount(){
+    const {params} = this.props.navigation.state;
 
-    absolute = Math.abs(value)
+    // console.log(params)
+    this.state.ws = params.websocket
 
-    if(absolute <= 1){
-        absolute = 0
-    }else if(absolute < 9){
-        absolute = 10
-    }else if(absolute < 19){
-        absolute = 20
-    }else if(absolute < 29){
-        absolute = 30
-    }else if(absolute < 39){
-        absolute = 40
-    }else if(absolute < 49){
-        absolute = 50
-    }else if(absolute < 59){
-        absolute = 60
-    }else if(absolute < 69){
-        absolute = 70
-    }else if(absolute < 79){
-        absolute = 80
-    }else if(absolute < 89){
-        absolute = 90
-    }else if(absolute <= 100){
-        absolute = 100
+    if(this.state.ws == undefined){
+        console.log('UNDEFINED')
+        return
     }else{
-        absolute = 100
+        ws = this.state.ws
     }
-    
-    // console.log(`left: ${absolute}, ${dir}`)
 
-    if(absolute >= 0 && absolute <= 100){
-        ws.send(`left: ${absolute}, ${dir}`);
-    }
-    
+    this.state.ws.onmessage = (e) => {
+        // a message was received
+        console.log(e.data);
+    };
+
+    this.state.ws.onerror = (e) => {
+        // an error occurred
+        console.log(e.message);
+    };
+
+    this.state.ws.onclose = (e) => {
+        // connection closed
+        console.log(e.code, e.reason);
+    };
+
+    // Connection opened
+    this.state.ws.addEventListener('open', function (event) {
+        // this.state.ws.send('Hello Server!');
+    });
+
+    // Listen for messages
+    this.state.ws.addEventListener('message', function (event) {
+        console.log('Message from server ', event.data);
+    });
   }
 
-  rightValueUpdate(value){
-    value *= -2
-    dir = value < 0? -1 : 1;
+  valueUpdate = (value) => {
+    dir = (value.y * -1) < 0? -1 : 1;
 
-    absolute = Math.abs(value)
+    absolute = Math.abs(value.y)
 
     if(absolute <= 1){
         absolute = 0
@@ -152,21 +125,23 @@ class Joystick extends React.Component {
     }else{
         absolute = 100
     }
-
-    // console.log(`right,${absolute},${dir}`)
     
+    console.log(`value: ${absolute}, ${dir}`)
+
     if(absolute >= 0 && absolute <= 100){
-        ws.send(`right,${absolute},${dir}`);
+        this.state.ws.send(`left,${absolute},${dir}`);
+        this.state.ws.send(`right,${absolute},${dir}`);
     }
+    
   }
 
   turnMatOn(){
-    ws.send(`turn-on-mat`);
+    this.state.ws.send(`turn-on-mat`);
     this.setState({ matState:true })
   }
 
   turnMatOff(){
-    ws.send(`turn-off-mat`);
+    this.state.ws.send(`turn-off-mat`);
     this.setState({ matState:false })
   }
 
@@ -202,23 +177,15 @@ class Joystick extends React.Component {
             {this.renderMatHandler()} 
             <View style={{
                 marginTop:200,
+                alignItems:'center'
             }}>
-                
-                <View style={{flex: 1, flexDirection: 'row'}}>
-                    {/* Left Wheel */}
-                    <View style={[StickStyle.backCircle, {marginLeft:30}]}> 
-                        <Draggable
-                            valueUpdate={this.leftValueUpdate}
-                        />
-                    </View>
-
-                    {/* Right Wheel */}
-                    <View style={[StickStyle.backCircle, {marginLeft:30}]}>
-                        <Draggable 
-                            valueUpdate={this.rightValueUpdate}
-                        />
-                    </View>
+                {/* Movement Wheel */}
+                <View style={[StickStyle.backCircle]}> 
+                    <Draggable
+                        valueUpdate={this.valueUpdate}
+                    />
                 </View>
+                
             </View>
         </View>
     )
@@ -254,33 +221,20 @@ class Draggable extends React.Component {
     }
 
     valueUpdate(value){
-        // console.log(this.props);
-        if (value > 0.1 || value < -0.1){
-            this.props.valueUpdate(value);
-        }else{
-            this.props.valueUpdate(0);
-        }
+        this.props.valueUpdate(value);
     }
   
     componentWillMount() {
       // Add a listener for the delta value change
       this._val = { x:0, y:0 }
-      this.state.pan.addListener((value) => {this.valueUpdate(value.y)} );
+      this.state.pan.addListener((value) => {this.valueUpdate(value)} );
       // Initialize PanResponder with move handling
       this.panResponder = PanResponder.create({
         onStartShouldSetPanResponder: (e, gesture) => true,
         onPanResponderMove: (e, gestureState) => {
-
-            // console.log(`before_set: ${this.state.pan.x._value}`)
-            corrected = this.state.pan.y._value < 0 ? 0 : this.state.pan.y._value
-            corrected = this.state.pan.y._value > 50 ? 50 : this.state.pan.y._value
-
-            this.state.pan.setValue({ x:0, y:corrected})
-            // console.log(`after_set: ${this.state.pan.x._value}`)
-   
             Animated.event([
                     null,
-                    {dx: 0, dy: this.state.pan.y},
+                    {dx: this.state.pan.x, dy: this.state.pan.y},
                 ])(e, gestureState)
             },
         onPanResponderRelease: (e, gesture) => {
@@ -298,45 +252,12 @@ class Draggable extends React.Component {
         transform: this.state.pan.getTranslateTransform()
       }
       return (
-          <Animated.View
+        <Animated.View
             {...this.panResponder.panHandlers}
             style={[panStyle, StickStyle.frontCircle]}
-          />
+        />
       );
     }
 }
-
-var ws = new WebSocket('ws://localhost:8000');
-
-ws.onopen = () => {
-  // connection opened
-  ws.send('something'); // send a message
-};
-
-ws.onmessage = (e) => {
-  // a message was received
-  console.log(e.data);
-};
-
-ws.onerror = (e) => {
-  // an error occurred
-  console.log(e.message);
-};
-
-ws.onclose = (e) => {
-  // connection closed
-  console.log(e.code, e.reason);
-};
-
-// Connection opened
-ws.addEventListener('open', function (event) {
-    ws.send('Hello Server!');
-});
-
-// Listen for messages
-ws.addEventListener('message', function (event) {
-    console.log('Message from server ', event.data);
-});
-
 
 export default Joystick;
