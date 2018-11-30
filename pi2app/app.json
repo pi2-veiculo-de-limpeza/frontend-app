@@ -1,5 +1,15 @@
 {
   "expo": {
-    "sdkVersion": "27.0.0"
+    "name": "SandBot",
+    "slug": "sandbot-app",
+    "sdkVersion": "27.0.0",
+    "orientation": "portrait",
+    "android": {
+      "package": "com.unbgama.sandbot",
+      "versionCode": 1
+    },
+    "ios": {
+      "bundleIdentifier": "com.unbgama.sandbot"
+    }
   }
 }

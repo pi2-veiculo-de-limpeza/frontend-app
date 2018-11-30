@@ -1,17 +1,19 @@
 import React from 'react';
 import {
-  View,
   ImageBackground,
-  Text,
-  ScrollView,
+  View,
   ActivityIndicator,
   TouchableHighlight,
-} from 'react-native';
+  Alert,
+  ScrollView } from 'react-native';
 import axios from 'axios';
+import { Button } from 'react-native-elements';
 import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
 import VehicleCard from '../components/VehicleCard';
+import DialogInput from 'react-native-dialog-input';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
+
 
 class VehicleDetail extends React.Component {
   constructor(props) {
@@ -21,6 +23,8 @@ class VehicleDetail extends React.Component {
       missions: [],
       isLoading: false,
       vehicleInfo: {},
+      navigation: undefined,
+      isDialogVisible: false
     }
   }
 
@@ -69,13 +73,74 @@ class VehicleDetail extends React.Component {
     }
   };
 
+  startManual(){
+    this.setState({ isDialogVisible:true })
+  }
+
+  beginJoystick(ip_address){
+    var ws = new WebSocket(`ws://${ip_address}:8000`);
+    ws.onopen = () => {
+      // connection opened
+      ws.send('Remote activated'); // send a message
+      this.state.navigation.navigate("Joystick", {vehicle: this.state.navigation.state.params.vehicle, websocket: ws})
+      this.setState({ isDialogVisible:false })
+    };
+    ws.onclose = (e) => {
+      this.showAlert('Error', 'Não foi possível se conectar com o veículo.')
+      console.log(e.code, e.reason);
+    };
+  }
+
+  showAlert(title, body){
+    Alert.alert(
+      title,
+      body,
+      [
+        {text: 'Ok', onPress: () => console.log('Ok pressed')},
+      ],
+      { cancelable: false }
+    )
+  }
+
+  stopManual(){
+    this.setState({ onManual:false })
+  }
+
+  renderManualButton(){    
+
+    let button
+
+    if(this.state.onManual == false){
+      button = <DefaultButton
+        type={"green"}
+        text={"Remoto"}
+        padding={15}
+        onPress={() => this.startManual()}
+      />
+    }else {
+      button = <DefaultButton
+        type={"red"}
+        text={"Sair do Manual"}
+        padding={15}
+        onPress={() => this.stopManual()}
+      />
+    }
+
+    return button
+  }
+
   render() {
-    const {params} = this.props.navigation.state
+
+    var screen;
+    const {params} = this.props.navigation.state;
+    this.state.navigation = this.props.navigation;
+
     if(this.state.isLoading == true){
       return (
         <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
           <ActivityIndicator size="large" color="#0000ff" style={styles.activityIndicator}/>
         </ImageBackground>
+
       )
     } else {
       return (
@@ -119,6 +184,16 @@ class VehicleDetail extends React.Component {
             padding={15}
             onPress={() => this.newMission()}
           />
+
+          {this.renderManualButton()}
+
+          <DialogInput isDialogVisible={this.state.isDialogVisible}
+            title={"Conexão remota"}
+            message={"Entre com o IP de rede do veículo"}
+            hintInput ={"192.168.1.20"}
+            submitInput={ (inputText) => {this.beginJoystick(inputText)} }
+            closeDialog={ () => {this.setState({ isDialogVisible:false })}}>
+          </DialogInput>
 
         </ScrollView>
       </ImageBackground>
