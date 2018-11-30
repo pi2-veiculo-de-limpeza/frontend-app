@@ -63,7 +63,7 @@ class MainScreen extends React.Component {
   // Navigation header
   static navigationOptions = ({ navigation }) => {
     return {
-      title: 'SandBot',
+      title: 'Robôs',
       headerStyle: {
         backgroundColor: '#53A9F6',
         elevation: 0,
@@ -169,9 +169,13 @@ class MainScreen extends React.Component {
                 <TouchableHighlight 
                 key={index}
                 onPress={ () => { this.props.navigation.navigate("VehicleDetail", {vehicle:vehicle}) }}>
-                  <VehicleCard
-                      vehicle={vehicle}
-                  />
+                  <Card
+                    title={ vehicle.name }
+                  >
+                    <Text style={{color: 'black', textAlign: 'center'}}>
+                      Aperte aqui para mais detalhes.
+                    </Text>
+                  </Card>
                 </TouchableHighlight>
               );
             })}
