@@ -95,10 +95,8 @@ class Joystick extends React.Component {
     });
   }
 
-  valueUpdate = (value) => {
-    dir = (value.y * -1) < 0? -1 : 1;
-
-    absolute = Math.abs(value.y)
+  filterValue(value){
+    absolute = Math.abs(value)
 
     if(absolute <= 1){
         absolute = 0
@@ -125,13 +123,40 @@ class Joystick extends React.Component {
     }else{
         absolute = 100
     }
-    
-    console.log(`value: ${absolute}, ${dir}`)
 
-    if(absolute >= 0 && absolute <= 100){
-        this.state.ws.send(`left,${absolute},${dir}`);
-        this.state.ws.send(`right,${absolute},${dir}`);
+    return absolute
+  }
+
+  valueUpdate = (value) => {
+    dir = 1
+
+    var angleRadians = Math.atan2(value.y * -1, value.x);
+    
+
+    var speed = Math.sqrt( Math.pow(value.x, 2) + Math.pow(value.y, 2) )
+    console.log(`${angleRadians} : ${speed}`)
+
+    if (Math.cos(angleRadians) < 0 ){
+        left = this.filterValue(speed * Math.sin(angleRadians) )
+    }else{
+        left = this.filterValue(speed)
     }
+
+    if (Math.cos(angleRadians) > 0 ){
+        right = this.filterValue(speed * Math.sin(angleRadians) )
+    }else{
+        right = this.filterValue(speed)
+    }
+
+    if ( angleRadians < 0 ){
+        left = this.filterValue(speed)
+        right = this.filterValue(speed)
+        dir = -1
+    }
+
+    this.state.ws.send(`left,${left},${dir}`);
+    this.state.ws.send(`right,${right},${dir}`);
+    
     
   }
 

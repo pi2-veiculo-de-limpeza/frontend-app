@@ -10,6 +10,9 @@ run:
 	docker-compose -f docker-compose-osx.yml up -d
 	docker-compose -f docker-compose-osx.yml exec front bash -c "bash"
 
+enter:
+	docker-compose -f docker-compose-osx.yml exec front bash
+
 down:
 	docker-compose -f docker-compose-osx.yml down
 
