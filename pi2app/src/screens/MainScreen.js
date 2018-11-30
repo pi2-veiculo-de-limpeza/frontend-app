@@ -155,6 +155,15 @@ class MainScreen extends React.Component {
           />
         }>
           <View>
+          {this.state.vehicles.length == 0 && !this.state.refreshing &&
+            <Card
+              title={ "Nenhum veículo cadastrado!" }
+              >
+              <Text style={{color: 'black'}}>
+                Para cadastrarar um veículo, aperte no ícone de + no canto superior direito.
+              </Text>
+            </Card>
+            }
             {this.state.vehicles.map((vehicle, index) => {
               return (
                 <TouchableHighlight 
