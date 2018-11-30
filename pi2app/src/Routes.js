@@ -11,8 +11,6 @@ import UpdateUserInfo from './screens/UpdateUserInfo';
 import MissionDefinition from './screens/MissionDefinition';
 import VehicleEdit from './screens/VehicleEdit';
 import MissionAccompaniment from './screens/MissionAccompaniment';
-import Logout from './screens/Logout'
-import UpdateUserInfo from './screens/UpdateUserInfo'
 import Joystick from './screens/joystick.js';
 
 // Routes for a not signed in user must be placed here.

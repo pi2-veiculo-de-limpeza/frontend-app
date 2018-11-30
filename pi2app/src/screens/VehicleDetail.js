@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   ImageBackground,
+  Text,
   View,
   ActivityIndicator,
   TouchableHighlight,
@@ -106,29 +107,6 @@ class VehicleDetail extends React.Component {
     this.setState({ onManual:false })
   }
 
-  renderManualButton(){    
-
-    let button
-
-    if(this.state.onManual == false){
-      button = <DefaultButton
-        type={"green"}
-        text={"Remoto"}
-        padding={15}
-        onPress={() => this.startManual()}
-      />
-    }else {
-      button = <DefaultButton
-        type={"red"}
-        text={"Sair do Manual"}
-        padding={15}
-        onPress={() => this.stopManual()}
-      />
-    }
-
-    return button
-  }
-
   render() {
 
     var screen;
@@ -150,12 +128,20 @@ class VehicleDetail extends React.Component {
             key={1}
             vehicle={params.vehicle}
           />
-          <DefaultButton
-            type={"blue"}
-            text={"Editar Robô"}
-            padding={15}
-            onPress={ () => this.props.navigation.navigate("VehicleEdit", {vehicle: params.vehicle}) } 
-          />
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <DefaultButton
+              type={"blue"}
+              text={"Editar Robô"}
+              padding={15}
+              onPress={ () => this.props.navigation.navigate("VehicleEdit", {vehicle: params.vehicle}) } 
+            />
+            <DefaultButton
+              type={"green"}
+              text={"Remoto"}
+              padding={15}
+              onPress={() => this.startManual()}
+            />
+          </View>
 
           <View style={styles.simpleTextView}>
             <Text style={styles.simpleText}>
@@ -184,8 +170,6 @@ class VehicleDetail extends React.Component {
             padding={15}
             onPress={() => this.newMission()}
           />
-
-          {this.renderManualButton()}
 
           <DialogInput isDialogVisible={this.state.isDialogVisible}
             title={"Conexão remota"}
