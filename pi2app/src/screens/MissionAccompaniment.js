@@ -3,6 +3,7 @@ import {
   View,
   ImageBackground,
   Dimensions,
+  ActivityIndicator,
   ScrollView } from 'react-native';
 import styles from '../styles/GeneralStyles';
 import CreateMissionMapStyle from '../styles/CreateMissionMapStyle';
@@ -23,15 +24,16 @@ class MissionAccompaniment extends React.Component {
     this.state = {
       token: '',
       isInMission: false,
+      isLoading: true,
       region: {
-        latitude: -15.989938,
-        longitude: -48.044018,
+        latitude: -15,
+        longitude: -48,
         latitudeDelta: LATITUDE_DELTA,
         longitudeDelta: LONGITUDE_DELTA,
       },
       markerPosition: {
-        latitude: -15.989938,
-        longitude: -48.044018,
+        latitude: -15,
+        longitude: -48,
       },
       intervalId: null,
     }
@@ -40,7 +42,29 @@ class MissionAccompaniment extends React.Component {
 
   // TODO: Check if it has a mission to display on map
   componentDidMount(){
-    this.getRobotPosition()
+    navigator.geolocation.getCurrentPosition((position) => {
+      console.log("LATITUDE: " + position.coords.latitude)
+      console.log("LONGITUDE: " + position.coords.longitude)
+      this.setState({
+        markerPosition: {
+          ...this.state.markerPosition,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        },
+        isLoading: false
+      })
+      this.setState({
+        region: {
+          ...this.state.region,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        },
+        isLoading: false
+      })
+    },
+    (error) => console.log("error: " + error.message),
+    { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+    );
   }
 
   componentWillUnmount(){
@@ -115,7 +139,14 @@ class MissionAccompaniment extends React.Component {
 
   render() {
     var missionButton = this.renderMissionButton()
-
+    
+    if(this.state.isLoading == true){
+      return (
+        <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
+          <ActivityIndicator size="large" color="#0000ff" style={styles.activityIndicator}/>
+        </ImageBackground>
+      )
+    } else {
     return(
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
@@ -145,5 +176,6 @@ class MissionAccompaniment extends React.Component {
       )
     }
   }
+}
 
 export default MissionAccompaniment;
