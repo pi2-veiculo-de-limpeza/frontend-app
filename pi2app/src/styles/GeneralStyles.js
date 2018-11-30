@@ -1,4 +1,6 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
+const { height } = Dimensions.get('window');
+
 
 const styles = StyleSheet.create({
     initialBackgroundImage: {
@@ -27,6 +29,13 @@ const styles = StyleSheet.create({
       fontSize: 20,
       color: 'white',
     },
+
+    activityIndicator: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      height: 80
+   },
   
     registerButton: {
       width: 320,
@@ -44,19 +53,103 @@ const styles = StyleSheet.create({
       marginTop: 140,
     },
 
-    registerVehicleButton: {
+    greenButton: {
       width: 140,
       height: 45,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#50DD64',
+      backgroundColor: '#55C583',
       borderRadius: 10,
-      marginBottom: 60,
+      marginBottom: 20,
+    },
+
+    redButton: {
+      width: 170,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#E94B74',
+      borderRadius: 10,
+      marginBottom: 20,
+    },
+
+    blueButton: {
+      width: 170,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#4885ed',
+      borderRadius: 10,
+      marginBottom: 20,
+    },
+
+    yellowButton: {
+      width: 170,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#ffd800',
+      borderRadius: 10,
+      marginBottom: 20,
+    },
+
+    grayButton: {
+      width: 140,
+      height: 45,
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#858585',
+      borderRadius: 10,
+      marginBottom: 20,
     },
 
     vehicleScrollView: {
       paddingVertical: 20
-    }
+    },
+
+    simpleText: {
+      fontSize: 30,
+      fontWeight: 'bold',
+      color: 'white',
+    },
+
+    simpleTextView: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+      backgroundColor: '#328A2E',
+      margin: 10,
+      borderRadius: 2,
+   },
+
+   missionNameView: {
+    flex: 1,
+    flexDirection:"column",
+  },
+
+  missionNameTouch: {
+    backgroundColor: '#C26A00',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginHorizontal: 45,
+    marginVertical: 10,
+  },
+
+  missionTextName: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+  }, 
+
+  mapStyle: {
+    flex: 1, 
+    alignItems: 'center',
+    height: height * 0.7,
+    paddingVertical: 20,
+    marginHorizontal: 10,
+    backgroundColor: "gray"
+  },
 });
 
 export default styles;

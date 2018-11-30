@@ -3,7 +3,7 @@ import { RootNavigator } from './src/Routes';
 import { isSignedIn } from "./src/AuthMethods";
 
 if (process.env.BACKEND == undefined || process.env.BACKEND == ''){
-  process.env.BACKEND='http://' + process.env.REACT_NATIVE_PACKAGER_HOSTNAME + ':3000'
+  process.env.BACKEND='http://' + process.env.REACT_NATIVE_PACKAGER_HOSTNAME
 }
 
 class App extends React.Component {

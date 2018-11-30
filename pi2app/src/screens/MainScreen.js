@@ -11,8 +11,7 @@ import { getUserToken, getUserId } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 import VehicleCard from '../components/VehicleCard';
-
-
+import DefaultButton from "../components/DefaultButton";
 
 class MainScreen extends React.Component {
   state = {
@@ -34,7 +33,16 @@ class MainScreen extends React.Component {
       .catch(err => alert("Erro"));
   }
 
-  addNewVehicle(name='SandBot', battery_state=3, battery_capacity=3, weight='0kg', distance='0m', estimated_time=new Date(), elapsed_time=new Date()){
+  addNewVehicle(name='SandBot', 
+                code='123abc', 
+                vehicleId=0,
+                userToken=0,
+                battery_state=3, 
+                battery_capacity=3, 
+                weight='0kg', 
+                distance='0m', 
+                estimated_time=new Date(), 
+                elapsed_time=new Date()){
 
     var newVehicle = {
       name: name,
@@ -43,7 +51,10 @@ class MainScreen extends React.Component {
       weight: weight,
       distance: distance,
       estimated_time: estimated_time,
-      elapsed_time: elapsed_time
+      elapsed_time: elapsed_time,
+      code: code,
+      vehicleId: vehicleId,
+      userToken: userToken
     }
 
     this.state.vehicles.push(newVehicle)
@@ -110,7 +121,15 @@ class MainScreen extends React.Component {
 
         //Insert current vehicles
         responseJson.map((json_vehicle, index) => {
-          this.addNewVehicle(name=json_vehicle.name);
+
+          console.log(json_vehicle)
+
+          this.addNewVehicle(
+            name=json_vehicle.name,
+            code=json_vehicle.code,
+            vehicleId=json_vehicle._id.$oid,
+            userToken=this.state.userToken
+            );
         })
         
         // console.log("Vehicle response")
@@ -129,39 +148,42 @@ class MainScreen extends React.Component {
   render() {
     return (
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
-      <ScrollView contentContainerStyle={styles.vehicleScrollView} refreshControl={
-        <RefreshControl
-          refreshing={this.state.refreshing}
-          onRefresh={this._onRefresh}
-        />
-      }>
-        <View>
-          {this.state.vehicles.map((vehicle, index) => {
-            return (
-              <VehicleCard
-                  key={index}
-                  vehicle={vehicle}
-                  navigation={this.props.navigation}
-              />
-            );
-          })}
-        </View>
-      </ScrollView>
-      <View>
-          <Button
-            backgroundColor="#000000"
-            title="Logout"
-            onPress={() => this.props.navigation.navigate("Logout")}
+        <ScrollView contentContainerStyle={styles.vehicleScrollView} refreshControl={
+          <RefreshControl
+            refreshing={this.state.refreshing}
+            onRefresh={this._onRefresh}
+          />
+        }>
+          <View>
+            {this.state.vehicles.map((vehicle, index) => {
+              return (
+                <TouchableHighlight 
+                key={index}
+                onPress={ () => { this.props.navigation.navigate("VehicleDetail", {vehicle:vehicle}) }}>
+                  <VehicleCard
+                      vehicle={vehicle}
+                  />
+                </TouchableHighlight>
+              );
+            })}
+          </View>
+        
+        <View style={{flex: 1, flexDirection: 'row'}}>
+          <DefaultButton 
+            text={"Logout"}
+            type={"blue"}
+            onPress={() => this.props.navigation.navigate("Logout")}            
           />
 
-          <Button
-            backgroundColor="#000000"
-            title="Editar conta"
+          <DefaultButton 
+            text={"Editar conta"}
+            type={"blue"}
             onPress={() => this.props.navigation.navigate("UpdateUserInfo", {
               userToken: this.state.userToken,
               userId: this.state.userId})}
           />
-      </View>
+        </View>
+        </ScrollView>
       </ImageBackground>
 
     );
