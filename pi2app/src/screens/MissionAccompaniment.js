@@ -5,6 +5,8 @@ import {
   Dimensions,
   ActivityIndicator,
   ScrollView } from 'react-native';
+import axios from 'axios';
+import { getUserToken } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import CreateMissionMapStyle from '../styles/CreateMissionMapStyle';
 import DefaultButton from "../components/DefaultButton";
@@ -22,8 +24,10 @@ class MissionAccompaniment extends React.Component {
     super(props);
 
     this.state = {
-      token: '',
+      userToken: '',
       isInMission: false,
+      garbageVolume: 'Indisponível',
+      garbageWeight: 'Indisponível',
       isLoading: true,
       region: {
         latitude: -15,
@@ -38,6 +42,11 @@ class MissionAccompaniment extends React.Component {
       intervalId: null,
     }
     this.getRobotPosition = this.getRobotPosition.bind(this);
+  }
+
+  componentWillMount(){
+    getUserToken().then(res => this.setState({ userToken: res }))
+      .catch(err => alert("Erro"));
   }
 
   // TODO: Check if it has a mission to display on map
@@ -65,6 +74,8 @@ class MissionAccompaniment extends React.Component {
     (error) => console.log("error: " + error.message),
     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
     );
+    this.getRobotInfo()
+
   }
 
   componentWillUnmount(){
@@ -83,6 +94,28 @@ class MissionAccompaniment extends React.Component {
     })
     console.log("MARKER UPDATED")
   }
+
+  getRobotInfo = async () => {
+    // wait 1s for db get userToken
+    if (this.state.userToken == undefined || this.state.userToken == ""){
+      await sleep(1000);
+    }
+    const mission = this.props.navigation.state.params.mission
+
+    axios.all([
+      axios.get(`${process.env.BACKEND}/volume?mission_id=/` + mission._id.$oid, { headers: { Authorization: this.state.userToken } }),
+      axios.get(`${process.env.BACKEND}/peso?mission_id=/` + mission._id.$oid, { headers: { Authorization: this.state.userToken } })
+      ])
+      .then(axios.spread(function (volumeResponse, weightResponse) {
+        if(volumeResponse.data == '' || weightResponse == ''){
+          console.log("Dado não disponível")
+        } else {
+          this.setState({ garbageVolume: volumeResponse.data })
+          this.setState({ garbageWeight: weightResponse.data })
+        }
+      })
+    )
+  };
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -176,6 +209,10 @@ class MissionAccompaniment extends React.Component {
       )
     }
   }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export default MissionAccompaniment;

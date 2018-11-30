@@ -142,6 +142,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginHorizontal: 45,
     marginVertical: 10,
+    paddingVertical: 10,
   },
 
   missionTextName: {
