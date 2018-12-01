@@ -13,8 +13,8 @@ jobs:
       script:
         - cd pi2app
         - yarn add expo-cli
-        - yarn expo login -u $EXPO_USERNAME -p $EXPO_PASSWORD
-        - yarn build:android --non-interactive
+        - expo-cli login -u $EXPO_USERNAME -p $EXPO_PASSWORD
+        - expo-cli build:android --non-interactive
 
     - stage: build
       name: "Build master expo"
