@@ -132,26 +132,36 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
 
-   missionNameView: {
-    flex: 1,
-    flexDirection:"column",
+  missionScrollView: {
+    paddingVertical: 5
   },
 
+   missionNameView: {
+    flex: 1,
+    flexDirection: "column",
+    backgroundColor: 'rgba(200, 200, 200, 0.4)',
+    marginHorizontal: 20,
+    paddingVertical: 5,
+    borderRadius: 5,
+  },
+  
   missionNameTouch: {
-    backgroundColor: '#C26A00',
+    backgroundColor: '#ffffff',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
     marginHorizontal: 45,
     marginVertical: 10,
     paddingVertical: 10,
+    justifyContent: 'flex-start'
   },
 
   missionTextName: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: 'white',
-  }, 
+    color: '#686868',
+    textAlign: 'center',
+  },
 
   mapStyle: {
     flex: 1, 

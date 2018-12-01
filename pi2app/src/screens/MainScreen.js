@@ -173,7 +173,7 @@ class MainScreen extends React.Component {
                     title={ vehicle.name }
                   >
                     <Text style={{color: 'black', textAlign: 'center'}}>
-                      Aperte aqui para mais detalhes.
+                      Aperte aqui para ver as missões.
                     </Text>
                   </Card>
                 </TouchableHighlight>
