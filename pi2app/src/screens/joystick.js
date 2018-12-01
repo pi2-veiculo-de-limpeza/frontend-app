@@ -132,6 +132,7 @@ class Joystick extends React.Component {
 
     var angleRadians = Math.atan2(value.y * -1, value.x);
     var degrees = angleRadians * 180 / Math.PI;
+    degrees = degrees < 0 ? degrees + 360 : degrees
 
     var speed = Math.sqrt( Math.pow(value.x, 2) + Math.pow(value.y, 2) )
     speed = this.filterValue(speed)
@@ -219,6 +220,13 @@ class Joystick extends React.Component {
 
 
 const StickStyle = StyleSheet.create({
+
+    background: {
+        width: 500,
+        height: 800,
+        opacity: 0.0
+    },
+
     frontCircle: {
         width: 100,
         height: 100,
