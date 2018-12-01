@@ -1,0 +1,30 @@
+# .travis.yml
+
+stages:
+  - build
+
+jobs:
+  include:
+    - stage: build
+      name: "Build dev expo"
+      if: branch = dev
+      node_js:
+        - '9.3'
+      script:
+        - cd pi2app
+        - yarn
+        - yarn global add expo-cli
+        - expo-cli login -u $EXPO_USERNAME -p $EXPO_PASSWORD
+        - expo-cli build:android --non-interactive
+
+    - stage: build
+      name: "Build master expo"
+      if: branch = master
+      node_js:
+        - '9.3'
+      script:
+        - cd pi2app
+        - yarn
+        - yarn global add expo-cli
+        - expo-cli login -u $EXPO_USERNAME -p $EXPO_PASSWORD
+        - expo-cli build:android --non-interactive

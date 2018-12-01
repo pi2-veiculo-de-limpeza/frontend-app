@@ -1,13 +1,10 @@
 import React from 'react';
-import {
-  Text, 
+import { 
   View,
-  TouchableOpacity ,
   PanResponder,
   Animated
 } from "react-native";
-import { Button, Icon } from 'react-native-elements';
-import styles from '../styles/GeneralStyles';
+import {Icon } from 'react-native-elements';
 import { StyleSheet } from 'react-native';
 import DefaultButton from "../components/DefaultButton";
 
@@ -95,10 +92,8 @@ class Joystick extends React.Component {
     });
   }
 
-  valueUpdate = (value) => {
-    dir = (value.y * -1) < 0? -1 : 1;
-
-    absolute = Math.abs(value.y)
+  filterValue(value){
+    absolute = Math.abs(value)
 
     if(absolute <= 1){
         absolute = 0
@@ -125,14 +120,44 @@ class Joystick extends React.Component {
     }else{
         absolute = 100
     }
-    
-    console.log(`value: ${absolute}, ${dir}`)
 
-    if(absolute >= 0 && absolute <= 100){
-        this.state.ws.send(`left,${absolute},${dir}`);
-        this.state.ws.send(`right,${absolute},${dir}`);
+    return absolute
+  }
+
+  valueUpdate = (value) => {
+    dir = 1
+
+    left_dir = 1
+    right_dir = 1
+
+    var angleRadians = Math.atan2(value.y * -1, value.x);
+    var degrees = angleRadians * 180 / Math.PI;
+
+    var speed = Math.sqrt( Math.pow(value.x, 2) + Math.pow(value.y, 2) )
+    speed = this.filterValue(speed)
+    console.log(`${degrees} : ${speed}`)
+
+    if (degrees >= 45 && degrees < 135){
+        left_dir  = 1
+        right_dir = 1
+    }else if(degrees >= 135 && degrees < 225){
+        left_dir  = -1
+        right_dir = 1
+    }else if(degrees >= 225 && degrees < 315){
+        left_dir  = -1
+        right_dir = -1
+    }else {
+        left_dir  = 1
+        right_dir = -1
     }
-    
+
+    if (speed >= 20){
+        this.state.ws.send(`left,${speed},${left_dir}`);
+        this.state.ws.send(`right,${speed},${right_dir}`);
+    }else{
+        this.state.ws.send(`left,${0},${1}`);
+        this.state.ws.send(`right,${0},${1}`);
+    }
   }
 
   turnMatOn(){
