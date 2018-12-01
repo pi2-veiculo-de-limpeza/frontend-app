@@ -6,6 +6,7 @@ import {
   TouchableOpacity } from 'react-native';
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
+import RemoteHandle from './Remote'
 
 class InitialScreen extends React.Component {
   static navigationOptions = {
@@ -37,6 +38,9 @@ class InitialScreen extends React.Component {
             </TouchableOpacity>
           </View>
         </View>
+        <RemoteHandle submit={(vehicle, ws) => {
+          this.props.navigation.navigate("Joystick", {vehicle: vehicle, websocket: ws})
+         } }> </RemoteHandle>
       </ImageBackground>
 
     );
