@@ -82,6 +82,7 @@ class VehicleRegister extends React.Component {
     bodyData = {
       code: this.state.robotCode,
       name: this.state.robotName,
+      speed: 100,
       user_id: this.state.user_id
     }
 

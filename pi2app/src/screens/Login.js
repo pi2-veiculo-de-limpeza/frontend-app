@@ -49,6 +49,8 @@ class Login extends React.Component{
       "password": this.state.password
     }
 
+    console.log(`${process.env.BACKEND}/sessions`)
+
     await axios.post(`${process.env.BACKEND}/sessions`, userBody)
     .then((response) => {
       var responseToken = response.data.token;

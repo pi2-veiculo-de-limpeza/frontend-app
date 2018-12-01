@@ -17,7 +17,7 @@ class InitialScreen extends React.Component {
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         <View style={styles.initialScreen}>
           <View style={{ flex: 1, alignItems: 'center' }}>
-            <Text style={styles.titleText}>Robô</Text>
+            <Text style={styles.initialScreenTitle}>Robô Limpador de Terrenos Arenosos</Text>
           </View>
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <TouchableOpacity

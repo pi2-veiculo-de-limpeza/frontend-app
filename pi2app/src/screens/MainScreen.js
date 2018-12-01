@@ -7,7 +7,7 @@ import {
   RefreshControl,
   ImageBackground } from 'react-native';
 import { Card, ListItem, Button, Icon, Badge } from 'react-native-elements';
-import { getUserToken, getUserId } from "../AuthMethods";
+import { getUserToken, getUserId, onSignOut } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 import VehicleCard from '../components/VehicleCard';
@@ -139,6 +139,8 @@ class MainScreen extends React.Component {
 			})
 			.catch((err) => {
         this.setState({refreshing: false});
+        onSignOut();
+        this.props.navigation.navigate("InitialScreen");
 				console.log(err);
       })
       
@@ -155,6 +157,15 @@ class MainScreen extends React.Component {
           />
         }>
           <View>
+          {this.state.vehicles.length == 0 && !this.state.refreshing &&
+            <Card
+              title={ "Nenhum veículo cadastrado!" }
+              >
+              <Text style={{color: 'black'}}>
+                Para cadastrarar um veículo, aperte no ícone de + no canto superior direito.
+              </Text>
+            </Card>
+            }
             {this.state.vehicles.map((vehicle, index) => {
               return (
                 <TouchableHighlight 

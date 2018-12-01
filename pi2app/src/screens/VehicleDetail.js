@@ -1,17 +1,20 @@
 import React from 'react';
 import {
-  View,
   ImageBackground,
   Text,
-  ScrollView,
+  View,
   ActivityIndicator,
   TouchableHighlight,
-} from 'react-native';
+  Alert,
+  ScrollView } from 'react-native';
 import axios from 'axios';
+import { Button } from 'react-native-elements';
 import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
 import VehicleCard from '../components/VehicleCard';
+import Dialog from "react-native-dialog";
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
+
 
 class VehicleDetail extends React.Component {
   constructor(props) {
@@ -21,6 +24,9 @@ class VehicleDetail extends React.Component {
       missions: [],
       isLoading: false,
       vehicleInfo: {},
+      navigation: undefined,
+      isDialogVisible: false,
+      ip: ''
     }
   }
 
@@ -69,13 +75,59 @@ class VehicleDetail extends React.Component {
     }
   };
 
+  startManual(){
+    this.setState({ isDialogVisible:true })
+  }
+
+  handleIp(ipAddressText){
+    this.setState({ip: ipAddressText})
+    console.log(this.state.ip)
+  }
+
+  beginJoystick = () => {
+
+    ip_address = this.state.ip
+
+    var ws = new WebSocket(`ws://${ip_address}:8000`);
+    ws.onopen = () => {
+      // connection opened
+      ws.send('Remote activated'); // send a message
+      this.state.navigation.navigate("Joystick", {vehicle: this.state.navigation.state.params.vehicle, websocket: ws})
+      this.setState({ isDialogVisible:false })
+    };
+    ws.onclose = (e) => {
+      this.showAlert('Error', 'Não foi possível se conectar com o veículo.')
+      console.log(e.code, e.reason);
+    };
+  }
+
+  showAlert(title, body){
+    Alert.alert(
+      title,
+      body,
+      [
+        {text: 'Ok', onPress: () => console.log('Ok pressed')},
+      ],
+      { cancelable: false }
+    )
+  }
+
+  stopManual(){
+    this.setState({ onManual:false })
+  }
+
   render() {
-    const {params} = this.props.navigation.state
+
+    var screen;
+    const {params} = this.props.navigation.state;
+    this.state.navigation = this.props.navigation;
+
     if(this.state.isLoading == true){
       return (
         <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
           <ActivityIndicator size="large" color="#0000ff" style={styles.activityIndicator}/>
         </ImageBackground>
+
       )
     } else {
       return (
@@ -85,12 +137,20 @@ class VehicleDetail extends React.Component {
             key={1}
             vehicle={params.vehicle}
           />
-          <DefaultButton
-            type={"blue"}
-            text={"Editar Robô"}
-            padding={15}
-            onPress={ () => this.props.navigation.navigate("VehicleEdit", {vehicle: params.vehicle}) } 
-          />
+          <View style={{flex: 1, flexDirection: 'row'}}>
+            <DefaultButton
+              type={"blue"}
+              text={"Editar Robô"}
+              padding={15}
+              onPress={ () => this.props.navigation.navigate("VehicleEdit", {vehicle: params.vehicle}) } 
+            />
+            <DefaultButton
+              type={"green"}
+              text={"Remoto"}
+              padding={15}
+              onPress={() => this.startManual()}
+            />
+          </View>
 
           <View style={styles.simpleTextView}>
             <Text style={styles.simpleText}>
@@ -120,11 +180,21 @@ class VehicleDetail extends React.Component {
             onPress={() => this.newMission()}
           />
 
+          <View>
+            <Dialog.Container visible={this.state.isDialogVisible}>
+              <Dialog.Title>LAN IP address</Dialog.Title>
+              <Dialog.Input text={this.state.ip} onChangeText={(ip) => this.handleIp(ip)}
+              ></Dialog.Input>
+              <Dialog.Button label="Cancel" onPress={() => {this.setState({isDialogVisible: false})} } />
+              <Dialog.Button label="Submit" onPress={this.beginJoystick} />
+            </Dialog.Container>
+          </View>
+
         </ScrollView>
       </ImageBackground>
       )
     }
   }
-  }
+}
 
 export default VehicleDetail;
