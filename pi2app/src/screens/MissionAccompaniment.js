@@ -117,6 +117,23 @@ class MissionAccompaniment extends React.Component {
     )
   };
 
+  missionHasStarted = async () => {
+    const mission = this.props.navigation.state.params.mission
+
+    const endpoint = `${process.env.BACKEND}/missions/` + mission._id.$oid + '/andamento'
+    const body = {
+      "status": 'andamento',
+    }
+
+    await axios.post(endpoint, body, { headers: { Authorization: this.state.userToken } })
+    .then(() => {
+      console.log('Mission has started.')
+    })
+    .catch((error) => {
+      console.log('Error', error.message);
+    })
+  };
+
   static navigationOptions = ({ navigation }) => {
     return {
       title: navigation.state.params.mission.name,
@@ -138,6 +155,7 @@ class MissionAccompaniment extends React.Component {
   startMission(){
     // TODO: iniciar mapeamento do terreno
     this.setState({ isInMission:true })
+    this.missionHasStarted()
     let updateMarker = setInterval(this.getRobotPosition, 2000);
     this.setState({ intervalId: updateMarker })
   }
