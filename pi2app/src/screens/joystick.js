@@ -131,7 +131,6 @@ class Joystick extends React.Component {
     dir = 1
 
     var angleRadians = Math.atan2(value.y * -1, value.x);
-    
 
     var speed = Math.sqrt( Math.pow(value.x, 2) + Math.pow(value.y, 2) )
     console.log(`${angleRadians} : ${speed}`)

@@ -12,7 +12,7 @@ import { Button } from 'react-native-elements';
 import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
 import VehicleCard from '../components/VehicleCard';
-import DialogInput from 'react-native-dialog-input';
+import Dialog from "react-native-dialog";
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 
 
@@ -25,7 +25,8 @@ class VehicleDetail extends React.Component {
       isLoading: false,
       vehicleInfo: {},
       navigation: undefined,
-      isDialogVisible: false
+      isDialogVisible: false,
+      ip: ''
     }
   }
 
@@ -78,7 +79,15 @@ class VehicleDetail extends React.Component {
     this.setState({ isDialogVisible:true })
   }
 
-  beginJoystick(ip_address){
+  handleIp(ipAddressText){
+    this.setState({ip: ipAddressText})
+    console.log(this.state.ip)
+  }
+
+  beginJoystick = () => {
+
+    ip_address = this.state.ip
+
     var ws = new WebSocket(`ws://${ip_address}:8000`);
     ws.onopen = () => {
       // connection opened
@@ -171,19 +180,21 @@ class VehicleDetail extends React.Component {
             onPress={() => this.newMission()}
           />
 
-          <DialogInput isDialogVisible={this.state.isDialogVisible}
-            title={"Conexão remota"}
-            message={"Entre com o IP de rede do veículo"}
-            hintInput ={"192.168.1.20"}
-            submitInput={ (inputText) => {this.beginJoystick(inputText)} }
-            closeDialog={ () => {this.setState({ isDialogVisible:false })}}>
-          </DialogInput>
+          <View>
+            <Dialog.Container visible={this.state.isDialogVisible}>
+              <Dialog.Title>LAN IP address</Dialog.Title>
+              <Dialog.Input text={this.state.ip} onChangeText={(ip) => this.handleIp(ip)}
+              ></Dialog.Input>
+              <Dialog.Button label="Cancel" onPress={() => {this.setState({isDialogVisible: false})} } />
+              <Dialog.Button label="Submit" onPress={this.beginJoystick} />
+            </Dialog.Container>
+          </View>
 
         </ScrollView>
       </ImageBackground>
       )
     }
   }
-  }
+}
 
 export default VehicleDetail;

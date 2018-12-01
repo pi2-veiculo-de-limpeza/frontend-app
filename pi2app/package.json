@@ -24,7 +24,7 @@
     "expo-multi-touch": "0.0.0",
     "react": "16.3.1",
     "react-native": "~0.55.2",
-    "react-native-dialog-input": "^1.0.5",
+    "react-native-dialog": "^5.5.0",
     "react-native-elements": "^0.19.1",
     "react-navigation": "^2.18.0",
     "watchman": "^1.0.0"
