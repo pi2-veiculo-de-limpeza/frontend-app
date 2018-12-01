@@ -28,7 +28,6 @@ class MissionAccompaniment extends React.Component {
     this.state = {
       userToken: '',
       isInMission: false,
-      garbageVolume: 'Indisponível',
       garbageWeight: 'Indisponível',
       speed: 'Indisponível',
       isLoading: true,
@@ -42,9 +41,11 @@ class MissionAccompaniment extends React.Component {
         latitude: -15,
         longitude: -48,
       },
-      intervalId: null,
+      updateMarkerId: null,
+      updateRobotInfoId: null,
     }
     this.getRobotPosition = this.getRobotPosition.bind(this);
+    this.getRobotInfo = this.getRobotInfo.bind(this);
   }
 
   componentWillMount(){
@@ -77,8 +78,6 @@ class MissionAccompaniment extends React.Component {
     (error) => console.log("error: " + error.message),
     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
     );
-    this.getRobotInfo()
-
   }
 
   componentWillUnmount(){
@@ -111,10 +110,20 @@ class MissionAccompaniment extends React.Component {
       ])
       .then(axios.spread(function (volumeResponse, weightResponse) {
         if(volumeResponse.data == '' || weightResponse == ''){
-          console.log("Dado não disponível")
+          console.log("Dados não disponíveis")
         } else {
-          this.setState({ garbageVolume: volumeResponse.data })
           this.setState({ garbageWeight: weightResponse.data })
+          // Check atribute from response
+          if(volumeResponse.data.volume){
+            Alert.alert(
+              'Aviso!',
+              'A lixeira chegou em sua capacidade máxima. Por favor, retire o lixo.',
+              [
+                {text: 'Ok', onPress: () => console.log('Ok')},
+              ],
+              { cancelable: false }
+            ) 
+          }
         }
       })
     )
@@ -160,13 +169,16 @@ class MissionAccompaniment extends React.Component {
     this.setState({ isInMission:true })
     this.missionHasStarted()
     let updateMarker = setInterval(this.getRobotPosition, 2000);
-    this.setState({ intervalId: updateMarker })
+    let updateRobotInfo = setInterval(this.getRobotInfo, 2000);
+    this.setState({ updateMarkerId: updateMarker })
+    this.setState({ updateRobotInfoId: updateRobotInfo })
   }
 
   stopMission(){
     // TODO: atualizar API
     this.setState({ isInMission:false })
-    clearInterval(this.state.intervalId)
+    clearInterval(this.state.updateMarkerId)
+    clearInterval(this.state.updateRobotInfoId)
   }
 
   renderMissionButton(){
@@ -227,11 +239,6 @@ class MissionAccompaniment extends React.Component {
       <Card 
           containerStyle={{borderRadius: 10, paddingVertical: 1, justifyContent: 'space-between'}}        
         >
-          <Text style={{color: 'gray'}}>
-            Volume de Lixo:  
-            <Text style={{color: 'black'}}> {this.state.garbageVolume} </Text>
-          </Text>
-
           <Text style={{color: 'gray'}}>
             Peso de Lixo:  
             <Text style={{color: 'black'}}> {this.state.garbageWeight} </Text>
