@@ -3,14 +3,19 @@ import logo from './logo.svg';
 import './App.css';
 
 import BarChart2 from './BarChart2'
+import VehicleData from './VehicleData'
 
 class App extends Component {
   
   state = {
-    data: [12, 5, 6, 6, 9, 10],
+    data: VehicleData.items,
     width: 700,
     height: 500,
     //id: root
+  }
+
+  componentDidMount() {
+    console.log("Dados do veiculo: "+ VehicleData.props)
   }
 
   render() {
@@ -20,6 +25,7 @@ class App extends Component {
               data={this.state.data} 
               width={this.state.width} 
               height={this.state.height} />
+        <VehicleData/>
       </div>
     );
   }

@@ -3,6 +3,7 @@ import './App.css'
 import { scaleLinear } from 'd3-scale'
 import { max } from 'd3-array'
 import { select } from 'd3-selection'
+import VehicleData from './VehicleData'
 
 class BarChart2 extends Component {
   componentDidMount() {
@@ -11,9 +12,10 @@ class BarChart2 extends Component {
     
   drawChart() {
     const data = this.props.data;
-    const h = 300;
+    var w = 700;
+    var h = 300;
     
-    const svg = select("#barchart")
+    const svg = select("#myChart")
     .append("svg")
     .attr("width", this.props.width)
     .attr("height", this.props.height);
@@ -35,6 +37,11 @@ class BarChart2 extends Component {
       .text((d) => d)
       .attr("x", (d, i) => i * 70)
       .attr("y", (d, i) => h - (10 * d) - 3)
+
+    // svg.selectAll("bar-label")
+    // 	.data(data)
+    // 	.enter()
+    // 	.
   }
         
   render(){
