@@ -1,10 +1,12 @@
 import React from 'react';
 import {
   View,
+  Text,
   ImageBackground,
   Dimensions,
   ActivityIndicator,
   ScrollView } from 'react-native';
+import { Card } from 'react-native-elements';
 import axios from 'axios';
 import { getUserToken } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
@@ -28,6 +30,7 @@ class MissionAccompaniment extends React.Component {
       isInMission: false,
       garbageVolume: 'Indisponível',
       garbageWeight: 'Indisponível',
+      speed: 'Indisponível',
       isLoading: true,
       region: {
         latitude: -15,
@@ -202,7 +205,7 @@ class MissionAccompaniment extends React.Component {
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
           
-          {/* PLACEHOLDER do mapa */}
+          {/* Map */}
           <View style={styles.mapStyle}>
             <MapView
               initialRegion={this.state.region}
@@ -220,8 +223,27 @@ class MissionAccompaniment extends React.Component {
               </Marker>
             </MapView>
           </View>
-          {missionButton}
 
+      <Card 
+          containerStyle={{borderRadius: 10, paddingVertical: 1, justifyContent: 'space-between'}}        
+        >
+          <Text style={{color: 'gray'}}>
+            Volume de Lixo:  
+            <Text style={{color: 'black'}}> {this.state.garbageVolume} </Text>
+          </Text>
+
+          <Text style={{color: 'gray'}}>
+            Peso de Lixo:  
+            <Text style={{color: 'black'}}> {this.state.garbageWeight} </Text>
+          </Text>
+
+          <Text style={{color: 'gray'}}>
+            Velocidade:  
+            <Text style={{color: 'black'}}> {this.state.speed} </Text>
+          </Text>
+          </Card>
+
+          {missionButton}
         </ScrollView>
       </ImageBackground>
       )
