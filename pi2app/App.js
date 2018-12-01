@@ -2,10 +2,10 @@ import React from 'react';
 import { RootNavigator } from './src/Routes';
 import { isSignedIn } from "./src/AuthMethods";
 
+process.env.BACKEND='http://18.216.157.143'
 if (process.env.BACKEND == undefined || process.env.BACKEND == ''){
   process.env.BACKEND=`http://${REACT_NATIVE_PACKAGER_HOSTNAME}:3000`
 }
-process.env.BACKEND='http://18.216.157.143'
 
 class App extends React.Component {
   state = {
