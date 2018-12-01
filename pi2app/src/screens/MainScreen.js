@@ -148,7 +148,7 @@ class MainScreen extends React.Component {
   render() {
     return (
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
-        <ScrollView contentContainerStyle={styles.vehicleScrollView} refreshControl={
+        <ScrollView style={styles.vehicleScrollView} refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
             onRefresh={this._onRefresh}
@@ -181,7 +181,9 @@ class MainScreen extends React.Component {
             })}
           </View>
         
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        
+        </ScrollView>
+        <View style={{flexDirection: 'row', marginBottom: 1}}>
           <DefaultButton 
             text={"Logout"}
             type={"blue"}
@@ -196,7 +198,6 @@ class MainScreen extends React.Component {
               userId: this.state.userId})}
           />
         </View>
-        </ScrollView>
       </ImageBackground>
 
     );

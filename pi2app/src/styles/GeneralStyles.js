@@ -5,7 +5,13 @@ const { height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   initialBackgroundImage: {
     flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
     width: null,
+  },
+
+  vehicleScrollView: {
+    paddingVertical: 5
   },
 
   initialScreen: {
@@ -109,10 +115,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#858585',
     borderRadius: 10,
     marginBottom: 20,
-  },
-
-  vehicleScrollView: {
-    paddingVertical: 20
   },
 
   simpleText: {
