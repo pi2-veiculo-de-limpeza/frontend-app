@@ -126,8 +126,9 @@ class VehicleDetail extends React.Component {
         {this.state.missions.length == 0 &&
             <Card
               title={ "Nenhuma Missão cadastradada!" }
+              containerStyle={{borderRadius: 10, paddingVertical: 10}}
               >
-              <Text style={{color: 'black'}}>
+              <Text style={{color: 'black', textAlign: 'center'}}>
                 Suas missões cadastradas aparecerão aqui.
               </Text>
             </Card>

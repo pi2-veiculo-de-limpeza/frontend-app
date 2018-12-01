@@ -139,14 +139,14 @@ const styles = StyleSheet.create({
    missionNameView: {
     flex: 1,
     flexDirection: "column",
-    backgroundColor: 'rgba(200, 200, 200, 0.4)',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
     marginHorizontal: 20,
     paddingVertical: 5,
-    borderRadius: 5,
+    borderRadius: 7,
   },
   
   missionNameTouch: {
-    backgroundColor: '#ffffff',
+    backgroundColor: '#f9fcff',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   missionTextName: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#686868',
+    color: '#042e59',
     textAlign: 'center',
   },
 

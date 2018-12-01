@@ -3,6 +3,7 @@ import {
   View,
   Alert,
   ScrollView,
+  ActivityIndicator,
   ImageBackground, } from 'react-native';
 import styles from '../styles/GeneralStyles';
 import { 
@@ -20,7 +21,8 @@ class VehicleRegister extends React.Component {
     token: '',
     codeIsValid: true,
     robotCode: '',
-    robotName: ''
+    robotName: '',
+    isLoading: false,
   }
 
   // Navigation header
@@ -85,6 +87,7 @@ class VehicleRegister extends React.Component {
       speed: 100,
       user_id: this.state.user_id
     }
+    this.setState({ isLoading: true })
 
 		fetch(vehicles_path, {
 			method: 'POST',
@@ -97,15 +100,24 @@ class VehicleRegister extends React.Component {
 			.then((response) => { return response.json() })
 			.then((responseJson) => {
         // Launch alert of created robot
+        this.setState({ isLoading: false }) 
         this.checkResponseAndLaunchMessage(responseJson)
 			})
 			.catch((err) => {
+        this.setState({ isLoading: false }) 
         this.checkResponseAndLaunchMessage(undefined)
 				console.log(err);
 			})
   }
 
   render() {
+    if(this.state.isLoading == true){
+      return (
+        <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
+          <ActivityIndicator size="large" color="#0000ff" style={styles.activityIndicator}/>
+        </ImageBackground>
+      )
+    } else {
     return (
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}> 
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
@@ -136,6 +148,7 @@ class VehicleRegister extends React.Component {
         </ScrollView>
       </ImageBackground>
     );
+  }
   }
 }
 
