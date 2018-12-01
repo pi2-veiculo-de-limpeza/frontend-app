@@ -1,10 +1,12 @@
 import React from 'react';
 import {
   View,
+  Text,
   ImageBackground,
   Dimensions,
   ActivityIndicator,
   ScrollView } from 'react-native';
+import { Card } from 'react-native-elements';
 import axios from 'axios';
 import { getUserToken } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
@@ -26,8 +28,8 @@ class MissionAccompaniment extends React.Component {
     this.state = {
       userToken: '',
       isInMission: false,
-      garbageVolume: 'Indisponível',
       garbageWeight: 'Indisponível',
+      speed: 'Indisponível',
       isLoading: true,
       region: {
         latitude: -15,
@@ -39,9 +41,11 @@ class MissionAccompaniment extends React.Component {
         latitude: -15,
         longitude: -48,
       },
-      intervalId: null,
+      updateMarkerId: null,
+      updateRobotInfoId: null,
     }
     this.getRobotPosition = this.getRobotPosition.bind(this);
+    this.getRobotInfo = this.getRobotInfo.bind(this);
   }
 
   componentWillMount(){
@@ -74,8 +78,6 @@ class MissionAccompaniment extends React.Component {
     (error) => console.log("error: " + error.message),
     { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
     );
-    this.getRobotInfo()
-
   }
 
   componentWillUnmount(){
@@ -108,13 +110,40 @@ class MissionAccompaniment extends React.Component {
       ])
       .then(axios.spread(function (volumeResponse, weightResponse) {
         if(volumeResponse.data == '' || weightResponse == ''){
-          console.log("Dado não disponível")
+          console.log("Dados não disponíveis")
         } else {
-          this.setState({ garbageVolume: volumeResponse.data })
           this.setState({ garbageWeight: weightResponse.data })
+          // Check atribute from response
+          if(volumeResponse.data.volume){
+            Alert.alert(
+              'Aviso!',
+              'A lixeira chegou em sua capacidade máxima. Por favor, retire o lixo.',
+              [
+                {text: 'Ok', onPress: () => console.log('Ok')},
+              ],
+              { cancelable: false }
+            ) 
+          }
         }
       })
     )
+  };
+
+  missionHasStarted = async () => {
+    const mission = this.props.navigation.state.params.mission
+
+    const endpoint = `${process.env.BACKEND}/missions/` + mission._id.$oid + '/andamento'
+    const body = {
+      "status": 'andamento',
+    }
+
+    await axios.post(endpoint, body, { headers: { Authorization: this.state.userToken } })
+    .then(() => {
+      console.log('Mission has started.')
+    })
+    .catch((error) => {
+      console.log('Error', error.message);
+    })
   };
 
   static navigationOptions = ({ navigation }) => {
@@ -138,14 +167,18 @@ class MissionAccompaniment extends React.Component {
   startMission(){
     // TODO: iniciar mapeamento do terreno
     this.setState({ isInMission:true })
+    this.missionHasStarted()
     let updateMarker = setInterval(this.getRobotPosition, 2000);
-    this.setState({ intervalId: updateMarker })
+    let updateRobotInfo = setInterval(this.getRobotInfo, 2000);
+    this.setState({ updateMarkerId: updateMarker })
+    this.setState({ updateRobotInfoId: updateRobotInfo })
   }
 
   stopMission(){
     // TODO: atualizar API
     this.setState({ isInMission:false })
-    clearInterval(this.state.intervalId)
+    clearInterval(this.state.updateMarkerId)
+    clearInterval(this.state.updateRobotInfoId)
   }
 
   renderMissionButton(){
@@ -184,7 +217,7 @@ class MissionAccompaniment extends React.Component {
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
           
-          {/* PLACEHOLDER do mapa */}
+          {/* Map */}
           <View style={styles.mapStyle}>
             <MapView
               initialRegion={this.state.region}
@@ -202,8 +235,22 @@ class MissionAccompaniment extends React.Component {
               </Marker>
             </MapView>
           </View>
-          {missionButton}
 
+      <Card 
+          containerStyle={{borderRadius: 10, paddingVertical: 1, justifyContent: 'space-between'}}        
+        >
+          <Text style={{color: 'gray'}}>
+            Peso de Lixo:  
+            <Text style={{color: 'black'}}> {this.state.garbageWeight} </Text>
+          </Text>
+
+          <Text style={{color: 'gray'}}>
+            Velocidade:  
+            <Text style={{color: 'black'}}> {this.state.speed} </Text>
+          </Text>
+          </Card>
+
+          {missionButton}
         </ScrollView>
       </ImageBackground>
       )

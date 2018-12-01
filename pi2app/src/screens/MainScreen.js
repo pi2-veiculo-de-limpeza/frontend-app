@@ -151,7 +151,7 @@ class MainScreen extends React.Component {
   render() {
     return (
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
-        <ScrollView contentContainerStyle={styles.vehicleScrollView} refreshControl={
+        <ScrollView style={styles.vehicleScrollView} refreshControl={
           <RefreshControl
             refreshing={this.state.refreshing}
             onRefresh={this._onRefresh}
@@ -161,8 +161,9 @@ class MainScreen extends React.Component {
           {this.state.vehicles.length == 0 && !this.state.refreshing &&
             <Card
               title={ "Nenhum veículo cadastrado!" }
+              containerStyle={{borderRadius: 10, paddingVertical: 10}}
               >
-              <Text style={{color: 'black'}}>
+              <Text style={{color: 'black', textAlign: 'center'}}>
                 Para cadastrarar um veículo, aperte no ícone de + no canto superior direito.
               </Text>
             </Card>
@@ -174,9 +175,11 @@ class MainScreen extends React.Component {
                 onPress={ () => { this.props.navigation.navigate("VehicleDetail", {vehicle:vehicle}) }}>
                   <Card
                     title={ vehicle.name }
+                    containerStyle={{borderRadius: 10, paddingVertical: 10}}
+                    titleStyle={{fontSize: 20, marginBottom: 2}}
                   >
-                    <Text style={{color: 'black', textAlign: 'center'}}>
-                      Aperte aqui para mais detalhes.
+                    <Text style={{color: 'black', textAlign: 'center', fontSize: 15}}>
+                      Aperte aqui para ver as missões.
                     </Text>
                   </Card>
                 </TouchableHighlight>
@@ -184,7 +187,9 @@ class MainScreen extends React.Component {
             })}
           </View>
         
-        <View style={{flex: 1, flexDirection: 'row'}}>
+        
+        </ScrollView>
+        <View style={{flexDirection: 'row', marginBottom: 1}}>
           <DefaultButton 
             text={"Logout"}
             type={"blue"}
@@ -199,7 +204,6 @@ class MainScreen extends React.Component {
               userId: this.state.userId})}
           />
         </View>
-        </ScrollView>
       </ImageBackground>
 
     );
