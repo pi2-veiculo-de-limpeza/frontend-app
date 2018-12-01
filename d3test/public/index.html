@@ -19,9 +19,127 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React PI2</title>
+    <title>React PI2</title> 
+    <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/style.css">
   </head>
   <body>
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+          <a class="navbar-brand" href="#">Navbar</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item active">
+                  <a class="nav-link" href="#">veiculo one <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Missions</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="#">Pricing</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link disabled" href="#">Disabled</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                      Dropdown link
+                  </a>
+                  <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                      <a class="dropdown-item" href="#">Action</a>
+                      <a class="dropdown-item" href="#">Another action</a>
+                      <a class="dropdown-item" href="#">Something else here</a>
+                  </div>
+                </li>
+            </ul>
+            <span class="navbar-text padding_left_30">
+                Bem-vindo  Gesiel
+            </span>
+          </div>
+      </nav>
+    </header>
+
+    <section class="container-fluid">
+      <header class="margin_30_top_button title">
+        <h1>Dados do veículo nos últimos 30 dias</h1>
+      </header>
+      <div class="row">
+        <div class="col-lg-3 col-sm-6">
+          <div class="card">
+            <h5 class="card-header bg-primary">Dados do Veículo</h5>
+            <div class="card-body">
+              <div class="row">
+              <div class="col-sm-4">
+                  <img src="assets/images/vehicle.svg" class="img-thumbnail" />
+                </div>
+                <div class="col-sm-8">
+                  <p class="text-left">Nome: Special title treatment</p>
+                  <p class="text-left">Velocidade: Special title treatment</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <div class="card">
+            <h5 class="card-header bg-oldace">Missões</h5>
+            <div class="card-body">
+              <div class="row">
+              <div class="col-sm-4">
+                  <img src="assets/images/mission.png" class="img-thumbnail" />
+                </div>
+                <div class="col-sm-8">
+                  <p class="text-left">Nome: Special title treatment</p>
+                  <p class="text-left">Velocidade: Special title treatment</p>
+                  <p class="text-left">Nome: Special title treatment</p>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <div class="card">
+            <h5 class="card-header bg-palegreen">Total de lixo coletado</h5>
+            <div class="card-body">
+              <div class="row">
+              <div class="col-sm-4">
+                  <img src="assets/images/peso.png" class="img-thumbnail" />
+                </div>
+                <div class="col-sm-8">
+                  <p class="text-left">Nome: Special title treatment</p>
+                  <p class="text-left">Velocidade: Special title treatment</p>
+                  <p class="text-left">Nome: Special title treatment</p>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+          <div class="card">
+            <h5 class="card-header bg-pink">Total área limpa</h5>
+            <div class="card-body">
+              <div class="row">
+              <div class="col-sm-4">
+                  <img src="assets/images/peso.png" class="img-thumbnail" />
+                </div>
+                <div class="col-sm-8">
+                  <p class="text-left">Nome: Special title treatment</p>
+                  <p class="text-left">Velocidade: Special title treatment</p>
+                  <p class="text-left">Nome: Special title treatment</p>
+              </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <article>
+        <div id="myChart"></div>
+        
+      </article>
+    </section>
     <div id="barchart"></div>
     <noscript>
       You need to enable JavaScript to run this app.

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<title>BI - Veículo limpador de terrenos arenosos</title>
+		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css"/>
+		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-grid.min.css"/>
+		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap.css.map"/>
+		<link rel="stylesheet" type="text/css" href="assets/css/bootstrap-reboot.css"/>
+		<link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="assets/javascript/bootstrap.js"></script>
+		<script type="text/javascript" src="assets/javascript/bootstrap.js.map"></script>
+		<script  type="text/javascript" src="d3.min.js"></script>
+	</head>
+	<body>
+		<header>
+			<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+	  			<a class="navbar-brand" href="#">Navbar</a>
+	  			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+	    		<span class="navbar-toggler-icon"></span>
+	  			</button>
+	  			<div class="collapse navbar-collapse" id="navbarNav">
+	    			<ul class="navbar-nav">
+	      				<li class="nav-item active">
+	       		 			<a class="nav-link" href="#">veiculo one <span class="sr-only">(current)</span></a>
+	      				</li>
+	      				<li class="nav-item">
+	        				<a class="nav-link" href="#">Missions</a>
+	      				</li>
+	      				<li class="nav-item">
+	        				<a class="nav-link" href="#">Pricing</a>
+	      				</li>
+	      				<li class="nav-item">
+	        				<a class="nav-link disabled" href="#">Disabled</a>
+	      				</li>
+	      				<li class="nav-item dropdown">
+        					<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          						Dropdown link
+        					</a>
+        					<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          						<a class="dropdown-item" href="#">Action</a>
+          						<a class="dropdown-item" href="#">Another action</a>
+          						<a class="dropdown-item" href="#">Something else here</a>
+        					</div>
+      					</li>
+	    			</ul>
+	    			<span class="navbar-text padding_left_30">
+      					Bem-vindo  Gesiel
+    				</span>
+	  			</div>
+			</nav>
+		</header>
+		<section class="container-fluid">
+			<header class="margin_30_top_button title">
+				<h1>Dados do veículo nos últimos 30 dias</h1>
+			</header>
+			<div class="row">
+				<div class="col-lg-3 col-sm-6">
+					<div class="card">
+					  <h5 class="card-header bg-primary">Dados do Veículo</h5>
+					  <div class="card-body">
+					  	<div class="row">
+							<div class="col-sm-4">
+					    		<img src="assets/images/vehicle.svg" class="img-thumbnail" />
+					    	</div>
+					    	<div class="col-sm-8">
+					    		<p class="text-left">Nome: Special title treatment</p>
+					    		<p class="text-left">Velocidade: Special title treatment</p>
+					    	</div>
+					    </div>
+					  </div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-sm-6">
+					<div class="card">
+					  <h5 class="card-header bg-oldace">Missões</h5>
+					  <div class="card-body">
+					  	<div class="row">
+							<div class="col-sm-4">
+					    		<img src="assets/images/mission.png" class="img-thumbnail" />
+					    	</div>
+					    	<div class="col-sm-8">
+							    <p class="text-left">Nome: Special title treatment</p>
+							    <p class="text-left">Velocidade: Special title treatment</p>
+							    <p class="text-left">Nome: Special title treatment</p>
+							</div>
+						</div>
+					  </div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-sm-6">
+					<div class="card">
+					  <h5 class="card-header bg-palegreen">Total de lixo coletado</h5>
+					  <div class="card-body">
+					    <div class="row">
+							<div class="col-sm-4">
+					    		<img src="assets/images/peso.png" class="img-thumbnail" />
+					    	</div>
+					    	<div class="col-sm-8">
+							    <p class="text-left">Nome: Special title treatment</p>
+							    <p class="text-left">Velocidade: Special title treatment</p>
+							    <p class="text-left">Nome: Special title treatment</p>
+							</div>
+						</div>
+					  </div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-sm-6">
+					<div class="card">
+					  <h5 class="card-header bg-pink">Total área limpa</h5>
+					  <div class="card-body">
+					    <div class="row">
+							<div class="col-sm-4">
+					    		<img src="assets/images/peso.png" class="img-thumbnail" />
+					    	</div>
+					    	<div class="col-sm-8">
+							    <p class="text-left">Nome: Special title treatment</p>
+							    <p class="text-left">Velocidade: Special title treatment</p>
+							    <p class="text-left">Nome: Special title treatment</p>
+							</div>
+						</div>
+					  </div>
+					</div>
+				</div>
+			</div>
+			<article>
+				<div id="myChart"></div>
+				
+			</article>
+		</section>
+
+		<script>
+
+		var disciplinas = [
+			{key: "Lógica", 	    				value: 78},
+			{key: "Álgebra I", 						value: 71},
+			{key: "Orientação a Objetos", 			value: 67},
+			{key: "Estatística I",					value: 93},
+			{key: "Sistemas Operacionais I", 	    value: 59},
+			{key: "Física Experimental", 			value: 43},
+			{key: "Engenharia de Software", 		value: 88},
+			{key: "Estrutura de Dados",				value: 36},
+			{key: "Algoritmos I", 	    			value: 91},
+			{key: "Algoritmos II", 					value: 74},
+			{key: "Programação Java", 				value: 67},
+			{key: "Programação Python",				value: 75}
+		];
+
+		var w = 800;
+		var h = 450;
+		var margin = {
+			top: 58,
+			bottom: 150,
+			left: 80,
+			right: 40
+		};
+		var width = w - margin.left - margin.right;
+		var height = h - margin.top - margin.bottom;
+
+		var x = d3.scale.ordinal()
+				.domain(disciplinas.map(function(entry){
+					return entry.key;
+				}))
+				.rangeBands([0, width]);
+
+		var y = d3.scale.linear()
+				.domain([0, d3.max(disciplinas, function(d){
+					return d.value;
+				})])
+				.range([height, 0]);
+
+		var ordinalColorScale = d3.scale.category20();
+
+		var xAxis = d3.svg.axis()
+					.scale(x)
+					.orient("bottom");
+					
+		var yAxis = d3.svg.axis()
+					.scale(y)
+					.orient("left");
+
+		var yGridlines = d3.svg.axis()
+						.scale(y)
+						.tickSize(-width,0,0)
+						.tickFormat("")
+						.orient("left");
+
+		var svg = d3.select("#myChart").append("svg")
+					.attr("id", "chart")
+					.attr("width", w)
+					.attr("height", h);
+
+		var chart = svg.append("g")
+					.classed("display", true)
+					.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+		function plot(params){
+			this.append("g")
+				.call(params.gridlines)
+				.classed("gridline", true)
+				.attr("transform", "translate(0,0)")
+			this.selectAll(".bar")
+				.data(params.data)
+				.enter()
+					.append("rect")
+					.classed("bar", true)
+					.attr("x", function(d,i){
+						return x(d.key);
+					})
+					.attr("y", function(d,i){
+						return y(d.value);
+					})
+					.attr("height", function(d,i){
+						return height - y(d.value);
+					})
+					.attr("width", function(d){
+						return x.rangeBand();
+					})
+					.style("fill", function(d,i){
+						return ordinalColorScale(i);
+					});
+			this.selectAll(".bar-label")
+				.data(params.data)
+				.enter()
+					.append("text")
+					.classed("bar-label", true)
+					.attr("x", function(d,i){
+						return x(d.key) + (x.rangeBand()/2)
+					})
+					.attr("dx", 0)
+					.attr("y", function(d,i){
+						return y(d.value);
+					})
+					.attr("dy", -6)
+					.text(function(d){
+						return d.value;
+					})
+			this.append("g")
+				.classed("x axis", true)
+				.attr("transform", "translate(" + 0 + "," + height + ")")
+				.call(params.axis.x)
+					.selectAll("text")
+						.style("text-anchor", "end")
+						.attr("dx", -8)
+						.attr("dy", 8)
+						.attr("transform", "translate(0,0) rotate(-45)");
+
+			this.append("g")
+				.classed("y axis", true)
+				.attr("transform", "translate(0,0)")
+				.call(params.axis.y);
+
+			this.select(".y.axis")
+				.append("text")
+				.attr("x", 80)
+				.attr("y", 0)
+				.style("text-anchor", "middle")
+				.attr("transform", "translate(-50," + height + ") rotate(-90)")
+				.text("Médias");
+
+			this.select(".x.axis")
+				.append("text")
+				.attr("x", 0)
+				.attr("y", 0)
+				.style("text-anchor", "middle")
+				.attr("transform", "translate(" + width/2 + ",145)")
+				.text("Disciplinas");
+		}
+
+		plot.call(chart, {
+			data: disciplinas,
+			axis:{
+				x: xAxis,
+				y: yAxis
+			},
+			gridlines: yGridlines
+		});
+
+		</script>	
+	</body>
+</html>

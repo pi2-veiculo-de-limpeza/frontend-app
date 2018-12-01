@@ -1,0 +1,35 @@
+.padding_left_30{
+	padding-left: 5rem;
+}
+.bg-oldace{
+	background-color: #FDF5E6 !important;
+}
+.bg-palegreen{
+	background-color: #98FB98 !important;
+}
+.bg-pink{
+	background-color: #FFC0CB !important;
+}
+
+/* margins */
+.margin_30_top_button{
+	margin-bottom: 30px !important;
+	margin-top: 30px !important;
+}
+.title h1{
+	font-size: 36px;
+
+}
+
+.img-thumbnail-nova {
+    padding: 0.25rem;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    max-width: 40%;
+    height: auto;
+}
+#myChart{
+	width: 400px;
+	height: 400px;
+}
