@@ -12,6 +12,7 @@ jobs:
         - '9.3'
       script:
         - cd pi2app
+        - yarn
         - yarn global add expo-cli
         - expo-cli login -u $EXPO_USERNAME -p $EXPO_PASSWORD
         - expo-cli build:android --non-interactive
@@ -23,6 +24,7 @@ jobs:
         - '9.3'
       script:
         - cd pi2app
+        - yarn
         - yarn global add expo-cli
         - expo-cli login -u $EXPO_USERNAME -p $EXPO_PASSWORD
         - expo-cli build:android --non-interactive
