@@ -68,7 +68,7 @@ class Joystick extends React.Component {
 
     this.state.ws.onmessage = (e) => {
         // a message was received
-        console.log(e.data);
+        // console.log(e.data);
     };
 
     this.state.ws.onerror = (e) => {
@@ -84,11 +84,6 @@ class Joystick extends React.Component {
     // Connection opened
     this.state.ws.addEventListener('open', function (event) {
         // this.state.ws.send('Hello Server!');
-    });
-
-    // Listen for messages
-    this.state.ws.addEventListener('message', function (event) {
-        console.log('Message from server ', event.data);
     });
   }
 
@@ -200,7 +195,15 @@ class Joystick extends React.Component {
 
     return (
         <View>
-            {this.renderMatHandler()} 
+            <View style={{flex: 1, flexDirection: 'row'}}>
+                {this.renderMatHandler()} 
+                <DefaultButton
+                    type={"blue"}
+                    text={"Sensores"}
+                    padding={15}
+                    onPress={() => this.props.navigation.navigate("Sensors", { ws: this.state.ws}) }
+                />
+            </View>
             <View style={{
                 marginTop:200,
                 alignItems:'center'

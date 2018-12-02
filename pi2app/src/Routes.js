@@ -12,6 +12,8 @@ import MissionDefinition from './screens/MissionDefinition';
 import VehicleEdit from './screens/VehicleEdit';
 import MissionAccompaniment from './screens/MissionAccompaniment';
 import Joystick from './screens/joystick.js';
+import Sensors from './screens/Sensors.js';
+
 
 // Routes for a not signed in user must be placed here.
 export const SignedOutRoutes = createStackNavigator({
@@ -65,6 +67,10 @@ export const SignedInRoutes = createStackNavigator({
 
   Joystick:{
     screen: Joystick
+  },
+
+  Sensors:{
+    screen: Sensors
   }
 });
 
