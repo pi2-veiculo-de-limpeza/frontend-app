@@ -12,7 +12,7 @@ class Sensors extends React.Component {
 
         motor = {
             name: 'motor',
-            pwm: 20,
+            pwm: 0,
             dir: 'False'
         }
 
@@ -64,7 +64,6 @@ class Sensors extends React.Component {
 
     this.state.ws.onmessage = (e) => {
         // a message was received
-        console.log(e.data);
 
         msg = e.data
         msg_array = msg.split(',');
@@ -143,10 +142,10 @@ class Sensors extends React.Component {
             <Text>{motor.name}</Text>
             <View style={{flex: 1, flexDirection: 'row'}}>
                 <Text>
-                    {'\t'} duty cycle: {motor.pwm}%
+                    {'\t'} duty cycle: { Math.abs(motor.pwm-100) }%
                 </Text>
                 <Text>
-                    {'\t'} direction: {motor.pwm == 'False' ? 'frente' : 'trás'}
+                    {'\t'} direction: {motor.dir == 'False' ? 'frente' : 'trás'}
                 </Text>
             </View>
         </View>
