@@ -94,6 +94,13 @@ class MissionAccompaniment extends React.Component {
         longitude: long,
       },
     })
+    this.setState({
+      region: {
+        ...this.state.region,
+        latitude: lat,
+        longitude: long
+      }
+    })
     console.log("MARKER UPDATED")
   }
 
@@ -221,6 +228,7 @@ class MissionAccompaniment extends React.Component {
           <View style={styles.mapStyle}>
             <MapView
               initialRegion={this.state.region}
+              region={this.state.region}
               style={CreateMissionMapStyle.map}
               mapType={MAP_TYPES.SATELLITE}
               scrollEnabled={true}
