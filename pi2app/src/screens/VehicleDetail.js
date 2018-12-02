@@ -8,7 +8,7 @@ import {
   Alert,
   ScrollView } from 'react-native';
 import axios from 'axios';
-import { Button } from 'react-native-elements';
+import { Button, Card } from 'react-native-elements';
 import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
 import VehicleCard from '../components/VehicleCard';
@@ -47,6 +47,7 @@ class VehicleDetail extends React.Component {
     .then(response => {
       this.setState({ missions: response.data })
       this.setState({ isLoading: false })
+      console.log('MISSIONS: ' + JSON.stringify(response.data))
     })
     .catch((error) => {
     this.setState({isLoading: false});
@@ -60,7 +61,7 @@ class VehicleDetail extends React.Component {
 
   static navigationOptions = ({ navigation }) => {
     return {
-      title: navigation.state.params.vehicle.name,
+      title: 'Missões',
       headerStyle: {
         backgroundColor: '#53A9F6',
         elevation: 0,
@@ -117,9 +118,7 @@ class VehicleDetail extends React.Component {
   }
 
   render() {
-
-    var screen;
-    const {params} = this.props.navigation.state;
+    const { params } = this.props.navigation.state;
     this.state.navigation = this.props.navigation;
 
     if(this.state.isLoading == true){
@@ -132,33 +131,18 @@ class VehicleDetail extends React.Component {
     } else {
       return (
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
-        <ScrollView contentContainerStyle={styles.vehicleScrollView}>
-          <VehicleCard
-            key={1}
-            vehicle={params.vehicle}
-          />
-          <View style={{flex: 1, flexDirection: 'row'}}>
-            <DefaultButton
-              type={"blue"}
-              text={"Editar Robô"}
-              padding={15}
-              onPress={ () => this.props.navigation.navigate("VehicleEdit", {vehicle: params.vehicle}) } 
-            />
-            <DefaultButton
-              type={"green"}
-              text={"Remoto"}
-              padding={15}
-              onPress={() => this.startManual()}
-            />
-          </View>
-
-          <View style={styles.simpleTextView}>
-            <Text style={styles.simpleText}>
-              Missões
-            </Text>
-          </View>
-
-          <View style={styles.missionNameView}>
+        <ScrollView style={styles.missionNameView}>
+        {this.state.missions.length == 0 &&
+            <Card
+              title={ "Nenhuma Missão cadastradada!" }
+              containerStyle={{borderRadius: 10, paddingVertical: 10}}
+              >
+              <Text style={{color: 'black', textAlign: 'center'}}>
+                Suas missões cadastradas aparecerão aqui.
+              </Text>
+            </Card>
+            }
+          <View>
             {this.state.missions.map((mission, index) => {
               return (
                 <TouchableHighlight
@@ -191,6 +175,20 @@ class VehicleDetail extends React.Component {
           </View>
 
         </ScrollView>
+        <View style={{flexDirection: 'row'}}>
+            <DefaultButton
+              type={"blue"}
+              text={"Editar Robô"}
+              padding={15}
+              onPress={ () => this.props.navigation.navigate("VehicleEdit", {vehicle: params.vehicle}) } 
+            />
+            <DefaultButton
+              type={"green"}
+              text={"Remoto"}
+              padding={15}
+              onPress={() => this.startManual()}
+            />
+          </View>
       </ImageBackground>
       )
     }
