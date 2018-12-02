@@ -15,7 +15,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    console.log("Dados do veiculo: "+ VehicleData.props)
+    console.log("Dados do veiculo: "+ VehicleData.constructor.props)
+    console.log("Itens do veiculo: "+ VehicleData.constructor.items)
   }
 
   render() {
