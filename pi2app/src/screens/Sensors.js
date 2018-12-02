@@ -12,18 +12,25 @@ class Sensors extends React.Component {
 
         motor = {
             name: 'motor',
-            pwm: 0,
-            dir: 0
+            pwm: 20,
+            dir: 'False'
         }
 
         this.state = {
             esteira: motor,
             leftMotor: motor,
             rightMotor: motor,
-            gps: {},
-            acc: {},
-            volume: {},
-            weight: {},
+            gps: {
+                lat: '10.151',
+                lon: '10.42'
+            },
+            acc: {
+                x: '21.321',
+                y: '0.1092',
+                temp: '36.2'
+            },
+            volume: { value: 30 },
+            weight: { value: 30 }
         };
       }
 
@@ -95,7 +102,7 @@ class Sensors extends React.Component {
                 this.setState({acc:{
                     x: msg_array[1],
                     y: msg_array[2],
-                    z: msg_array[3]
+                    temp: msg_array[3]
                 }})
                 break;
             case 'volume':
@@ -136,10 +143,10 @@ class Sensors extends React.Component {
             <Text>{motor.name}</Text>
             <View style={{flex: 1, flexDirection: 'row'}}>
                 <Text>
-                    {'\t'} PWM: {motor.pwm} 
+                    {'\t'} duty cycle: {motor.pwm}%
                 </Text>
                 <Text>
-                    {'\t'} direction: {motor.pwm}
+                    {'\t'} direction: {motor.pwm == 'False' ? 'frente' : 'trás'}
                 </Text>
             </View>
         </View>
@@ -149,12 +156,53 @@ class Sensors extends React.Component {
   render() {
     return (  
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
-            {this.renderMotor(this.state.leftMotor)}
-            <Text>{'\n'}</Text>
-            {this.renderMotor(this.state.rightMotor)}
-            <Text>{'\n'}</Text>
-            {this.renderMotor(this.state.esteira)}
-            <Text>{'\n'}</Text>
+            <View style={{marginVertical:15, padding:30, marginHorizontal:20, backgroundColor:'#F5FBFF', borderRadius: 10,}}>
+                {this.renderMotor(this.state.leftMotor)}
+                <Text>{'\n'}</Text>
+                {this.renderMotor(this.state.rightMotor)}
+                <Text>{'\n'}</Text>
+                {this.renderMotor(this.state.esteira)}
+                <Text>{'\n'}</Text>
+            </View>
+            <View style={{marginVertical:15, padding:30, marginHorizontal:20, backgroundColor:'#F5FBFF', borderRadius: 10,}}>
+                <Text>GPS</Text>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <Text>
+                        {'\t'} latitude: {this.state.gps.lat}˚
+                    </Text>
+                    <Text>
+                        {'\t'} longitude: {this.state.gps.lon}˚
+                    </Text>
+                </View>
+            </View>
+            <View style={{marginVertical:15, padding:30, marginHorizontal:20, backgroundColor:'#F5FBFF', borderRadius: 10,}}>
+                <Text>Acelerometro</Text>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <Text>
+                        {'\t'} x: {this.state.acc.x}m/s²
+                    </Text>
+                    <Text>
+                        {'\t'} y: {this.state.acc.y}m/s²
+                    </Text>
+                </View>
+                <Text>
+                    {'\t'} temp: {this.state.acc.temp}˚C
+                </Text>
+            </View>
+            <View style={{marginVertical:15, padding:30, marginHorizontal:20, backgroundColor:'#F5FBFF', borderRadius: 10,}}>
+                <Text>Volume</Text>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <Text>
+                        {'\t'} valor: {this.state.volume.value}cm³
+                    </Text>
+                </View>
+                <Text>Peso</Text>
+                <View style={{flex: 1, flexDirection: 'row'}}>
+                    <Text>
+                        {'\t'} valor: {this.state.volume.value}g
+                    </Text>
+                </View>
+            </View>
         </ScrollView>
     );
   }
