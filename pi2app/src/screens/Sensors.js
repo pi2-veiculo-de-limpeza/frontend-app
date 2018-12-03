@@ -5,11 +5,12 @@ import {
   ScrollView
   } from 'react-native';
 import styles from '../styles/GeneralStyles';
+import DefaultButton from "../components/DefaultButton";
+import Dialog from "react-native-dialog";
 
 class Sensors extends React.Component {
     constructor(props) {
         super(props);
-
         motor = {
             name: 'motor',
             pwm: 0,
@@ -30,7 +31,8 @@ class Sensors extends React.Component {
                 temp: '36.2'
             },
             volume: { value: 30 },
-            weight: { value: 30 }
+            weight: { value: 30 },
+            calibrateWeight: 0
         };
       }
 
@@ -133,6 +135,14 @@ class Sensors extends React.Component {
     };
   }
 
+  calibrate(known_weight){
+    this.setState({calibrateWeight: known_weight})
+  }
+
+  submitCalibrate(){
+    this.state.ws.send(`calibrate,${this.state.calibrateWeight}`);
+  }
+
   renderMotor(motor){
     return (
         <View>
@@ -192,6 +202,12 @@ class Sensors extends React.Component {
                         {'\t'} valor: {this.state.volume.value}cm³
                     </Text>
                 </View>
+                <DefaultButton
+                    type={"blue"}
+                    text={"Calibragem"}
+                    padding={5}
+                    onPress={() => this.setState({isDialogVisible: true}) }
+                />
                 <Text>Peso</Text>
                 <View style={{flex: 1, flexDirection: 'row'}}>
                     <Text>
@@ -199,6 +215,14 @@ class Sensors extends React.Component {
                     </Text>
                 </View>
             </View>
+
+            <Dialog.Container visible={this.state.isDialogVisible}>
+                <Dialog.Title>Coloque um peso conhecido na lixeira do veículo.</Dialog.Title>
+                <Dialog.Input text={'540'} onChangeText={(w) => this.calibrate(w)}
+                ></Dialog.Input>
+                <Dialog.Button label="Cancel" onPress={() => {this.setState({isDialogVisible: false})} } />
+                <Dialog.Button label="Submit" onPress={this.submitCalibrate} />
+            </Dialog.Container>
         </ScrollView>
     );
   }
