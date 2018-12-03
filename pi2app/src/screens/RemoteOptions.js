@@ -1,13 +1,9 @@
 import React from 'react';
 import {
   ImageBackground,
-  Text,
-  View,
-  ActivityIndicator,
-  TouchableHighlight,
-  Alert,
-  ScrollView } from 'react-native';
+  View} from 'react-native';
 import { StyleSheet } from 'react-native';
+import { Icon } from 'react-native-elements';
 import { INITIAL_BACKGROUND_IMG } from '../constants/GeneralConstants';
 import styles from '../styles/GeneralStyles';
 import DefaultButton from "../components/DefaultButton";
@@ -37,8 +33,21 @@ class RemoteOptions extends React.Component {
         fontWeight: 'bold',
         fontSize: 35,
       },
+      headerLeft: ( <Icon name={'chevron-left'} onPress={ () => { 
+        if(ws != undefined){
+            ws.close();
+        }
+        navigation.pop();
+    } 
+}  /> )
     }
   };
+
+  componentWillUnmount(){
+    if(ws != undefined){
+        ws.close();
+    }
+  }
 
   componentDidMount(){
     const {params} = this.props.navigation.state;
@@ -93,7 +102,7 @@ class RemoteOptions extends React.Component {
           type={"yellow"}
           text={"Standby"}
           padding={15}
-          onPress={() => this.state.ws.send(`stand-by`)}
+          onPress={() => { this.state.ws.send(`stand-by`)} }
           />
       </View>
       <View style={buttonStyles.spaceButtons}>
@@ -101,7 +110,7 @@ class RemoteOptions extends React.Component {
         type={"blue"}
         text={"Controle"}
         padding={15}
-        onPress={() => this.state.navigation.navigate("Joystick", {vehicle: this.state.vehicle, websocket: this.state.ws})}
+        onPress={() => this.props.navigation.navigate("Joystick", {vehicle: this.state.vehicle, websocket: this.state.ws})}
         />
       </View>
       <View style={buttonStyles.spaceButtons}>
@@ -120,7 +129,7 @@ class RemoteOptions extends React.Component {
         type={"green"}
         text={"Iniciar"}
         padding={15}
-        onPress={() => this.state.ws.send(`turn-on`)}
+        onPress={() => { this.state.ws.send(`turn-on`) } }
         />
       </View>
     }

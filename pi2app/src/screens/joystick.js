@@ -4,12 +4,9 @@ import {
   PanResponder,
   Animated
 } from "react-native";
-import {Icon } from 'react-native-elements';
 import { StyleSheet } from 'react-native';
 import DefaultButton from "../components/DefaultButton";
 
-
-ws = undefined
 
 class Joystick extends React.Component {
   state = {
@@ -35,23 +32,9 @@ class Joystick extends React.Component {
         alignSelf:'center',
         fontWeight: 'bold',
         fontSize: 35,
-      },
-      headerLeft: ( <Icon name={'chevron-left'} onPress={ () => { 
-                console.log("HELLO !!")
-                if(ws != undefined){
-                    ws.close();
-                }
-                navigation.pop();
-            } 
-        }  /> )
+      }
     }
   };
-
-  componentWillUnmount(){
-    if(ws != undefined){
-        ws.close();
-    }
-  }
 
   componentDidMount(){
     const {params} = this.props.navigation.state;
@@ -62,14 +45,7 @@ class Joystick extends React.Component {
     if(this.state.ws == undefined){
         console.log('UNDEFINED')
         return
-    }else{
-        ws = this.state.ws
     }
-
-    this.state.ws.onmessage = (e) => {
-        // a message was received
-        // console.log(e.data);
-    };
 
     this.state.ws.onerror = (e) => {
         // an error occurred
@@ -80,11 +56,6 @@ class Joystick extends React.Component {
         // connection closed
         console.log(e.code, e.reason);
     };
-
-    // Connection opened
-    this.state.ws.addEventListener('open', function (event) {
-        // this.state.ws.send('Hello Server!');
-    });
   }
 
   filterValue(value){

@@ -50,6 +50,11 @@ class Sensors extends React.Component {
     },
   };
 
+
+  componentWillUnmount(){
+    this.state.ws.onmessage = (e) => {}
+  }
+
   componentDidMount(){
     const {params} = this.props.navigation.state;
 
@@ -126,16 +131,6 @@ class Sensors extends React.Component {
     this.state.ws.onclose = (e) => {
         console.log(e.code, e.reason);
     };
-
-    // Connection opened
-    this.state.ws.addEventListener('open', function (event) {
-        // this.state.ws.send('Hello Server!');
-    });
-
-    // Listen for messages
-    this.state.ws.addEventListener('message', function (event) {
-        // console.log('Message from server ', event.data);
-    });
   }
 
   renderMotor(motor){
