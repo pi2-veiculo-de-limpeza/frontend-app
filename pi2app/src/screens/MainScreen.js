@@ -140,8 +140,8 @@ class MainScreen extends React.Component {
 			.catch((err) => {
         this.setState({refreshing: false});
         // DEV CHANGES TODO: descomentar para prod
-        // onSignOut();
-        // this.props.navigation.navigate("InitialScreen");
+        onSignOut();
+        this.props.navigation.navigate("InitialScreen");
 				console.log(err);
       })
       

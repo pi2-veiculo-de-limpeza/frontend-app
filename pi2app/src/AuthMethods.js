@@ -4,6 +4,7 @@ export const onSignIn = async (token, id) => {
   try{
     await AsyncStorage.setItem("tokenKey", token);
     await AsyncStorage.setItem("idKey", id);
+    console.log(token)
     console.log('Saved on Storage.')
   }
   catch(exception) {
@@ -15,6 +16,9 @@ export const onSignOut = async () => {
   try {
     await AsyncStorage.removeItem("tokenKey");
     await AsyncStorage.removeItem("idKey");
+
+    console.log(getUserToken())
+    
     console.log('Storage Removed.')
     return true;
   }

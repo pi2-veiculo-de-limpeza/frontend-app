@@ -112,6 +112,7 @@ class Sensors extends React.Component {
                 }})
                 break;
             case 'volume':
+                console.log(msg_array)
                 this.setState({volume:{
                     value: msg_array[1]
                 }})
@@ -136,11 +137,14 @@ class Sensors extends React.Component {
   }
 
   calibrate(known_weight){
+    console.log(known_weight)
     this.setState({calibrateWeight: known_weight})
   }
 
-  submitCalibrate(){
+  submitCalibrate = () => {
+    console.log(this.state.calibrateWeight)
     this.state.ws.send(`calibrate,${this.state.calibrateWeight}`);
+    this.setState({isDialogVisible: false})
   }
 
   renderMotor(motor){
@@ -199,7 +203,8 @@ class Sensors extends React.Component {
                 <Text>Volume</Text>
                 <View style={{flex: 1, flexDirection: 'row'}}>
                     <Text>
-                        {'\t'} valor: {this.state.volume.value}cm³
+                        {'\t'} valor: {this.state.volume.value}%
+                        {/* cm³ */}
                     </Text>
                 </View>
                 <DefaultButton
@@ -211,7 +216,7 @@ class Sensors extends React.Component {
                 <Text>Peso</Text>
                 <View style={{flex: 1, flexDirection: 'row'}}>
                     <Text>
-                        {'\t'} valor: {this.state.volume.value}g
+                        {'\t'} valor: {this.state.weight.value}g
                     </Text>
                 </View>
             </View>
