@@ -18,6 +18,8 @@ class RemoteOptions extends React.Component {
 
     this.state = {
       isInStandby: true,
+      ws: undefined,
+      vehicle: undefined
     }
   }
 
@@ -38,6 +40,48 @@ class RemoteOptions extends React.Component {
     }
   };
 
+  componentDidMount(){
+    const {params} = this.props.navigation.state;
+
+    // console.log(params)
+    this.state.ws = params.websocket
+    this.state.vehicle = params.vehicle
+
+    if(this.state.ws == undefined){
+        console.log('UNDEFINED')
+        return
+    }
+
+    this.state.ws.onmessage = (e) => {
+
+      msg = e.data
+      msg_array = msg.split(',');
+      command = msg_array[0]
+
+      switch(command) {
+        case 'turn-on':
+          this.setState({ isInStandby: false })
+          break;
+        case 'stand-by':
+          this.setState({ isInStandby: true })
+          break;
+        default:
+          break;
+      }
+      
+    };
+
+    this.state.ws.onerror = (e) => {
+        // an error occurred
+        // console.log(e.message);
+    };
+
+    this.state.ws.onclose = (e) => {
+        // connection closed
+        console.log(e.code, e.reason);
+    };
+  }
+
   renderButton(){
     let button
 
@@ -49,7 +93,7 @@ class RemoteOptions extends React.Component {
           type={"yellow"}
           text={"Standby"}
           padding={15}
-          onPress={() => this.setState({ isInStandby: true })}
+          onPress={() => this.state.ws.send(`stand-by`)}
           />
       </View>
       <View style={buttonStyles.spaceButtons}>
@@ -57,7 +101,7 @@ class RemoteOptions extends React.Component {
         type={"blue"}
         text={"Controle"}
         padding={15}
-        onPress={() => console.log('')}
+        onPress={() => this.state.navigation.navigate("Joystick", {vehicle: this.state.vehicle, websocket: this.state.ws})}
         />
       </View>
       <View style={buttonStyles.spaceButtons}>
@@ -65,7 +109,7 @@ class RemoteOptions extends React.Component {
         type={"blue"}
         text={"Sensores"}
         padding={15}
-        onPress={() => console.log('')}
+        onPress={() => this.props.navigation.navigate("Sensors", { ws: this.state.ws}) }
         />
       </View>
       </View>
@@ -76,7 +120,7 @@ class RemoteOptions extends React.Component {
         type={"green"}
         text={"Iniciar"}
         padding={15}
-        onPress={() => this.setState({ isInStandby: false })}
+        onPress={() => this.state.ws.send(`turn-on`)}
         />
       </View>
     }

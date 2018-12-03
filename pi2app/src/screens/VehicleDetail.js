@@ -93,7 +93,8 @@ class VehicleDetail extends React.Component {
     ws.onopen = () => {
       // connection opened
       ws.send('Remote activated'); // send a message
-      this.state.navigation.navigate("Joystick", {vehicle: this.state.navigation.state.params.vehicle, websocket: ws})
+      // this.state.navigation.navigate("Joystick", {vehicle: this.state.navigation.state.params.vehicle, websocket: ws})
+      this.state.navigation.navigate("RemoteOptions", {vehicle: this.state.navigation.state.params.vehicle, websocket: ws})
       this.setState({ isDialogVisible:false })
     };
     ws.onclose = (e) => {

@@ -114,6 +114,8 @@ class Sensors extends React.Component {
                     value: msg_array[1]
                 }})
                 break;
+            default:
+                break;
         }
     };
 

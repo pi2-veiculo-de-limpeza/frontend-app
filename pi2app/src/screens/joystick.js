@@ -190,20 +190,10 @@ class Joystick extends React.Component {
   }
 
   render() {
-    
-    const {params} = this.props.navigation.state;
 
     return (
         <View>
-            <View style={{flex: 1, flexDirection: 'row'}}>
-                {this.renderMatHandler()} 
-                <DefaultButton
-                    type={"blue"}
-                    text={"Sensores"}
-                    padding={15}
-                    onPress={() => this.props.navigation.navigate("Sensors", { ws: this.state.ws}) }
-                />
-            </View>
+            {this.renderMatHandler()} 
             <View style={{
                 marginTop:200,
                 alignItems:'center'
