@@ -6425,11 +6425,6 @@ react-native-branch@2.0.0-beta.3:
   resolved "https://registry.yarnpkg.com/react-native-branch/-/react-native-branch-2.0.0-beta.3.tgz#2167af86bbc9f964bd45bd5f37684e5b54965e32"
   integrity sha1-IWevhrvJ+WS9Rb1fN2hOW1SWXjI=
 
-react-native-dialog-input@^1.0.5:
-  version "1.0.5"
-  resolved "https://registry.yarnpkg.com/react-native-dialog-input/-/react-native-dialog-input-1.0.5.tgz#0c1659110b9b9c9f4f1acb6b670c0559f44da948"
-  integrity sha512-RayS/EAAtx9wYJurGk14QzBJ8qQzL+Ws3ep5Bl1hPaEhCGHzopqBGVQcmmouhOpwTeA/p5oAdtvxOA6vKEgH+w==
-
 react-native-dialog@^5.5.0:
   version "5.5.0"
   resolved "https://registry.yarnpkg.com/react-native-dialog/-/react-native-dialog-5.5.0.tgz#09d13e23264f820d6308b5f93e1f03606f97dee3"

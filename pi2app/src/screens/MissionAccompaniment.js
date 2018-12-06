@@ -1,10 +1,14 @@
 import React from 'react';
 import {
   View,
+  Text,
   ImageBackground,
   Dimensions,
   ActivityIndicator,
   ScrollView } from 'react-native';
+import { Card } from 'react-native-elements';
+import axios from 'axios';
+import { getUserToken } from "../AuthMethods";
 import styles from '../styles/GeneralStyles';
 import CreateMissionMapStyle from '../styles/CreateMissionMapStyle';
 import DefaultButton from "../components/DefaultButton";
@@ -22,8 +26,10 @@ class MissionAccompaniment extends React.Component {
     super(props);
 
     this.state = {
-      token: '',
+      userToken: '',
       isInMission: false,
+      garbageWeight: 'Indisponível',
+      speed: 'Indisponível',
       isLoading: true,
       region: {
         latitude: -15,
@@ -35,9 +41,16 @@ class MissionAccompaniment extends React.Component {
         latitude: -15,
         longitude: -48,
       },
-      intervalId: null,
+      updateMarkerId: null,
+      updateRobotInfoId: null,
     }
     this.getRobotPosition = this.getRobotPosition.bind(this);
+    this.getRobotInfo = this.getRobotInfo.bind(this);
+  }
+
+  componentWillMount(){
+    getUserToken().then(res => this.setState({ userToken: res }))
+      .catch(err => alert("Erro"));
   }
 
   // TODO: Check if it has a mission to display on map
@@ -81,8 +94,64 @@ class MissionAccompaniment extends React.Component {
         longitude: long,
       },
     })
+    this.setState({
+      region: {
+        ...this.state.region,
+        latitude: lat,
+        longitude: long
+      }
+    })
     console.log("MARKER UPDATED")
   }
+
+  getRobotInfo = async () => {
+    // wait 1s for db get userToken
+    if (this.state.userToken == undefined || this.state.userToken == ""){
+      await sleep(1000);
+    }
+    const mission = this.props.navigation.state.params.mission
+
+    axios.all([
+      axios.get(`${process.env.BACKEND}/volume?mission_id=/` + mission._id.$oid, { headers: { Authorization: this.state.userToken } }),
+      axios.get(`${process.env.BACKEND}/peso?mission_id=/` + mission._id.$oid, { headers: { Authorization: this.state.userToken } })
+      ])
+      .then(axios.spread(function (volumeResponse, weightResponse) {
+        if(volumeResponse.data == '' || weightResponse == ''){
+          console.log("Dados não disponíveis")
+        } else {
+          this.setState({ garbageWeight: weightResponse.data })
+          // Check atribute from response
+          if(volumeResponse.data.volume){
+            Alert.alert(
+              'Aviso!',
+              'A lixeira chegou em sua capacidade máxima. Por favor, retire o lixo.',
+              [
+                {text: 'Ok', onPress: () => console.log('Ok')},
+              ],
+              { cancelable: false }
+            ) 
+          }
+        }
+      })
+    )
+  };
+
+  missionHasStarted = async () => {
+    const mission = this.props.navigation.state.params.mission
+
+    const endpoint = `${process.env.BACKEND}/missions/` + mission._id.$oid + '/andamento'
+    const body = {
+      "status": 'andamento',
+    }
+
+    await axios.post(endpoint, body, { headers: { Authorization: this.state.userToken } })
+    .then(() => {
+      console.log('Mission has started.')
+    })
+    .catch((error) => {
+      console.log('Error', error.message);
+    })
+  };
 
   static navigationOptions = ({ navigation }) => {
     return {
@@ -105,14 +174,18 @@ class MissionAccompaniment extends React.Component {
   startMission(){
     // TODO: iniciar mapeamento do terreno
     this.setState({ isInMission:true })
+    this.missionHasStarted()
     let updateMarker = setInterval(this.getRobotPosition, 2000);
-    this.setState({ intervalId: updateMarker })
+    let updateRobotInfo = setInterval(this.getRobotInfo, 2000);
+    this.setState({ updateMarkerId: updateMarker })
+    this.setState({ updateRobotInfoId: updateRobotInfo })
   }
 
   stopMission(){
     // TODO: atualizar API
     this.setState({ isInMission:false })
-    clearInterval(this.state.intervalId)
+    clearInterval(this.state.updateMarkerId)
+    clearInterval(this.state.updateRobotInfoId)
   }
 
   renderMissionButton(){
@@ -151,10 +224,11 @@ class MissionAccompaniment extends React.Component {
       <ImageBackground style={styles.initialBackgroundImage} source={INITIAL_BACKGROUND_IMG}>
         <ScrollView contentContainerStyle={styles.vehicleScrollView}>
           
-          {/* PLACEHOLDER do mapa */}
+          {/* Map */}
           <View style={styles.mapStyle}>
             <MapView
               initialRegion={this.state.region}
+              region={this.state.region}
               style={CreateMissionMapStyle.map}
               mapType={MAP_TYPES.SATELLITE}
               scrollEnabled={true}
@@ -169,13 +243,31 @@ class MissionAccompaniment extends React.Component {
               </Marker>
             </MapView>
           </View>
-          {missionButton}
 
+      <Card 
+          containerStyle={{borderRadius: 10, paddingVertical: 1, justifyContent: 'space-between'}}        
+        >
+          <Text style={{color: 'gray'}}>
+            Peso de Lixo:  
+            <Text style={{color: 'black'}}> {this.state.garbageWeight} </Text>
+          </Text>
+
+          <Text style={{color: 'gray'}}>
+            Velocidade:  
+            <Text style={{color: 'black'}}> {this.state.speed} </Text>
+          </Text>
+          </Card>
+
+          {missionButton}
         </ScrollView>
       </ImageBackground>
       )
     }
   }
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export default MissionAccompaniment;
